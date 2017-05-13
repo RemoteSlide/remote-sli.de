@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <% include partials/head.ejs %>
+    </head>
+    <body>
+        <div id="session-form">
+            <form>
+                <input type="text" id="session-id" required>
+                <button type="submit" id="session-submit">Submit</button>
+            </form>
+        </div>
+        <div id="previews">
+            <input type="text" id="keycode-preview" readonly>
+            <input type="text" id="key-preview" readonly>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
+        <script>
+            $(function () {
+                var socket = io();
+                // TODO: remove
+                window._socket = socket;
+
+                $("#session-submit").click(function (e) {
+                    e.preventDefault();
+                    socket.emit("init", {iAm: "host", session: $("#session-id").val()});
+                })
+
+                socket.on("control",function(msg) {
+                    var keyCode = msg.keyCode;
+                    $("#keycode-preview").val(keyCode);
+                    $("#key-preview").val(charset.charAt(keyCode));
+                })
+
+
+                socket.on("err", function (msg) {
+                    alert("Error #" + msg.code + ": " + msg.msg)
+                })
+            });
+        </script>
+    </body>
+</html>
