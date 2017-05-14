@@ -9,6 +9,8 @@ var cookieParser = require("cookie-parser");
 var Cookies = require("cookies");
 var port = 3011;
 
+require('console-stamp')(console, 'HH:MM:ss.l');
+
 
 /*
 
