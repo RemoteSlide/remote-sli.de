@@ -4,8 +4,14 @@
 
     var socket = io("https://remote-sli.de");
 
-    console.log("Initializing session #" + remote_slide.session);
-    socket.emit("init", {iAm: "host", session: remote_slide.session});
+    socket.on("init", function (data) {
+        if (data.state == "start") {
+            console.info("Initializing session #" + remote_slide.session);
+            socket.emit("init", {iAm: "host", session: remote_slide.session});
+        } else if (data.state == "success") {
+            console.info("Session initialized");
+        }
+    });
 
     socket.on("control", function (msg) {
         var keyCode = msg.keyCode;
