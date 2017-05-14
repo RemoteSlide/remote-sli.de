@@ -68,7 +68,7 @@ app.get("/api/session", function (req, res) {// Continue or create session
         maxAge: 1.2e+6
     });
 
-    qrcode.toDataURL("https://remote-slide.ga/" + sessionId, {margin: 1, scale: 5}, function (err, url) {
+    qrcode.toDataURL("https://remote-sli.de/" + sessionId, {margin: 1, scale: 5}, function (err, url) {
         res.send({
             session: sessionId,
             qr: url
@@ -101,7 +101,7 @@ app.get("*", function (req, res) {
 //         sessions[sessionId].lastActivity = new Date().valueOf();
 //     }
 //
-//     qrcode.toDataURL("https://remote-slide.ga/r/" + sessionId, {margin: 1, scale: 5}, function (err, url) {
+//     qrcode.toDataURL("https://remote-sli.de/r/" + sessionId, {margin: 1, scale: 5}, function (err, url) {
 //         res.render("index", {
 //             sessionId: sessionId,
 //             sessionQrCode: url

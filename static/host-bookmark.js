@@ -2,7 +2,7 @@
     // Load dependencies
     $.getScript("https://code.jquery.com/jquery-3.2.1.min.js");
 
-    var socket = io("https://remote-slide.ga");
+    var socket = io("https://remote-sli.de");
 
     console.log("Initializing session #" + remote_slide.session);
     socket.emit("init", {iAm: "host", session: remote_slide.session});
