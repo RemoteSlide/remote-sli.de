@@ -141,7 +141,7 @@
 
                 $http.get("/api/session").success(function (data) {
                     $scope.session = data;
-                    $http.get("/res/bookmark.min.js").success(function (data) {
+                    $http.get("/res/bookmark.js").success(function (data) {
                         console.log(data)
                         data = data.replace(":sessionId:", $scope.session.session);
                         $scope.session.bookmarkContent = data;
@@ -197,8 +197,8 @@
                 }
 
 
-                $scope.sendControl = function (keyCode) {
-                    socket.emit("control", {keyCode: keyCode});
+                $scope.sendControl = function (keyCode, keys) {
+                    socket.emit("control", {keyCode: keyCode, keys: keys});
                 };
 
                 // (mobile)
@@ -245,7 +245,7 @@
                             $scope.statusIcon.showMessage("Host connected", 2500);
                         }
                     }
-                    if(data.type=='client_disconnected'){
+                    if (data.type == 'client_disconnected') {
                         if (data.clientType == 'remote') {
                             $scope.statusIcon.showMessage("A Remote disconnected", 2500);
                         } else if (data.clientType == 'host') {

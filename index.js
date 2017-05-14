@@ -38,7 +38,9 @@ repeat(function () {
     expiredSessions.forEach(function (session) {
         delete sessions[session];
     });
-}).every(10, "minutes").during(function(){ return true; }).start();
+}).every(10, "minutes").during(function () {
+    return true;
+}).start();
 
 app.set('view engine', 'ejs');
 app.use(express.static("static"));
@@ -188,13 +190,22 @@ io.on('connection', function (socket) {
         // we should only need to listen for control messages by clients
         if (socket.clientType == 'remote') {
             var keyCode = msg["keyCode"];
+
             if (!keyCode) {
                 socket.emit("err", {code: 400, msg: "Missing keyCode"});
                 return;
             }
 
+            var keys = {};
+            if (msg.keys && msg.keys.ctrl)
+                keys.ctrl = true;
+            if (msg.keys && msg.keys.shift)
+                keys.shift = true;
+            if (msg.keys && msg.keys.alt)
+                keys.alt = true;
+
             if (session.host) {
-                session.host.emit("control", {keyCode: keyCode});
+                session.host.emit("control", {keyCode: keyCode, keys: keys});
             } else {
                 //TODO: maybe change to err
                 socket.emit("info", {code: 200, msg: "Session host not yet connected"});
@@ -203,7 +214,7 @@ io.on('connection', function (socket) {
             session.lastActivity = new Date().valueOf();
 
             session.remotes.forEach(function (remote) {
-                remote.emit("control", {keyCode: keyCode});
+                remote.emit("control", {keyCode: keyCode, keys: keys});
             })
         }
     });

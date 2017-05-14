@@ -9,13 +9,14 @@
         height: 50px;
         margin: 5px;
     }
+
     .tooltip.left {
         padding: 0 5px;
         margin-left: -3px;
     }
 </style>
 <div style="position: absolute; right: 2px; top: 2px;" id="statusIcons">
-    <div ng-style="{'color': statusIcon.color}"  data-toggle="tooltip" data-placement="left">
+    <div ng-style="{'color': statusIcon.color}" data-toggle="tooltip" data-placement="left">
         <i ng-show="statusIcon.type=='times'" class="fa fa-times-circle-o fa-2" aria-hidden="true"></i>
         <i ng-show="statusIcon.type=='check'" class="fa fa-check-circle-o fa-2" aria-hidden="true"></i>
         <i ng-show="statusIcon.type=='question'" class="fa fa-question-circle-o fa-2" aria-hidden="true"></i>
@@ -54,6 +55,14 @@
             </button>
             <button class="btn-control btn" id="btn-control-pgdown" data-keycode="34" ng-disabled="!session.initialized" ng-click="sendControl(34)">
                 Page Down
+            </button>
+
+            <br/>
+            <button class="btn-control btn" id="btn-control-zoomin" data-keycode="33" ng-disabled="!session.initialized" ng-click="sendControl(107,{ctrl:true})">
+                Zoom in
+            </button>
+            <button class="btn-control btn" id="btn-control-zoomout" data-keycode="34" ng-disabled="!session.initialized" ng-click="sendControl(109,{ctrl:true})">
+                Zoom out
             </button>
         </div>
         <div id="swipe-controls" ng-show="navigationType=='swipe'">
