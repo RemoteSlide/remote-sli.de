@@ -84,53 +84,6 @@ app.get("*", function (req, res) {
     res.sendFile(__dirname + "/views/index.html");
 });
 
-// app.get('/', function (req, res) {
-//     var cookies = new Cookies(req, res);
-//
-//     // First check if there's an old session
-//     var sessionId = cookies.get("rs-session-id");
-//     if (!sessionId || !sessions[sessionId]) {
-//         // Or create a new one
-//         sessionId = randomstring.generate(10);
-//
-//         sessions[sessionId] = {
-//             id: sessionId,
-//             lastActivity: new Date().valueOf(),
-//             host: undefined,
-//             remotes: []
-//         };
-//
-//         console.info("New Session: " + sessionId)
-//     } else {
-//         sessions[sessionId].lastActivity = new Date().valueOf();
-//     }
-//
-//     qrcode.toDataURL("https://remote-sli.de/r/" + sessionId, {margin: 1, scale: 5}, function (err, url) {
-//         res.render("index", {
-//             sessionId: sessionId,
-//             sessionQrCode: url
-//         });
-//     });
-//
-//     // Set session cookie
-//     cookies.set("rs-session-id", sessionId, {
-//         maxAge: 1.2e+6
-//     });
-// });
-// app.get('/remote/:session?', function (req, res) {
-//     var session = req.params.session;
-//     res.render("remote", {
-//         session: session
-//     })
-// });
-// app.get("/host", function (req, res) {
-//     res.render("host");
-// })
-//
-// app.get("/r/:session?", function (req, res) {
-//     res.redirect("/remote/" + req.params.session);
-// });
-
 io.on('connection', function (socket) {
     console.log("connection");
     socket.emit("init", {state: "start"});
@@ -255,7 +208,3 @@ io.on('connection', function (socket) {
 http.listen(port, function () {
     console.log('listening on *:' + port);
 });
-//
-// process.on('uncaughtException', function (err) {
-//     console.info(util.inspect(err, {colors: true}));
-// });
