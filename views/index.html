@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="slideApp" ng-controller="slideController" style="touch-action: none;" id="outer-html-wrapper">
     <head>
-        <title ng-bind="head.pageTitle">Remote Slide</title>
+        <title>Remote Slide</title>
         <!--<update-title content="{{head.pageTitle}}"></update-title>-->
         <!--<link id="favicon" rel="shortcut icon" type="image/png" href="/favicon.png"/>-->
 
@@ -21,6 +21,16 @@
         <!--<meta property="twitter:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">-->
         <!--<meta property="twitter:creator" content="@Inventivtalent">-->
         <!--<meta property="twitter:card" content="summary">-->
+
+
+        <!-- Theme Color (https://stackoverflow.com/questions/26960703/how-to-change-the-color-of-header-bar-and-address-bar-in-newest-android-chrome-v) -->
+        <!-- Chrome, Firefox OS and Opera -->
+        <meta name="theme-color" content="#222222">
+        <!-- Windows Phone -->
+        <meta name="msapplication-navbutton-color" content="#222222">
+        <!-- iOS Safari -->
+        <meta name="apple-mobile-web-app-status-bar-style" content="#222222">
+        <!-- /Theme Color -->
 
         <meta name="robots" content="index, follow">
 
@@ -131,13 +141,13 @@
 
                 $http.get("/api/session").success(function (data) {
                     $scope.session = data;
+                    $http.get("/res/bookmark.js").success(function (data) {
+                        console.log(data)
+                        data = data.replace(":sessionId:", $scope.session.session);
+                        $scope.session.bookmarkContent = data;
+                        $("#session-bookmark").attr("href", data)
+                    })
                 });
-                $http.get("/res/bookmark.txt").success(function (data) {
-                    console.log(data)
-                    data = data.replace(":sessionId:", $scope.session.session);
-                    $scope.session.bookmarkContent = data;
-                    $("#session-bookmark").attr("href", data)
-                })
             }]);
 
             authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", "$routeParams", "$window", function ($scope, $http, $cookies, $timeout, $interval, $location, $routeParams, $window) {
@@ -145,6 +155,28 @@
                 $scope.session = {
                     session: $routeParams.session,
                     initialized: false
+                };
+
+                $scope.statusIcon = {
+                    type: 'question',
+                    color: 'orange',
+                    message: '',
+                    showMessage: function (msg, timeout) {
+                        if (msg)
+                            $scope.statusIcon.message = msg;
+                        $("#statusIcons").tooltip("destroy");
+                        $("#statusIcons").tooltip({title: msg, placement: "auto left", animation: true});
+                        $("#statusIcons").tooltip("show");
+
+                        if (timeout) {
+                            $timeout(function () {
+                                $scope.statusIcon.hideMessage();
+                            }, timeout);
+                        }
+                    },
+                    hideMessage: function () {
+                        $("#statusIcons").tooltip("destroy");
+                    }
                 };
 
                 $scope.navigationType = 'button';
@@ -206,8 +238,19 @@
                 // Init
                 socket.on("info", function (data) {
                     console.log(data);
-                    if (data.code === 200 && data.type === 'session-initialized') {
-                        $scope.session.initalized = true;
+                    if (data.type == 'client_connected') {
+                        if (data.clientType == 'remote') {
+                            $scope.statusIcon.showMessage("Another Remote connected", 2500);
+                        } else if (data.clientType == 'host') {
+                            $scope.statusIcon.showMessage("Host connected", 2500);
+                        }
+                    }
+                    if(data.type=='client_disconnected'){
+                        if (data.clientType == 'remote') {
+                            $scope.statusIcon.showMessage("A Remote disconnected", 2500);
+                        } else if (data.clientType == 'host') {
+                            $scope.statusIcon.showMessage("Host disconnected", 2500);
+                        }
                     }
                 });
                 socket.on("init", function (data) {
@@ -219,7 +262,17 @@
                         console.info("Session initialized.")
                         $timeout(function () {
                             $scope.session.initialized = true;
+                            $scope.statusIcon.type = 'check';
+                            $scope.statusIcon.color = 'lime';
+                            $scope.statusIcon.showMessage("Connected", 2500);
                         });
+                    } else if (data.state == "not_found") {
+                        console.warn("Session not found");
+                        $timeout(function () {
+                            $scope.statusIcon.type = 'times';
+                            $scope.statusIcon.color = 'red';
+                            $scope.statusIcon.showMessage("Session not found", 20000);
+                        })
                     }
                 })
 

@@ -34,7 +34,7 @@ repeat(function () {
         }
     });
 
-    console.info("Cleaning up " + expiredSessions.length + " expired sessions...");
+    console.info("Cleaning up " + expiredSessions.length + " expired sessions (" + (Object.keys(sessions).length - expiredSessions.length) + " remaining)...");
     expiredSessions.forEach(function (session) {
         delete sessions[session];
     });
@@ -145,6 +145,7 @@ io.on('connection', function (socket) {
         var session = sessions[sessionId];
         if (!session) {
             socket.emit("err", {code: 404, msg: "Session not found"});
+            socket.emit("init", {state: "not_found"});
             return;
         }
 
@@ -154,9 +155,18 @@ io.on('connection', function (socket) {
 
         if (socket.clientType == 'host') {
             session.host = socket;
+            session.remotes.forEach(function (remote) {
+                remote.emit("info", {type: "client_connected", clientType: "host"});
+            });
         }
         if (socket.clientType == 'remote') {
             session.remotes.push(socket);
+            if (session.host) {
+                session.host.emit("info", {type: "client_connected", clientType: "remote"});
+            }
+            session.remotes.forEach(function (remote) {
+                remote.emit("info", {type: "client_connected", clientType: "remote"});
+            });
         }
 
         socket.emit("init", {state: "success"});
@@ -206,6 +216,10 @@ io.on('connection', function (socket) {
                 if (socket.clientType == 'host') {
                     session.host = undefined;
                     console.log("[-] Host of #" + socket.sessionId + " disconnected (Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)");
+
+                    session.remotes.forEach(function (remote) {
+                        remote.emit("info", {type: "client_disconnected", clientType: "host"});
+                    });
                 }
                 if (socket.clientType == 'remote') {
                     var index = session.remotes.indexOf(socket);
@@ -213,6 +227,13 @@ io.on('connection', function (socket) {
                         session.remotes.splice(index, 1);
                     }
                     console.log("[-] A remote of #" + socket.sessionId + " disconnected (Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)")
+
+                    if (session.host) {
+                        session.host.emit("info", {type: "client_disconnected", clientType: "remote"});
+                    }
+                    session.remotes.forEach(function (remote) {
+                        remote.emit("info", {type: "client_disconnected", clientType: "remote"});
+                    });
                 }
             }
         }
