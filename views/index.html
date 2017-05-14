@@ -141,7 +141,7 @@
 
                 $http.get("/api/session").success(function (data) {
                     $scope.session = data;
-                    $http.get("/res/bookmark.js").success(function (data) {
+                    $http.get("/res/bookmark.min.js").success(function (data) {
                         console.log(data)
                         data = data.replace(":sessionId:", $scope.session.session);
                         $scope.session.bookmarkContent = data;
