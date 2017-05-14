@@ -10,7 +10,7 @@ javascript:if (!remote_slide) {
         sc.onload = function () {
             var sc = document.createElement('SCRIPT');
             sc.type = 'text/javascript';
-            sc.src = "https://remote-sli.de/host-bookmark.js";
+            sc.src = "https://remote-sli.de/res/host-bookmark.js";
             document.getElementsByTagName('head')[0].appendChild(sc);
         };
         document.getElementsByTagName('head')[0].appendChild(sc);
