@@ -42,7 +42,7 @@ app.set('view engine', 'ejs');
 app.use(express.static("static"));
 app.use(cookieParser());
 
-app.get('/', function (req, res) {
+app.get("/api/session", function (req, res) {// Continue or create session
     var cookies = new Cookies(req, res);
 
     // First check if there's an old session
@@ -63,34 +63,73 @@ app.get('/', function (req, res) {
         sessions[sessionId].lastActivity = new Date().valueOf();
     }
 
-    qrcode.toDataURL("https://remote-slide.ga/r/" + sessionId, {margin: 1, scale: 5}, function (err, url) {
-        res.render("index", {
-            sessionId: sessionId,
-            sessionQrCode: url
-        });
-    });
-
     // Set session cookie
     cookies.set("rs-session-id", sessionId, {
         maxAge: 1.2e+6
     });
-});
-app.get('/remote/:session?', function (req, res) {
-    var session = req.params.session;
-    res.render("remote", {
-        session: session
-    })
-});
-app.get("/host", function (req, res) {
-    res.render("host");
-})
 
-app.get("/r/:session?", function (req, res) {
-    res.redirect("/remote/" + req.params.session);
+    qrcode.toDataURL("https://remote-slide.ga/" + sessionId, {margin: 1, scale: 5}, function (err, url) {
+        res.send({
+            session: sessionId,
+            qr: url
+        })
+    });
 });
+
+app.get("*", function (req, res) {
+    res.sendFile(__dirname + "/views/index.html");
+});
+
+// app.get('/', function (req, res) {
+//     var cookies = new Cookies(req, res);
+//
+//     // First check if there's an old session
+//     var sessionId = cookies.get("rs-session-id");
+//     if (!sessionId || !sessions[sessionId]) {
+//         // Or create a new one
+//         sessionId = randomstring.generate(10);
+//
+//         sessions[sessionId] = {
+//             id: sessionId,
+//             lastActivity: new Date().valueOf(),
+//             host: undefined,
+//             remotes: []
+//         };
+//
+//         console.info("New Session: " + sessionId)
+//     } else {
+//         sessions[sessionId].lastActivity = new Date().valueOf();
+//     }
+//
+//     qrcode.toDataURL("https://remote-slide.ga/r/" + sessionId, {margin: 1, scale: 5}, function (err, url) {
+//         res.render("index", {
+//             sessionId: sessionId,
+//             sessionQrCode: url
+//         });
+//     });
+//
+//     // Set session cookie
+//     cookies.set("rs-session-id", sessionId, {
+//         maxAge: 1.2e+6
+//     });
+// });
+// app.get('/remote/:session?', function (req, res) {
+//     var session = req.params.session;
+//     res.render("remote", {
+//         session: session
+//     })
+// });
+// app.get("/host", function (req, res) {
+//     res.render("host");
+// })
+//
+// app.get("/r/:session?", function (req, res) {
+//     res.redirect("/remote/" + req.params.session);
+// });
 
 io.on('connection', function (socket) {
     console.log("connection");
+    socket.emit("init", {state: "start"});
 
     socket.on('init', function (msg) {
         console.log(msg)
@@ -118,7 +157,7 @@ io.on('connection', function (socket) {
             session.remotes.push(socket);
         }
 
-        socket.emit("info", {code: 200, msg: "Connected with session id " + sessionId});
+        socket.emit("init", {state: "success"});
         console.log("[+]" + (clientType == 'host' ? "Host" : 'Remote' ) + " for #" + sessionId + " connected (Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)");
     });
 

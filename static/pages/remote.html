@@ -1,0 +1,60 @@
+<style>
+    .navigation-cross {
+        min-width: 200px;
+        min-height: 200px;
+    }
+
+    .navigation-cross .btn {
+        width: 50px;
+        height: 50px;
+        margin: 5px;
+    }
+</style>
+<div class="centered">
+    <div id="controls-container">
+        <div id="btn-controls" ng-show="navigationType=='button'">
+            <div class="center-block text-center navigation-cross">
+                <div>
+                    <button class="btn-control btn" id="btn-control-up" data-keycode="38" ng-disabled="!session.initialized" ng-click="sendControl(38)">
+                        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div>
+                    <button class="btn-control btn" id="btn-control-left" data-keycode="37" ng-disabled="!session.initialized" ng-click="sendControl(37)">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn-control btn" id="btn-control-space" data-keycode="32" ng-disabled="!session.initialized" ng-click="sendControl(32)">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn-control btn" id="btn-control-right" data-keycode="39" ng-disabled="!session.initialized" ng-click="sendControl(39)">
+                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div>
+                    <button class="btn-control btn" id="btn-control-down" data-keycode="40" ng-disabled="!session.initialized" ng-click="sendControl(40)">
+                        <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+            <br/>
+            <button class="btn-control btn" id="btn-control-pgup" data-keycode="33" ng-disabled="!session.initialized" ng-click="sendControl(33)">
+                Page Up
+            </button>
+            <button class="btn-control btn" id="btn-control-pgdown" data-keycode="34" ng-disabled="!session.initialized" ng-click="sendControl(34)">
+                Page Down
+            </button>
+        </div>
+        <div id="swipe-controls" ng-show="navigationType=='swipe'">
+            Swipe or tap to navigate
+        </div>
+    </div>
+</div>
+<div style="position: absolute; right: 1px; bottom: 1px;">
+    <label>Navigation Method</label>
+    <br/>
+    <div class="btn-group">
+        <button class="btn controls-toggle" id="controls-toggle-buttons" ng-click="setNavType('button')" ng-class="{'btn-success':navigationType=='button'}">Buttons</button>
+        <button class="btn controls-toggle" id="controls-toggle-swipe" ng-click="setNavType('swipe')" ng-class="{'btn-success':navigationType=='swipe'}">Swipe</button>
+    </div>
+</div>

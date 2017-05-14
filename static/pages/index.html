@@ -1,0 +1,24 @@
+<style>
+    .instructions {
+
+    }
+</style>
+<div class="centered text-center">
+    <div>
+        <p class="instructions">Scan the QR code, or open the link below</p>
+
+        <img src="" ng-src="{{ session.qr }}" style="width: 256px; height: 256px;">
+        <br/>
+        <form class="form-inline">
+            <div class="form-group">
+                <span class="text-muted" style="font-size:16px;">https://remote-slide.ga/{{ session.session }}</span>
+            </div>
+        </form>
+    </div>
+    <hr/>
+    <div>
+        <p class="instructions">Drag the <strong>Bookmark</strong> into your bookmarks bar</p>
+
+        <a class="btn btn-primary" href="" id="session-bookmark">Bookmark</a>
+    </div>
+</div>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html ng-app="slideApp" ng-controller="slideController" style="touch-action: none;" id="outer-html-wrapper">
+    <head>
+        <title ng-bind="head.pageTitle">Remote Slide</title>
+        <!--<update-title content="{{head.pageTitle}}"></update-title>-->
+        <!--<link id="favicon" rel="shortcut icon" type="image/png" href="/favicon.png"/>-->
+
+        <!--<meta name="description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">-->
+        <!--<meta name="keywords" content="minecraft,authentication,link,login,register">-->
+        <!--<meta name="author" content="inventivetalent">-->
+
+        <!--<meta property="og:type" content="website">-->
+        <!--<meta property="og:title" content="Minecraft Authentication">-->
+        <!--<update-meta property="og:title" content="{{head.seoTitle}}"></update-meta>-->
+        <!--<meta property="og:image" content="https://mcauth.ga/img/mcauth-256.png">-->
+        <!--<meta property="og:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">-->
+
+        <!--<meta property="twitter:title" content="Minecraft Authentication">-->
+        <!--<update-meta property="twitter:title" content="{{head.seoTitle}}"></update-meta>-->
+        <!--<meta property="twitter:image" content="https://mcauth.ga/img/mcauth-256.png">-->
+        <!--<meta property="twitter:description" content="MCAuth allows players to link their Minecraft account to websites, apps, etc.">-->
+        <!--<meta property="twitter:creator" content="@Inventivtalent">-->
+        <!--<meta property="twitter:card" content="summary">-->
+
+        <meta name="robots" content="index, follow">
+
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://spiget.org/css/sticky-footer.min.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap2/bootstrap-switch.min.css" rel="stylesheet">
+        <style>
+            .centered {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                -webkit-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+            }
+        </style>
+
+        <meta name=viewport content="width=device-width, initial-scale=1">
+
+        <base href="/">
+
+        <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+        <script>
+            window.addEventListener("load", function () {
+                window.cookieconsent.initialise({
+                    "palette": {
+                        "popup": {
+                            "background": "#edeff5",
+                            "text": "#838391"
+                        },
+                        "button": {
+                            "background": "#4b81e8"
+                        }
+                    },
+                    "position": "bottom-right"
+                })
+            });
+        </script>
+    </head>
+    <body ng-cloak>
+        <div>
+            <div ng-view></div>
+        </div>
+
+        <!--<div id="authModal" class="modal fade" role="dialog">-->
+        <!--<div class="modal-dialog modal-lg">-->
+        <!--<div class="modal-content">-->
+        <!--<div class="modal-header">-->
+        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+        <!--</div>-->
+
+        <!--<div class="modal-body">-->
+        <!--<iframe id="authModalIframe" src="" style="width: 100%; min-height: 200px; border-style: none; padding: 10px;">-->
+        <!--</iframe>-->
+        <!--</div>-->
+
+        <!--<div class="modal-footer">-->
+        <!--<button class="btn btn-success" onclick="window.open('/howto','_blank')" title="Need help?"><i class="fa fa-question" aria-hidden="true"></i></button>-->
+        <!--<button class="btn btn-primary" ng-click="auth.goToAuthPage()" title="Back to the authentication page"><i class="fa fa-arrow-right" aria-hidden="true"></i></button>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+
+        <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js" integrity="sha384-V6/dyDFv85/V/Ktq3ez5B80/c9ZY7jV9c/319rqwNOz3h9CIPdd2Eve0UQBYMMr/" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js" integrity="sha384-k+Qp/8rZxoiiYGVjOBiZwkEp5yv6clgl2EmwNaE1oUMlfmEYgCWazxf4CyxfZiWG" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.min.js" integrity="sha384-4Rqc4WCYcTgQGo7N/eJANj8VFLYiS0J/XRW6ThAPed/9YJmlNO7iD+ZdbeKi1Eqx" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.18/jquery.touchSwipe.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
+
+        <script>
+            var authApp = angular.module("slideApp", ["ngRoute", "ngCookies"]);
+
+            authApp.config(function ($routeProvider, $locationProvider, $httpProvider) {
+
+                $routeProvider
+                        .when("/", {
+                            templateUrl: "/pages/index.html",
+                            controller: "indexController"
+                        })
+                        .when("/:session", {
+                            templateUrl: "/pages/remote.html",
+                            controller: "remoteController"
+                        })
+
+
+                $locationProvider.html5Mode(true);
+
+                // Required for session cookies to be sent in $http
+                $httpProvider.defaults.withCredentials = true;
+            });
+
+            authApp.controller("slideController", ["$scope", "$route", "$cookies", "$location", "$http", "$interval", function ($scope, $route, $cookies, $location, $http, $interval) {
+
+            }]);
+
+            authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", function ($scope, $http, $cookies, $timeout, $interval, $location) {
+                $scope.session = {
+                    session: "",
+                    qr: "",
+                    bookmarkContent: ""
+                };
+
+                $http.get("/api/session").success(function (data) {
+                    $scope.session = data;
+                });
+                $http.get("/res/bookmark.txt").success(function (data) {
+                    console.log(data)
+                    data = data.replace(":sessionId:", $scope.session.session);
+                    $scope.session.bookmarkContent = data;
+                    $("#session-bookmark").attr("href", data)
+                })
+            }]);
+
+            authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", "$routeParams", "$window", function ($scope, $http, $cookies, $timeout, $interval, $location, $routeParams, $window) {
+                var socket = io();
+                $scope.session = {
+                    session: $routeParams.session,
+                    initialized: false
+                };
+
+                $scope.navigationType = 'button';
+                $scope.setNavType = function (type) {
+                    $timeout(function () {
+                        $scope.navigationType = type;
+
+                        var now = new $window.Date();
+                        var expires = new $window.Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
+                        $cookies.put("rs-nav-type", $scope.navigationType, {
+                            expires: expires
+                        })
+                    });
+                };
+                var navTypeCookie = $cookies.get("rs-nav-type");
+                if (navTypeCookie) {
+                    $scope.setNavType(navTypeCookie);
+                }
+
+
+                $scope.sendControl = function (keyCode) {
+                    socket.emit("control", {keyCode: keyCode});
+                };
+
+                // (mobile)
+                $(document).swipe({
+                    swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
+                        if ($scope.navigationType != 'swipe')
+                            return;
+                        event.preventDefault();
+
+                        console.log(event);
+                        console.log(direction);
+                        console.log(distance);
+
+                        if (direction == "right")
+                            $scope.sendControl(37);//left
+                        if (direction == "down")
+                            $scope.sendControl(38);//up
+                        if (direction == "left")
+                            $scope.sendControl(39);//right
+                        if (direction == "up")
+                            $scope.sendControl(40);//down
+                    },
+                    tap: function (event, target) {
+                        console.log(target)
+                        console.log(target == document);
+                        console.log(target == $(document));
+                        console.log($(target) == $(document))
+                        console.log(target.id)
+                        if ($scope.navigationType != 'swipe')
+                            return;
+                        if (target.id != 'outer-html-wrapper' && target.id != 'swipe-controls')// ignore taps on any other controls
+                            return;
+                        $scope.sendControl(32);//space
+                    }
+                });
+
+                // Init
+                socket.on("info", function (data) {
+                    console.log(data);
+                    if (data.code === 200 && data.type === 'session-initialized') {
+                        $scope.session.initalized = true;
+                    }
+                });
+                socket.on("init", function (data) {
+                    console.log("init: " + JSON.stringify(data));
+                    if (data.state == "start") {
+                        console.info("Initializing Session #" + $scope.session.session)
+                        socket.emit("init", {iAm: "remote", session: $scope.session.session});
+                    } else if (data.state == "success") {
+                        console.info("Session initialized.")
+                        $timeout(function () {
+                            $scope.session.initialized = true;
+                        });
+                    }
+                })
+
+                socket.on("err", function (data) {
+                    console.warn("err: " + JSON.stringify(data))
+                })
+            }]);
+
+        </script>
+    </body>
+</html>
