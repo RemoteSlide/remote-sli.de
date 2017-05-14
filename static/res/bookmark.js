@@ -6,7 +6,7 @@ javascript:if (!remote_slide) {
     (function () {
         var sc = document.createElement('SCRIPT');
         sc.type = 'text/javascript';
-        sc.src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js";
+        sc.src = "https://code.jquery.com/jquery-3.2.1.min.js";
         sc.onload = function () {
             var sc = document.createElement('SCRIPT');
             sc.type = 'text/javascript';
