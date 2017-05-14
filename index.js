@@ -36,7 +36,7 @@ repeat(function () {
     expiredSessions.forEach(function (session) {
         delete sessions[session];
     });
-}).every(30, "minutes");
+}).every(30, "minutes").start();
 
 app.set('view engine', 'ejs');
 app.use(express.static("static"));
