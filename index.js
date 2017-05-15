@@ -89,6 +89,12 @@ app.get("/api/session", function (req, res) {// Continue or create session
 });
 
 app.get("*", function (req, res) {
+    // redirects
+    if ('remote-slide.ga' == req.headers.host) {
+        res.redirect("https://remote-sli.de" + req.originalUrl);
+        return;
+    }
+
     res.sendFile(__dirname + "/views/index.html");
 });
 
@@ -180,7 +186,7 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on("deviceOrientation",function(data) {
+    socket.on("deviceOrientation", function (data) {
         if (!socket.sessionId || !socket.clientType) {
             socket.emit("err", {code: 400, msg: "Invalid session"});
             return;
