@@ -42,9 +42,17 @@ repeat(function () {
     return true;
 }).start();
 
-app.set('view engine', 'ejs');
+app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    if (req.method === 'OPTIONS') {
+        return res.send(200);
+    } else {
+        return next();
+    }
+});
 app.use(express.static("static"));
 app.use(cookieParser());
+
 
 app.get("/api/session", function (req, res) {// Continue or create session
     var cookies = new Cookies(req, res);
