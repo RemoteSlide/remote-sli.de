@@ -38,7 +38,10 @@
                     <button class="btn-control btn" id="btn-control-left" data-keycode="37" ng-disabled="!session.initialized" ng-click="sendControl(37)">
                         <i class="fa fa-arrow-left" aria-hidden="true"></i>
                     </button>
-                    <button class="btn-control btn" id="btn-control-space" data-keycode="32" ng-disabled="!session.initialized" ng-click="sendControl(32)">
+                    <!--<button class="btn-control btn" id="btn-control-space" data-keycode="32" ng-disabled="!session.initialized" ng-click="sendControl(32)">-->
+                        <!--<i class="fa fa-circle" aria-hidden="true"></i>-->
+                    <!--</button>-->
+                    <button class="btn-control btn" id="btn-control-space" data-keycode="32" ng-disabled="!session.initialized" ng-click="deviceOrientation.sendData(deviceOrientation.setup.step)">
                         <i class="fa fa-circle" aria-hidden="true"></i>
                     </button>
                     <button class="btn-control btn" id="btn-control-right" data-keycode="39" ng-disabled="!session.initialized" ng-click="sendControl(39)">

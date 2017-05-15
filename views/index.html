@@ -113,6 +113,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
         <script src="/js/angular-ui-switch.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.18/jquery.touchSwipe.min.js"></script>
+<script src="/js/vector.js"></script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
 
@@ -246,7 +247,7 @@
                 // (mobile)
                 $(document).swipe({
                     swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
-                        if ($scope.navigationType != 'swipe')
+                        if ($scope.settings.navigationType != 'swipe')
                             return;
                         event.preventDefault();
 
@@ -269,13 +270,14 @@
                         console.log(target == $(document));
                         console.log($(target) == $(document))
                         console.log(target.id)
-                        if ($scope.navigationType != 'swipe')
+                        if ($scope.settings.navigationType != 'swipe')
                             return;
                         if (target.id != 'outer-html-wrapper' && target.id != 'swipe-controls')// ignore taps on any other controls
                             return;
                         $scope.sendControl(32);//space
                     }
                 });
+
 
                 // Init
                 socket.on("info", function (data) {
@@ -322,6 +324,53 @@
                 socket.on("control", function (data) {
                     if ($scope.settings.vibration)
                         window.navigator.vibrate(50);
+                })
+
+                $scope.deviceOrientation = {
+                    lastAlpha: 0,
+                    lastBeta: 0,
+                    lastGamma: 0,
+                    getVector: function () {
+                        return [$scope.deviceOrientation.lastAlpha, $scope.deviceOrientation.lastBeta, $scope.deviceOrientation.lastGamma]
+                    },
+                    sendData: function (setupStep) {
+                        var data = {
+                            vector: $scope.deviceOrientation.getVector()
+                        };
+                        if ( setupStep > -1) {
+                            data["setup"] = true;
+                            data["setupStep"] = setupStep;
+                        }
+                        socket.emit("deviceOrientation", data)
+                    },
+                    setup:{
+                        step:-1
+                    }
+                };
+                window.laserPointer=$scope.deviceOrientation;
+                window.addEventListener("deviceorientation", function (event) {
+                    var absolute = event.absolute;
+                    var alpha = event.alpha;//  yaw (rotation) | z-axis
+                    var beta = event.beta;//    pitch          | x-axis
+                    var gamma = event.gamma;//  roll           | y-axis
+
+                    if (Math.abs(alpha - $scope.deviceOrientation.lastAlpha) > 0.5 &&
+                            Math.abs(beta - $scope.deviceOrientation.lastBeta) > 0.5 &&
+                            Math.abs(gamma - $scope.deviceOrientation.lastGamma) > 0.5) {
+                        $scope.deviceOrientation.lastAlpha = alpha;
+                        $scope.deviceOrientation.lastBeta = beta;
+                        $scope.deviceOrientation.lastGamma = gamma;
+
+                        console.log(" ")
+                        console.log("alpha: " + alpha)
+                        console.log(" beta: " + beta)
+                        console.log("gamma: " + gamma)
+                    }
+                }, true);
+                socket.on("laserPointer", function (data) {
+                    if (data.state == 'setup') {
+
+                    }
                 })
 
                 socket.on("err", function (data) {

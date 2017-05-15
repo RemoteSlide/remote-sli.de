@@ -172,6 +172,25 @@ io.on('connection', function (socket) {
         }
     });
 
+    socket.on("deviceOrientation",function(data) {
+        if (!socket.sessionId || !socket.clientType) {
+            socket.emit("err", {code: 400, msg: "Invalid session"});
+            return;
+        }
+        var session = sessions[socket.sessionId];
+        if (!session) {
+            socket.emit("err", {code: 400, msg: "Invalid session"});
+            return;
+        }
+
+        if (session.host) {
+            session.host.emit("deviceOrientation", data);
+        } else {
+            //TODO: maybe change to err
+            socket.emit("info", {code: 200, msg: "Session host not yet connected"});
+        }
+    });
+
     socket.on('disconnect', function () {
         if (socket.sessionId) {
             // Remove the client

@@ -1,5 +1,7 @@
 (function () {
     $.getScript("https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js", function () {
+        $.getScript("https://remote-sli.de/js/vector.js");
+
         var socket = io("https://remote-sli.de");
 
         socket.on("init", function (data) {
@@ -21,6 +23,45 @@
             console.log("Remote Key Event: " + (ctrlKey ? "[ctrl] + " : shiftKey ? "[shift] + " : altKey ? "[alt] + " : "") + keyCode);
             keyEvent(keyCode, ctrlKey, shiftKey, altKey);
         });
+
+        var laserPointer = {
+            setupVectorsRaw: [
+                [0, 0, 0],// top left
+                [0, 0, 0],// top right
+                [0, 0, 0],// bottom left
+                [0, 0, 0]// bottom right
+            ],
+            setupVectors: [],
+            currentVectorRaw: [],
+            currentVector: [],
+            currentPoint: []
+        };
+        $("body").append("<div id='rs-laser-dot' style='width: 1px; height: 1px; border: solid red; position: absolute;'>");
+        socket.on("deviceOrientation", function (msg) {
+            var yaw = msg.vector[0];
+            var pitch = msg.vector[1];
+
+            if (msg.setup) {
+                laserPointer.setupVectorsRaw[msg.setupStep] = msg.vector;
+
+                laserPointer.setupVectors[msg.setupStep] = new Vector(
+                    Math.sin(pitch) * Math.cos(yaw),
+                    Math.sin(pitch) * Math.sin(yaw),
+                    Math.cos(pitch)
+                );
+            } else {
+                laserPointer.currentVectorRaw = msg.vector;
+
+                laserPointer.currentVector = new Vector(
+                    Math.sin(pitch) * Math.cos(yaw),
+                    Math.sin(pitch) * Math.sin(yaw),
+                    Math.cos(pitch)
+                );
+                console.info(laserPointer.currentVector);
+            }
+            console.log(laserPointer)
+        })
+
 
         function keyEvent(keyCode, ctrlKey, shiftKey, altKey) {
             var event = new Event("keydown");
