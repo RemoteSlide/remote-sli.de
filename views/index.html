@@ -123,6 +123,29 @@
             </div>
         </div>
 
+        <div id="qrScannerModal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">QR Code Scan</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="qrCodeScan.stop()"><span aria-hidden="true">&times;</span></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div>
+                            <div ng-show="qrCodeScan.status=='scanning'">Scanning...</div>
+                            <div ng-show="qrCodeScan.status=='succcess'">Done!</div>
+                            <div ng-show="qrCodeScan.status=='cancelled'">Cancelled.</div>
+                        </div>
+                        <div>
+                            <div id="qrScanner" style="width: 100%;height:100%;min-height: 400px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js" integrity="sha384-V6/dyDFv85/V/Ktq3ez5B80/c9ZY7jV9c/319rqwNOz3h9CIPdd2Eve0UQBYMMr/" crossorigin="anonymous"></script>
@@ -132,6 +155,8 @@
         <script src="/js/angular-ui-switch.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.18/jquery.touchSwipe.min.js"></script>
         <script src="/js/vector.js"></script>
+        <script src="/js/jsqrcode-combined.min.js"></script>
+        <script src="/js/html5-qrcode.js"></script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
 
@@ -256,6 +281,49 @@
                         $("#statusIcons").tooltip("hide");
                     }
                 };
+
+                $scope.qrCodeScan = {
+                    start: function () {
+                        $scope.qrCodeScan.status = "scanning";
+                        $("#qrScannerModal").modal("show");
+                        $timeout(function () {
+                            $("#qrScanner").html5_qrcode(function (data) {
+                                console.info(data)
+                                //TODO show different status on invalid data
+                                $scope.qrCodeScan.status = "success";
+                                if(data.startsWith("https://remote-sli.de/")){
+                                    window.location=data;
+                                }
+                            }, function (error) {
+                                console.warn(error)
+                            }, function (videoError) {
+                                console.warn(videoError)
+                            })
+                        }, 500);
+                    },
+                    stop: function () {
+                        $scope.qrCodeScan.status = "cancelled";
+                        $("#qrScanner").html5_qrcode_stop()
+                    },
+                    cameraToggle: false,// switch front/back camera
+                    flipCamera: function () {
+                        $scope.qrCodeScan.cameraToggle = !$scope.qrCodeScan.cameraToggle;
+                    },
+                    status: 'scanning',
+                    success: function (data) {
+                        console.info("QR success");
+                        console.info(data)
+                    },
+                    error: function (error) {
+                        console.warn("QR error");
+                        console.warn(error)
+                    },
+                    videoError: function (error) {
+                        console.warn("QR video error");
+                        console.warn(error)
+                    }
+                }
+
 
                 $scope.deviceOrientation = {
                     lastAlpha: 0,// Yaw
