@@ -83,8 +83,8 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Settings</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h5 class="modal-title">Settings</h5>
                     </div>
 
                     <div class="modal-body">
@@ -127,18 +127,19 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">QR Code Scan</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="qrCodeScan.stop()"><span aria-hidden="true">&times;</span></button>
+                        <h5 class="modal-title">QR Code Scan</h5>
                     </div>
 
                     <div class="modal-body">
                         <div>
-                            <div ng-show="qrCodeScan.status=='scanning'">Scanning...</div>
+                            <div ng-show="qrCodeScan.status=='scanning'">Scanning... (this might take a few seconds)</div>
                             <div ng-show="qrCodeScan.status=='succcess'">Done!</div>
+                            <div ng-show="qrCodeScan.status=='videoError'">Couldn't get video. Please make sure your camera is enabled.</div>
                             <div ng-show="qrCodeScan.status=='cancelled'">Cancelled.</div>
                         </div>
                         <div>
-                            <div id="qrScanner" style="width: 100%;height:100%;min-height: 400px;"></div>
+                            <div id="qrScanner" style="width: 100%;height:100%;min-height: 250px;"></div>
                         </div>
                     </div>
                 </div>
@@ -284,6 +285,8 @@
 
                 $scope.qrCodeScan = {
                     start: function () {
+                        $("#qrScanner").empty();
+
                         $scope.qrCodeScan.status = "scanning";
                         $("#qrScannerModal").modal("show");
                         $timeout(function () {
@@ -297,9 +300,14 @@
                                     }
                                 })
                             }, function (error) {
+                                console.warn("error:")
                                 console.warn(error)
                             }, function (videoError) {
-                                console.warn(videoError)
+                                console.warn("Video error:")
+                                console.warn(videoError);
+                                $timeout(function () {
+                                    $scope.qrCodeScan.status = "videoError";
+                                })
                             })
                         }, 500);
                     },
@@ -311,7 +319,7 @@
                     flipCamera: function () {
                         $scope.qrCodeScan.cameraToggle = !$scope.qrCodeScan.cameraToggle;
                     },
-                    status: 'scanning'
+                    status: 'none'
                 }
 
 
@@ -423,6 +431,7 @@
                                 console.info("Session initialized.")
                                 $timeout(function () {
                                     $scope.session.initialized = true;
+                                    $scope.statusIcon.showMessage("check", "lime");
                                 });
                             } else if (data.state == "not_found") {// This should be impossible here, since the observer generates the new session ID
                                 console.warn("Session not found");
