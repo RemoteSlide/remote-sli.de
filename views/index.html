@@ -364,7 +364,6 @@
                                 console.info("Session initialized.")
                                 $timeout(function () {
                                     $scope.session.initialized = true;
-                                    $scope.statusIcon.showMessage("check", "lime", "Connected", 2500);
                                 });
                             } else if (data.state == "not_found") {// This should be impossible here, since the observer generates the new session ID
                                 console.warn("Session not found");
