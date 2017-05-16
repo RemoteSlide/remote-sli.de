@@ -43,7 +43,6 @@
             currentVector: [],
             currentPoint: []
         };
-        $("body").append("<div id='rs-laser-dot' style='width: 1px; height: 1px; border: solid red; position: absolute; z-index: 9999;'>");
         socket.on("deviceOrientation", function (msg) {
             var yaw = msg.vector[0];
             var pitch = msg.vector[1];
