@@ -290,10 +290,12 @@
                             $("#qrScanner").html5_qrcode(function (data) {
                                 console.info(data)
                                 //TODO show different status on invalid data
-                                $scope.qrCodeScan.status = "success";
-                                if(data.startsWith("https://remote-sli.de/")){
-                                    window.location=data;
-                                }
+                                $timeout(function () {
+                                    $scope.qrCodeScan.status = "success";
+                                    if (data.startsWith("https://remote-sli.de/")) {
+                                        window.location = data;
+                                    }
+                                })
                             }, function (error) {
                                 console.warn(error)
                             }, function (videoError) {
@@ -309,19 +311,7 @@
                     flipCamera: function () {
                         $scope.qrCodeScan.cameraToggle = !$scope.qrCodeScan.cameraToggle;
                     },
-                    status: 'scanning',
-                    success: function (data) {
-                        console.info("QR success");
-                        console.info(data)
-                    },
-                    error: function (error) {
-                        console.warn("QR error");
-                        console.warn(error)
-                    },
-                    videoError: function (error) {
-                        console.warn("QR video error");
-                        console.warn(error)
-                    }
+                    status: 'scanning'
                 }
 
 
