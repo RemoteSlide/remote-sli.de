@@ -69,6 +69,13 @@
     </head>
     <body ng-cloak>
         <div>
+            <div style="position: absolute; right: 2px; top: 2px;" id="statusIcons">
+                <div ng-style="{'color': statusIcon.color}" data-toggle="tooltip" data-placement="left">
+                    <i ng-show="statusIcon.type=='times'" class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i>
+                    <i ng-show="statusIcon.type=='check'" class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i>
+                    <i ng-show="statusIcon.type=='question'" class="fa fa-question-circle-o fa-2x" aria-hidden="true"></i>
+                </div>
+            </div>
             <div ng-view></div>
         </div>
 
@@ -203,6 +210,52 @@
 
 
                 // Non-settings stuff
+                $scope.statusIcon = {
+                    type: 'question',
+                    color: 'orange',
+                    message: '',
+                    showMessage: function (type, color, msg, timeout, doneCallback) {
+                        $timeout(function () {
+                            if (type)
+                                $scope.statusIcon.type = type;
+                            if (color)
+                                $scope.statusIcon.color = color;
+
+                            $("#statusIcons").tooltip("destroy");
+                            if (msg) {
+                                $scope.statusIcon.message = msg;
+                                // apparently tooltip('destroy') is asynchronous, which causes errors when showing a new tooltip immediately:
+                                //  http://stackoverflow.com/questions/27238938/bootstrap-popover-destroy-recreate-works-only-every-second-time
+                                $timeout(function () {
+                                    $("#statusIcons").tooltip({title: msg, placement: "auto left", animation: true});
+                                    $("#statusIcons").tooltip("show");
+                                }, 200);
+                            }
+                            if ($scope.settings.vibration) {
+                                if (type == "times") {// error
+                                    window.navigator.vibrate(100, 100);
+                                } else {// info
+                                    window.navigator.vibrate(200);
+                                }
+                            }
+
+                            if (timeout) {
+                                $timeout(function () {
+                                    $scope.statusIcon.hideMessage();
+                                    if (doneCallback)
+                                        doneCallback();
+                                }, timeout);
+                            } else {
+                                if (doneCallback)
+                                    doneCallback();
+                            }
+                        });
+                    },
+                    hideMessage: function () {
+                        $("#statusIcons").tooltip("hide");
+                    }
+                };
+
                 $scope.deviceOrientation = {
                     lastAlpha: 0,// Yaw
                     lastBeta: 0,// Pitch
@@ -249,6 +302,7 @@
                         pitch += 45;
 
                         //TODO: also consider the 'gamma' value for a more accurate pitch/yaw
+                        // https://engineering.stackexchange.com/questions/3348/calculating-pitch-yaw-and-roll-from-mag-acc-and-gyro-data
 
 
                         return [
@@ -295,7 +349,51 @@
                         console.log(data)
                         data = data.replace(":sessionId:", $scope.session.session);
                         $scope.session.bookmarkContent = data;
-                        $("#session-bookmark").attr("href", data)
+                        $("#session-bookmark").attr("href", data);
+
+                        // Wait for socket init
+                        var socket = io();
+                        socket.on("init", function (data) {
+                            console.log("init: " + JSON.stringify(data));
+                            if (data.state == "start") {
+                                console.info("Initializing Session #" + $scope.session.session)
+                                $timeout(function () {
+                                    socket.emit("init", {iAm: "observer", session: $scope.session.session});
+                                }, 500);
+                            } else if (data.state == "success") {
+                                console.info("Session initialized.")
+                                $timeout(function () {
+                                    $scope.session.initialized = true;
+                                    $scope.statusIcon.showMessage("check", "lime", "Connected", 2500);
+                                });
+                            } else if (data.state == "not_found") {// This should be impossible here, since the observer generates the new session ID
+                                console.warn("Session not found");
+                                $timeout(function () {
+                                    $scope.statusIcon.showMessage("times", "red", "Session not found", 20000);
+                                })
+                            }
+                        })
+                        socket.on("info", function (data) {
+                            console.log(data);
+                            if (data.type == 'client_connected') {
+                                if (data.clientType == 'remote') {
+                                    $scope.statusIcon.showMessage("check", "lime", "Remote connected", 2500);
+                                } else if (data.clientType == 'host') {
+                                    $scope.statusIcon.showMessage("check", "lime", "Host connected", 2500);
+                                }
+                            }
+                            if (data.type == 'client_disconnected') {
+                                if (data.clientType == 'remote') {
+                                    $scope.statusIcon.showMessage("times", "red", "Remote disconnected", 2000, function () {
+                                        $scope.statusIcon.showMessage("check", "lime");
+                                    });
+                                } else if (data.clientType == 'host') {
+                                    $scope.statusIcon.showMessage("times", "red", "Host disconnected", 2000, function () {
+                                        $scope.statusIcon.showMessage("check", "lime");
+                                    });
+                                }
+                            }
+                        })
                     })
                 });
             }]);
@@ -305,30 +403,6 @@
                 $scope.session = {
                     session: $routeParams.session,
                     initialized: false
-                };
-
-                $scope.statusIcon = {
-                    type: 'question',
-                    color: 'orange',
-                    message: '',
-                    showMessage: function (msg, timeout) {
-                        if (msg)
-                            $scope.statusIcon.message = msg;
-                        $("#statusIcons").tooltip("destroy");
-                        $("#statusIcons").tooltip({title: msg, placement: "auto left", animation: true});
-                        $("#statusIcons").tooltip("show");
-                        if ($scope.settings.vibration)
-                            window.navigator.vibrate(200);
-
-                        if (timeout) {
-                            $timeout(function () {
-                                $scope.statusIcon.hideMessage();
-                            }, timeout);
-                        }
-                    },
-                    hideMessage: function () {
-                        $("#statusIcons").tooltip("destroy");
-                    }
                 };
 
                 $scope.sendControl = function (keyCode, keys) {
@@ -375,16 +449,18 @@
                     console.log(data);
                     if (data.type == 'client_connected') {
                         if (data.clientType == 'remote') {
-//                            $scope.statusIcon.showMessage("Another Remote connected", 2500);
+//                            $scope.statusIcon.showMessage("Remote connected", 2500);
                         } else if (data.clientType == 'host') {
-                            $scope.statusIcon.showMessage("Host connected", 2500);
+                            $scope.statusIcon.showMessage("check", "lime", "Host connected", 2500);
                         }
                     }
                     if (data.type == 'client_disconnected') {
                         if (data.clientType == 'remote') {
-//                            $scope.statusIcon.showMessage("A Remote disconnected", 2500);
+//                            $scope.statusIcon.showMessage("Remote disconnected", 2500);
                         } else if (data.clientType == 'host') {
-                            $scope.statusIcon.showMessage("Host disconnected", 2500);
+                            $scope.statusIcon.showMessage("times", "red", "Host disconnected", 2000, function () {
+                                $scope.statusIcon.showMessage("check", "lime");
+                            });
                         }
                     }
                 });
@@ -399,16 +475,12 @@
                         console.info("Session initialized.")
                         $timeout(function () {
                             $scope.session.initialized = true;
-                            $scope.statusIcon.type = 'check';
-                            $scope.statusIcon.color = 'lime';
-                            $scope.statusIcon.showMessage("Connected", 2500);
+                            $scope.statusIcon.showMessage("check", "lime", "Connected", 2500);
                         });
                     } else if (data.state == "not_found") {
                         console.warn("Session not found");
                         $timeout(function () {
-                            $scope.statusIcon.type = 'times';
-                            $scope.statusIcon.color = 'red';
-                            $scope.statusIcon.showMessage("Session not found", 20000);
+                            $scope.statusIcon.showMessage("times", "red", "Session not found", 20000);
                         })
                     }
                 })
