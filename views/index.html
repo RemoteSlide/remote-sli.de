@@ -567,11 +567,6 @@
                 }).on("mouseup touchend mouseleave", function () {
                     clearInterval(laserDataTimer)
                 })
-                socket.on("laserPointer", function (data) {
-                    if (data.state == 'setup') {
-
-                    }
-                })
 
                 socket.on("err", function (data) {
                     console.warn("err: " + JSON.stringify(data))
