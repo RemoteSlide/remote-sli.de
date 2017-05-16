@@ -48,21 +48,27 @@
                 </div>
             </div>
 
-            <br/>
-            <button class="btn-control btn" id="btn-control-pgup" data-keycode="33" ng-disabled="!session.initialized" ng-click="sendControl(33)">
-                Page Up
-            </button>
-            <button class="btn-control btn" id="btn-control-pgdown" data-keycode="34" ng-disabled="!session.initialized" ng-click="sendControl(34)">
-                Page Down
-            </button>
+            <!--<br/>-->
+            <!--<button class="btn-control btn" id="btn-control-pgup" data-keycode="33" ng-disabled="!session.initialized" ng-click="sendControl(33)">-->
+            <!--Page Up-->
+            <!--</button>-->
+            <!--<button class="btn-control btn" id="btn-control-pgdown" data-keycode="34" ng-disabled="!session.initialized" ng-click="sendControl(34)">-->
+            <!--Page Down-->
+            <!--</button>-->
 
-            <br/>
-            <button class="btn-control btn" id="btn-control-zoomin" data-keycode="33" ng-disabled="!session.initialized" ng-click="sendControl(107,{ctrl:true})">
-                Zoom in
-            </button>
-            <button class="btn-control btn" id="btn-control-zoomout" data-keycode="34" ng-disabled="!session.initialized" ng-click="sendControl(109,{ctrl:true})">
-                Zoom out
-            </button>
+            <!--<br/>-->
+            <!--<button class="btn-control btn" id="btn-control-zoomin" data-keycode="33" ng-disabled="!session.initialized" ng-click="sendControl(107,{ctrl:true})">-->
+            <!--Zoom in-->
+            <!--</button>-->
+            <!--<button class="btn-control btn" id="btn-control-zoomout" data-keycode="34" ng-disabled="!session.initialized" ng-click="sendControl(109,{ctrl:true})">-->
+            <!--Zoom out-->
+            <!--</button>-->
+
+            <div>
+                <strong>alpha</strong><br/> &nbsp;{{ deviceOrientation.lastAlpha }}<br/>
+                <strong>beta</strong><br/> &nbsp;{{ deviceOrientation.lastBeta }}<br/>
+                <strong>gamma</strong><br/> &nbsp;{{ deviceOrientation.lastGamma }}
+            </div>
         </div>
 
         <div id="swipe-controls" ng-show="settings.navigationType=='swipe'">

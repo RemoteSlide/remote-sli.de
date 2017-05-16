@@ -41,9 +41,21 @@
             setupVectors: [],
             currentVectorRaw: [],
             currentVector: [],
-            currentPoint: []
+            currentPoint: [],
+            lastMessage: 0,
+            visible: false,
+            hideTimer: setInterval(function () {
+                if (new Date().valueOf() - laserPointer.lastMessage > 200) {
+                    if (laserPointer.visible) {
+                        laserPointer.visible = false;
+                        $("#rs-laser-dot").fadeOut("fast");
+                        console.log("fade out")
+                    }
+                }
+            }, 500)
         };
         socket.on("deviceOrientation", function (msg) {
+            laserPointer.lastMessage = new Date().valueOf();
             var yaw = msg.vector[0];
             var pitch = msg.vector[1];
 
@@ -75,15 +87,21 @@
                 var cx = screenWidth * vector[0] / 90;
                 var cy = screenHeight * vector[1] / 90;
 
-                cx = screenWidth-Math.abs(cx);
+                cx = screenWidth - Math.abs(cx);
                 cx = Math.min(screenWidth, cx);
 
-                cy = screenHeight-Math.abs(cy);
+                cy = screenHeight - Math.abs(cy);
                 cy = Math.min(screenHeight, cy);
 
                 console.log("Screen: " + screenWidth + "," + screenHeight)
                 console.info("Cursor Position: " + cx + "," + cy);
                 laserPointer.currentPoint = [cx, cy];
+
+                if (!laserPointer.visible) {
+                    console.log("fade in")
+                    $("#rs-laser-dot").fadeIn(50);
+                    laserPointer.visible = true;
+                }
 
                 $("#rs-laser-dot").css("left", cx).css("top", cy);
             }
