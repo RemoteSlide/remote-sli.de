@@ -34,10 +34,12 @@ repeat(function () {
         }
     });
 
-    console.info("Cleaning up " + expiredSessions.length + " expired sessions (" + (Object.keys(sessions).length - expiredSessions.length) + " remaining)...");
-    expiredSessions.forEach(function (session) {
-        delete sessions[session];
-    });
+    if (expiredSessions.length > 0) {
+        console.info("Cleaning up " + expiredSessions.length + " expired sessions (" + (Object.keys(sessions).length - expiredSessions.length) + " remaining)...");
+        expiredSessions.forEach(function (session) {
+            delete sessions[session];
+        });
+    }
 }).every(10, "minutes").during(function () {
     return true;
 }).start();
