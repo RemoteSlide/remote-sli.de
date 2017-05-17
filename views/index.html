@@ -244,6 +244,8 @@
 
 
                 // Non-settings stuff
+                $scope.chromeExtensionId = "bablpajeibomldijmnkliinaealllklb";
+
                 $scope.isMobile = function () {
                     return window.mobilecheck();
                 };
@@ -446,6 +448,11 @@
                                 $timeout(function () {
                                     $scope.session.initialized = true;
                                     $scope.statusIcon.showMessage("check", "lime");
+
+                                    // Notify extension
+                                    chrome.runtime.sendMessage($scope.chromeExtensionId, {session: $scope.session.session}, function () {
+
+                                    });
                                 });
                             } else if (data.state == "not_found") {// This should be impossible here, since the observer generates the new session ID
                                 console.warn("Session not found");
