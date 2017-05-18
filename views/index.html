@@ -102,7 +102,7 @@
                             <div>
                                 <div class="checkbox">
                                     <label>
-                                        <input id="controls-vibration" type="checkbox" ng-model="settings.vibration" ng-change="settings.refresh('vibration')">
+                                        <input id="controls-vibration" type="checkbox" ng-model="settings.vibration" ng-change="settings.save()">
                                         Vibration
                                     </label>
                                 </div>
@@ -199,44 +199,18 @@
                     put: function (name, value) {
                         $timeout(function () {
                             $scope.settings[name] = value;
-
-                            var now = new $window.Date();
-                            var expires = new $window.Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
-                            $cookies.put("rs-s_" + name, $scope.settings[name], {
-                                expires: expires
-                            })
+                            localStorage.setItem("rs-settings", JSON.stringify($scope.settings));
                         });
                     },
-                    refresh: function (name) {
-                        $timeout(function () {
-                            var now = new $window.Date();
-                            var expires = new $window.Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
-                            $cookies.put("rs-s_" + name, $scope.settings[name], {
-                                expires: expires
-                            })
-                        });
+                    save: function () {
+                        localStorage.setItem("rs-settings", JSON.stringify($scope.settings));
                     }
                 };
 
-                // Load settings cookies
-                var settingKeys = [];
-                for (var k in $scope.settings) {
-                    if (typeof $scope.settings[k] != "function") {
-                        settingKeys.push(k);
-                    }
-                }
-                settingKeys.forEach(function (key) {
-                    var cookie = $cookies.get("rs-s_" + key);
-                    if (cookie) {
-                        // type conversion
-                        if (cookie == 'true')
-                            cookie = true;
-                        if (cookie == 'false')
-                            cookie = false;
+                // Load settings
+                var storedSettings = JSON.parse(localStorage.getItem("rs-settings")) || {};
+                $.extend($scope.settings, storedSettings);
 
-                        $scope.settings.put(key, cookie);
-                    }
-                });
 
                 $scope.openSettings = function () {
                     $("#settingsModal").modal("show");
