@@ -1,7 +1,9 @@
 - Laser Pointer (replace space button, maybe)
 - Chrome addon
+- downloadable host (for PowerPoint, Open Office, etc.)
 - persistent sessions (in case of server restart)
 - transmit remote client keyboard input
 - zoom & rotate ("pinch")
 - vibrate on successful control
 - draw effect under finder when swiping
+- laser calibration (4 corners, to set the offset angle)

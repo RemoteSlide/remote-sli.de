@@ -9,4 +9,56 @@
     </div>
 </div>
 
+<!-- Laser -->
 <div id='rs-laser-dot' style='width: 1px; height: 1px; border: solid red; position: absolute; z-index: 9999; display: none;'></div>
+
+<!-- Laser Calibration -->
+<style>
+    .laser-calibration-dot {
+        position: absolute;
+    }
+
+    .laser-calibration-dot.top-left {
+        left: 10px;
+        top: 10px;
+    }
+
+    .laser-calibration-dot.top-right {
+        right: 10px;
+        top: 10px;
+    }
+
+    .laser-calibration-dot.bottom-left {
+        left: 10px;
+        bottom: 10px;
+    }
+
+    .laser-calibration-dot.bottom-right {
+        right: 10px;
+        bottom: 10px;
+    }
+
+    .laser-calibration-dot.center {
+        left: 50%;
+        top: 50%;
+    }
+</style>
+<div>
+    <div><!-- Top Left -->
+        <div class="laser-calibration-dot top-left"></div>
+    </div>
+    <div><!-- Top Right -->
+        <div class="laser-calibration-dot top-right"></div>
+    </div>
+    <div><!-- Center -->
+        <div class="laser-calibration-dot center"></div>
+    </div>
+    <div><!-- Bottom Left -->
+        <div class="laser-calibration-dot bottom-left"></div>
+    </div>
+    <div><!-- Bottom Right -->
+        <div class="laser-calibration-dot bottom-right"></div>
+    </div>
+</div>
+
+

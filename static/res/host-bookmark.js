@@ -41,70 +41,53 @@
             setupVectors: [],
             currentVectorRaw: [],
             currentVector: [],
+            lastPoint: [],
             currentPoint: [],
             lastMessage: 0,
             visible: false,
-            hideTimer: setInterval(function () {
-                if (new Date().valueOf() - laserPointer.lastMessage > 200) {
-                    if (laserPointer.visible) {
-                        laserPointer.visible = false;
-                        $("#rs-laser-dot").fadeOut("fast");
-                        console.log("fade out")
-                    }
-                }
-            }, 500)
+            hideTimer: undefined
         };
         socket.on("deviceOrientation", function (msg) {
             laserPointer.lastMessage = new Date().valueOf();
-            var yaw = msg.vector[0];
-            var pitch = msg.vector[1];
+            laserPointer.currentVectorRaw = msg.v;
 
-            if (msg.setup) {
-                laserPointer.setupVectorsRaw[msg.setupStep] = msg.vector;
+            var screenWidth = $(window).width() - 10;
+            var screenHeight = $(window).height() - 10;
 
-                laserPointer.setupVectors[msg.setupStep] = new Vector(
-                    Math.sin(pitch) * Math.cos(yaw),
-                    Math.sin(pitch) * -Math.sin(yaw),
-                    Math.cos(pitch)
-                );
-            } else {
-                laserPointer.currentVectorRaw = msg.vector;
+            var vector = msg.v;
 
-                var screenWidth = $(window).width() - 10;
-                var screenHeight = $(window).height() - 10;
+            var cx = screenWidth * vector[0] / 90;
+            var cy = screenHeight * vector[1] / 90;
 
-                var vector = msg.vector;
-                // var rotation = rv_to_rot(vector[0], vector[1], vector[2]);
-                // var ya = [[0.0], [1.0], [0.0]];
-                // var xa = [[1.0], [0.0], [0.0]];
-                // var ty = mmulti(rotation, ya);
-                // var tx = mmulti(rotation, xa);
-                // console.log(ty);
-                // console.log(tx);
-                // var cx = ty[0][0] * screenWidth + screenWidth / 2.0;
-                // var cy = -ty[2][0] * screenHeight + screenHeight / 2.0;
+            cx = screenWidth - Math.abs(cx);
+            cx = Math.min(screenWidth, cx);
 
-                var cx = screenWidth * vector[0] / 90;
-                var cy = screenHeight * vector[1] / 90;
+            cy = screenHeight - Math.abs(cy);
+            cy = Math.min(screenHeight, cy);
 
-                cx = screenWidth - Math.abs(cx);
-                cx = Math.min(screenWidth, cx);
+            console.log("Screen: " + screenWidth + "," + screenHeight)
+            console.info("Cursor Position: " + cx + "," + cy);
+            laserPointer.currentPoint = [cx, cy];
 
-                cy = screenHeight - Math.abs(cy);
-                cy = Math.min(screenHeight, cy);
+            if (!laserPointer.visible) {
+                console.log("fade in")
+                $("#rs-laser-dot").fadeIn(50);
+                laserPointer.visible = true;
 
-                console.log("Screen: " + screenWidth + "," + screenHeight)
-                console.info("Cursor Position: " + cx + "," + cy);
-                laserPointer.currentPoint = [cx, cy];
+                laserPointer.hideTimer = setInterval(function () {
+                    if (new Date().valueOf() - laserPointer.lastMessage > 100) {
+                        if (laserPointer.visible) {
+                            laserPointer.visible = false;
+                            $("#rs-laser-dot").fadeOut("fast");
+                            console.log("fade out")
 
-                if (!laserPointer.visible) {
-                    console.log("fade in")
-                    $("#rs-laser-dot").fadeIn(50);
-                    laserPointer.visible = true;
-                }
-
-                $("#rs-laser-dot").css("left", cx).css("top", cy);
+                            clearInterval(laserPointer.hideTimer);
+                        }
+                    }
+                }, 100)
             }
+
+            $("#rs-laser-dot").css("left", cx).css("top", cy);
             console.log(laserPointer)
         })
 

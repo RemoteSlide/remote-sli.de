@@ -324,7 +324,7 @@
                     updateYawOffset: function () {// Use the current device yaw as the new offset
                         $scope.settings.yawOffset = $scope.deviceOrientation.center.yaw = $scope.deviceOrientation.lastAlpha;
                         console.info("New Yaw offset: " + $scope.deviceOrientation.lastAlpha);
-                        $scope.settings.refresh("yawOffset")
+                        $scope.settings.save()
                     },
                     getVector: function () {
                         if ($scope.deviceOrientation.center.yaw == 0) {
@@ -553,13 +553,13 @@
 
                 $scope.deviceOrientation.sendData = function () {
                     console.log(JSON.stringify($scope.deviceOrientation.getVector()))
-                    socket.emit("deviceOrientation", {vector: $scope.deviceOrientation.getVector()})
+                    socket.emit("deviceOrientation", {v: $scope.deviceOrientation.getVector()})
                 };
                 var laserDataTimer;
                 $("#btn-control-laser").on("mousedown touchstart", function () {
                     laserDataTimer = setInterval(function () {
                         $scope.deviceOrientation.sendData();
-                    }, 50);
+                    }, 20);
                 }).on("mouseup touchend mouseleave", function () {
                     clearInterval(laserDataTimer)
                 })
