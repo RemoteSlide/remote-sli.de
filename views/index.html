@@ -69,11 +69,17 @@
     </head>
     <body ng-cloak>
         <div>
-            <div style="position: absolute; right: 2px; top: 2px;" id="statusIcons">
-                <div ng-style="{'color': statusIcon.color}" data-toggle="tooltip" data-placement="left">
-                    <i ng-show="statusIcon.type=='times'" class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i>
-                    <i ng-show="statusIcon.type=='check'" class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i>
-                    <i ng-show="statusIcon.type=='question'" class="fa fa-question-circle-o fa-2x" aria-hidden="true"></i>
+            <div>
+                <div style="position: absolute; right: 2px; top: 2px;" id="statusIcons">
+                    <div ng-style="{'color': statusIcon.color}" data-toggle="tooltip" data-placement="left" title="test">
+                        <i ng-show="statusIcon.type=='times'" class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i>
+                        <i ng-show="statusIcon.type=='check'" class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i>
+                        <i ng-show="statusIcon.type=='question'" class="fa fa-question-circle-o fa-2x" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="tooltip fade left in" role="tooltip" style="top: 5px; right: 35px;" ng-show="statusIcon.messageVisible">
+                    <div class="tooltip-arrow" style="top: 50%;"></div>
+                    <div class="tooltip-inner">{{ statusIcon.message }}</div>
                 </div>
             </div>
             <div ng-view></div>
@@ -147,14 +153,14 @@
         </div>
 
 
-        <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular-cookies.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js" integrity="sha384-V6/dyDFv85/V/Ktq3ez5B80/c9ZY7jV9c/319rqwNOz3h9CIPdd2Eve0UQBYMMr/" crossorigin="anonymous"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js" integrity="sha384-k+Qp/8rZxoiiYGVjOBiZwkEp5yv6clgl2EmwNaE1oUMlfmEYgCWazxf4CyxfZiWG" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.min.js" integrity="sha384-4Rqc4WCYcTgQGo7N/eJANj8VFLYiS0J/XRW6ThAPed/9YJmlNO7iD+ZdbeKi1Eqx" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.18/jquery.touchSwipe.min.js"></script>
-        <script src="/js/vector.js"></script>
         <script src="/js/jsqrcode-combined.min.js"></script>
         <script src="/js/html5-qrcode.js"></script>
 
@@ -231,6 +237,8 @@
                     type: 'question',
                     color: 'orange',
                     message: '',
+                    messageVisible: false,
+                    hideTimeout:undefined,
                     showMessage: function (type, color, msg, timeout, doneCallback) {
                         $timeout(function () {
                             if (type)
@@ -238,15 +246,10 @@
                             if (color)
                                 $scope.statusIcon.color = color;
 
-                            $("#statusIcons").tooltip("destroy");
+                            $scope.statusIcon.messageVisible = false;
                             if (msg) {
                                 $scope.statusIcon.message = msg;
-                                // apparently tooltip('destroy') is asynchronous, which causes errors when showing a new tooltip immediately:
-                                //  http://stackoverflow.com/questions/27238938/bootstrap-popover-destroy-recreate-works-only-every-second-time
-                                $timeout(function () {
-                                    $("#statusIcons").tooltip({title: msg, placement: "auto left", animation: true});
-                                    $("#statusIcons").tooltip("show");
-                                }, 200);
+                                $scope.statusIcon.messageVisible = true;
                             }
                             if ($scope.settings.vibration) {
                                 if (type == "times") {// error
@@ -257,8 +260,9 @@
                             }
 
                             if (timeout) {
+                                $timeout.cancel($scope.statusIcon.hideTimeout);
                                 $timeout(function () {
-                                    $scope.statusIcon.hideMessage();
+                                    $scope.statusIcon.messageVisible = false;
                                     if (doneCallback)
                                         doneCallback();
                                 }, timeout);
@@ -269,7 +273,7 @@
                         });
                     },
                     hideMessage: function () {
-                        $("#statusIcons").tooltip("hide");
+                        $scope.statusIcon.messageVisible = false;
                     }
                 };
 
@@ -400,9 +404,11 @@
                     bookmarkContent: ""
                 };
 
-                $http.get("/api/session").success(function (data) {
+                $http.get("/api/session").then(function (data) {
+                    data = data.data;
                     $scope.session = data;
-                    $http.get("/res/bookmark.js").success(function (data) {
+                    $http.get("/res/bookmark.js").then(function (data) {
+                        data = data.data;
                         console.log(data)
                         data = data.replace(":sessionId:", $scope.session.session);
                         $scope.session.bookmarkContent = data;
@@ -568,7 +574,6 @@
                     console.warn("err: " + JSON.stringify(data))
                 })
             }]);
-
         </script>
     </body>
 </html>
