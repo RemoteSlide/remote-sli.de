@@ -170,6 +170,7 @@
 
                     <div class="modal-body">
                         <div>
+                            <div ng-show="qrCodeScan.status=='none'">Loading...</div>
                             <div ng-show="qrCodeScan.status=='scanning'">Scanning... (this might take a few seconds)</div>
                             <div ng-show="qrCodeScan.status=='success'">Done! Redirecting...</div>
                             <div ng-show="qrCodeScan.status=='videoError'">Couldn't get video. Please make sure your camera is enabled.</div>
@@ -314,9 +315,9 @@
                     start: function () {
                         $("#qrScanner").empty();
 
-                        $scope.qrCodeScan.status = "scanning";
                         $("#qrScannerModal").modal("show");
                         $timeout(function () {
+                            $scope.qrCodeScan.status = "scanning";
                             $("#qrScanner").html5_qrcode(function (data) {
                                 console.info(data)
                                 //TODO show different status on invalid data
