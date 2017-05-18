@@ -66,6 +66,37 @@
                 })
             });
         </script>
+
+        <!-- http://codepen.io/femto113/pen/wBjVdL -->
+        <style>
+            .scanning:after {
+                content: '';
+                /* make the element cover the whole thing */
+                display: block;
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                /* and sit in front */
+                z-index: 1;
+                /* gradient with a radar like fade */
+                background: linear-gradient(90deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25) 50%, rgba(0, 255, 0, .5) 55%, rgba(0, 255, 0, 1) 56%, rgba(0, 0, 0, 0.25) 56%, rgba(0, 0, 0, 0.25));
+                /* make it big enough so when we slide it around still covers whole image */
+                background-size: 300% 100%;
+                background-repeat: no-repeat;
+                /* start with the scan bar just off the left side */
+                background-position: 84% center;
+                -webkit-animation: scan 5s infinite ease;
+            }
+
+            @-webkit-keyframes scan {
+                /* finish with the scan bar just off the right side */
+                100% {
+                    background-position: 25% center;
+                }
+            }
+        </style>
     </head>
     <body ng-cloak>
         <div>
@@ -140,12 +171,14 @@
                     <div class="modal-body">
                         <div>
                             <div ng-show="qrCodeScan.status=='scanning'">Scanning... (this might take a few seconds)</div>
-                            <div ng-show="qrCodeScan.status=='succcess'">Done!</div>
+                            <div ng-show="qrCodeScan.status=='success'">Done! Redirecting...</div>
                             <div ng-show="qrCodeScan.status=='videoError'">Couldn't get video. Please make sure your camera is enabled.</div>
                             <div ng-show="qrCodeScan.status=='cancelled'">Cancelled.</div>
                         </div>
                         <div>
-                            <div id="qrScanner" style="width: 100%;height:100%;min-height: 250px;"></div>
+                            <div ng-class="{'scanning': qrCodeScan.status=='scanning'}">
+                                <div id="qrScanner" style="width: 100%;height:100%;min-height: 250px;"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -238,7 +271,7 @@
                     color: 'orange',
                     message: '',
                     messageVisible: false,
-                    hideTimeout:undefined,
+                    hideTimeout: undefined,
                     showMessage: function (type, color, msg, timeout, doneCallback) {
                         $timeout(function () {
                             if (type)
@@ -290,9 +323,11 @@
                                 $timeout(function () {
                                     $scope.qrCodeScan.status = "success";
                                     if (data.startsWith("https://remote-sli.de/")) {
-                                        window.location = data;
+                                        $timeout(function () {
+                                            window.location = data;
+                                        }, 100);
                                     }
-                                })
+                                }, 50);
                             }, function (error) {
                                 console.warn("error:")
                                 console.warn(error)
@@ -303,7 +338,7 @@
                                     $scope.qrCodeScan.status = "videoError";
                                 })
                             })
-                        }, 500);
+                        }, 250);
                     },
                     stop: function () {
                         $scope.qrCodeScan.status = "cancelled";
