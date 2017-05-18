@@ -450,7 +450,7 @@
                                     $scope.statusIcon.showMessage("check", "lime");
 
                                     // Notify extension
-                                    chrome.runtime.sendMessage($scope.chromeExtensionId, {session: $scope.session.session}, function () {
+                                    chrome.runtime.sendMessage($scope.chromeExtensionId, {session: $scope.session}, function () {
 
                                     });
                                 });
