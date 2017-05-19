@@ -150,8 +150,8 @@
                                     <label>Rotation Offset</label>
                                 </div>
                                 <div>
-                                    <button class="btn" ng-click="deviceOrientation.updateYawOffset()">Update Offsets</button>
-                                    <span class="help-block">Point your phone at the screen and tap the button above</span>
+                                    <button class="btn" ng-click="deviceOrientation.calibration.startCalibration()">Start Laser Calibration</button>
+                                    <!--<span class="help-block">Point your phone at the screen and tap the button above</span>-->
                                 </div>
                             </div>
                         </div>
@@ -231,10 +231,11 @@
             });
 
             authApp.controller("slideController", ["$scope", "$route", "$cookies", "$location", "$http", "$interval", "$timeout", "$window", function ($scope, $route, $cookies, $location, $http, $interval, $timeout, $window) {
+                //TODO: disable some (most) settings for the host
                 $scope.settings = {
                     navigationType: 'button',
                     vibration: true,
-                    yawOffset: 0,
+                    laserOffsets: {},
 
                     put: function (name, value) {
                         $timeout(function () {
@@ -352,15 +353,84 @@
                     status: 'none'
                 }
 
-
+//TODO: move to remote
                 $scope.deviceOrientation = {
                     lastAlpha: 0,// Yaw
                     lastBeta: 0,// Pitch
                     lastGamma: 0,// Roll,
+                    currentYaw: 0,
+                    currentPitch: 0,
                     previousOrientations: [],
                     center: {
                         yaw: 0,
                         pitch: 0
+                    },
+                    range: {
+                        yaw: 0,
+                        pitch: 0
+                    },
+                    calibration: {
+                        angles: {
+                            center: [],
+                            topLeft: [],
+                            topRight: [],
+                            bottomLeft: [],
+                            bottomRight: []
+                        },
+                        active: true,
+                        step: "center",
+                        startCalibration: function () {
+                            $scope.deviceOrientation.calibration.step = "center";// reset step
+                            $scope.deviceOrientation.calibration.active = true;
+
+                            $scope.deviceOrientation.calibration.showOrHidePosition("show", "center");
+                        },
+                        onCalibrationFinished: function () {
+                            $scope.deviceOrientation.calibration.active = false;
+
+                            // Center
+                            $scope.deviceOrientation.center.yaw = $scope.deviceOrientation.calibration.angles.center[0];
+                            $scope.deviceOrientation.center.pitch = $scope.deviceOrientation.calibration.angles.center[1];
+
+                            // Ranges
+                            $scope.deviceOrientation.range.yaw = ($scope.deviceOrientation.calibration.angles.topLeft[0] - $scope.deviceOrientation.calibration.angles.topRight[0]) + 10;
+                            $scope.deviceOrientation.range.pitch = ($scope.deviceOrientation.calibration.angles.topLeft[1] - $scope.deviceOrientation.calibration.angles.bottomLeft[1]) + 10;
+
+                            console.info("Center: " + $scope.deviceOrientation.center.yaw + ", " + $scope.deviceOrientation.center.pitch)
+                            console.info("Range:  " + $scope.deviceOrientation.range.yaw + ", " + $scope.deviceOrientation.range.pitch)
+
+                            $scope.deviceOrientation.calibration.sendRange($scope.deviceOrientation.range.yaw, $scope.deviceOrientation.range.pitch)
+                        },
+                        nextStep: function () {
+                            var currentStep = $scope.deviceOrientation.calibration.step;
+                            var nextStep = undefined;
+                            if (currentStep == 'center') {
+                                nextStep = "topLeft";
+                            } else if (currentStep == 'topLeft') {
+                                nextStep = "topRight";
+                            } else if (currentStep == 'topRight') {
+                                nextStep = "bottomLeft";
+                            } else if (currentStep == 'bottomLeft') {
+                                nextStep = "bottomRight";
+                            }
+                            $scope.deviceOrientation.calibration.step = nextStep;
+                            if (currentStep) {
+                                $scope.deviceOrientation.calibration.showOrHidePosition("hide", currentStep);
+                            }
+                            if (nextStep) {
+                                $scope.deviceOrientation.calibration.showOrHidePosition("show", nextStep);
+                            } else {
+                                $scope.deviceOrientation.calibration.onCalibrationFinished();
+                            }
+                        },
+                        onCalibrationStepFinished: function () {
+                            if (!$scope.deviceOrientation.calibration.active) {
+                                return;
+                            }
+                            $scope.deviceOrientation.calibration.angles[$scope.deviceOrientation.calibration.step] = [$scope.deviceOrientation.lastAlpha, $scope.deviceOrientation.lastBeta];
+                            console.log(JSON.stringify($scope.deviceOrientation.calibration.angles))
+                            $scope.deviceOrientation.calibration.nextStep();
+                        }
                     },
                     updateYawOffset: function () {// Use the current device yaw as the new offset
                         $scope.settings.yawOffset = $scope.deviceOrientation.center.yaw = $scope.deviceOrientation.lastAlpha;
@@ -383,21 +453,26 @@
                         var yawCenter = $scope.deviceOrientation.center.yaw;
                         var pitchCenter = $scope.deviceOrientation.center.pitch;
 
+                        var yawRange = $scope.deviceOrientation.range.yaw;
+                        var pitchRange = $scope.deviceOrientation.range.pitch;
+
                         var yaw = $scope.deviceOrientation.lastAlpha;// yaw
                         var pitch = $scope.deviceOrientation.lastBeta;// pitch
 
                         //TODO: change 45 to a calibrated value (angle from center)
                         yaw -= yawCenter;
-                        if (yaw > 45)yaw = 45;
-                        if (yaw < (-45))yaw = (-45);
-                        yaw += 45;
+                        $scope.deviceOrientation.currentYaw = yaw;
+                        if (yaw > (yawRange / 2))yaw = (yawRange / 2);
+                        if (yaw < (-(yawRange / 2)))yaw = (-(yawRange / 2));
+                        yaw += (pitchRange / 2);
 
                         // taking 0 as center
                         //TODO: change 45 to a calibrated value (angle from center)
                         pitch -= pitchCenter;
-                        if (pitch > 45)pitch = 45;
-                        if (pitch < (-45))pitch = (-45);
-                        pitch += 45;
+                        $scope.deviceOrientation.currentPitch = pitch;
+                        if (pitch > (pitchRange / 2))pitch = (pitchRange / 2);
+                        if (pitch < (-(pitchRange / 2)))pitch = (-(pitchRange / 2));
+                        pitch += (pitchRange / 2);
 
                         //TODO: also consider the 'gamma' value for a more accurate pitch/yaw
                         // https://engineering.stackexchange.com/questions/3348/calculating-pitch-yaw-and-roll-from-mag-acc-and-gyro-data
@@ -409,53 +484,6 @@
                         ]
                     }
                 };
-                window.laserPointer = $scope.deviceOrientation;
-                window.addEventListener("deviceorientation", function (event) {
-                    var absolute = event.absolute;
-                    var alpha = event.alpha;//  yaw (rotation) | z-axis | [0-360]
-                    var beta = event.beta;//    pitch          | x-axis | [-180-180]
-                    var gamma = event.gamma;//  roll           | y-axis | [-90-90]
-
-                    if (Math.abs(alpha - $scope.deviceOrientation.lastAlpha) > 0.2 ||
-                            Math.abs(beta - $scope.deviceOrientation.lastBeta) > 0.2 ||
-                            Math.abs(gamma - $scope.deviceOrientation.lastGamma) > 0.2) {
-
-                        alpha -= 180;
-
-                        // push the original values before modification
-                        $scope.deviceOrientation.previousOrientations.push([alpha, beta, gamma]);
-
-                        // take averages to smooth
-                        var length = $scope.deviceOrientation.previousOrientations.length;
-                        if (length > 0) {
-                            $scope.deviceOrientation.previousOrientations.forEach(function (orientation) {
-                                alpha += orientation[0];
-                                beta += orientation[1];
-                                gamma += orientation[2];
-                            });
-                            alpha /= length;
-                            beta /= length;
-                            gamma /= length;
-                        }
-
-                        // save the smoothed values
-                        $scope.deviceOrientation.lastAlpha = alpha;
-                        $scope.deviceOrientation.lastBeta = beta;
-                        $scope.deviceOrientation.lastGamma = gamma;
-
-                        // remove the oldest orientation
-                        // TODO: maybe make smoothness level configurable
-                        if ($scope.deviceOrientation.previousOrientations.length > 4) {
-                            $scope.deviceOrientation.previousOrientations.shift();
-                        }
-
-
-//                        console.log(" ")
-//                        console.log("alpha: " + alpha)
-//                        console.log(" beta: " + beta)
-//                        console.log("gamma: " + gamma)
-                    }
-                }, true);
             }]);
 
             authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", function ($scope, $http, $cookies, $timeout, $interval, $location) {
@@ -619,9 +647,68 @@
                 })
 
                 $scope.deviceOrientation.sendData = function () {
+                    if ($scope.deviceOrientation.calibration.active) {
+                        $scope.deviceOrientation.calibration.onCalibrationStepFinished($scope.deviceOrientation.getVector());
+                        return;
+                    }
                     console.log(JSON.stringify($scope.deviceOrientation.getVector()))
                     socket.emit("deviceOrientation", {v: $scope.deviceOrientation.getVector()})
                 };
+                $scope.deviceOrientation.calibration.showOrHidePosition = function (action, which) {
+                    socket.emit("calibrationDot", {action: action, which: which});
+                };
+                $scope.deviceOrientation.calibration.sendRange = function (yaw, pitch) {
+                    socket.emit("orientationRange", {yaw: yaw, pitch: pitch})
+                };
+                window.laserPointer = $scope.deviceOrientation;
+                window.addEventListener("deviceorientation", function (event) {
+                    var absolute = event.absolute;
+                    var alpha = event.alpha;//  yaw (rotation) | z-axis | [0-360]
+                    var beta = event.beta;//    pitch          | x-axis | [-180-180]
+                    var gamma = event.gamma;//  roll           | y-axis | [-90-90]
+
+                    if (Math.abs(alpha - $scope.deviceOrientation.lastAlpha) > 0.2 ||
+                            Math.abs(beta - $scope.deviceOrientation.lastBeta) > 0.2 ||
+                            Math.abs(gamma - $scope.deviceOrientation.lastGamma) > 0.2) {
+
+                        alpha -= 180;
+
+                        /*
+                         // push the original values before modification
+                         $scope.deviceOrientation.previousOrientations.push([alpha, beta, gamma]);
+
+                         // take averages to smooth
+                         var length = $scope.deviceOrientation.previousOrientations.length;
+                         if (length > 0) {
+                         $scope.deviceOrientation.previousOrientations.forEach(function (orientation) {
+                         alpha += orientation[0];
+                         beta += orientation[1];
+                         gamma += orientation[2];
+                         });
+                         alpha /= length;
+                         beta /= length;
+                         gamma /= length;
+                         }
+                         */
+
+                        // save the smoothed values
+                        $scope.deviceOrientation.lastAlpha = alpha;
+                        $scope.deviceOrientation.lastBeta = beta;
+                        $scope.deviceOrientation.lastGamma = gamma;
+
+                        // remove the oldest orientation
+                        // TODO: maybe make smoothness level configurable
+                        if ($scope.deviceOrientation.previousOrientations.length > 4) {
+                            $scope.deviceOrientation.previousOrientations.shift();
+                        }
+
+
+//                        console.log(" ")
+//                        console.log("alpha: " + alpha)
+//                        console.log(" beta: " + beta)
+//                        console.log("gamma: " + gamma)
+                    }
+                }, true);
                 var laserDataTimer;
                 $("#btn-control-laser").on("mousedown touchstart", function () {
                     laserDataTimer = setInterval(function () {

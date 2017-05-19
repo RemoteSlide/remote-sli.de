@@ -41,6 +41,10 @@
             setupVectors: [],
             currentVectorRaw: [],
             currentVector: [],
+            range: {
+                yaw: 0,
+                pitch: 0
+            },
             lastPoint: [],
             currentPoint: [],
             lastMessage: 0,
@@ -56,8 +60,8 @@
 
             var vector = msg.v;
 
-            var cx = screenWidth * vector[0] / 90;
-            var cy = screenHeight * vector[1] / 90;
+            var cx = screenWidth * vector[0] / laserPointer.range.yaw;//90
+            var cy = screenHeight * vector[1] / laserPointer.range.pitch;//90
 
             cx = screenWidth - Math.abs(cx);
             cx = Math.min(screenWidth, cx);
@@ -91,6 +95,21 @@
             console.log(laserPointer)
         })
 
+        socket.on("calibrationDot", function (msg) {
+            var action = msg.action;
+            var which = msg.which;
+            var $element = $(".laser-calibration-dot." + which);
+            if (action == 'show') {
+                $element.fadeIn();
+            } else if (action == 'hide') {
+                $element.fadeOut();
+            }
+        })
+        socket.on("orientationRange", function (msg) {
+            console.info("Orientation Range")
+            console.info(msg)
+            laserPointer.range = msg;
+        })
 
         // TODO: understand this shit
         function mmulti(a, b) {
