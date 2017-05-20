@@ -25,20 +25,43 @@
 
             // alert("Control: " + keyCode);
             console.log("Remote Key Event: " + (ctrlKey ? "[ctrl] + " : shiftKey ? "[shift] + " : altKey ? "[alt] + " : "") + keyCode);
-            keyEvent(keyCode, ctrlKey, shiftKey, altKey);
+            simulateKeyEvent(keyCode, ctrlKey, shiftKey, altKey);
         });
-        function keyEvent(keyCode, ctrlKey, shiftKey, altKey) {
-            var event = new Event("keydown");
-            event.keyCode = keyCode;
-            event.which = keyCode;
+        //// http://stackoverflow.com/questions/26816306/is-there-a-way-to-simulate-pressing-multiple-keys-on-mouse-click-with-javascript
+        function simulateKeyEvent(keyCode, ctrlKey, shiftKey, altKey) {
+            // Prepare function for injection into page
+            function injected() {
+                // Adjust as needed; some events are only processed at certain elements
+                var element = document.body;
+                var keyCode = ___keyCode;
 
-            event.ctrlKey = ctrlKey;
-            event.shiftKey = shiftKey;
-            event.altKey = altKey;
+                function keyEvent(el, ev) {
+                    var eventObj = document.createEvent("Events");
+                    eventObj.initEvent(ev, true, true);
 
-            document.dispatchEvent(event);
-            document.body.dispatchEvent(event);
-            window.dispatchEvent(event);
+                    // Edit this to fit
+                    eventObj.keyCode = keyCode;
+                    eventObj.which = keyCode;
+                    //TODO: fix this
+                    // eventObj.ctrlKey = ctrlKey;
+                    // eventObj.shiftKey = shiftKey;
+                    // eventObj.altKey = altKey;
+
+                    el.dispatchEvent(eventObj);
+                }
+
+                // Trigger all 3 just in case
+                keyEvent(element, "keydown");
+                keyEvent(element, "keypress");
+                keyEvent(element, "keyup");
+            }
+
+            // Inject the script
+            var script = document.createElement('script');
+            script.textContent = "(" + injected.toString().replace("___keyCode", keyCode) + ")();";
+            // console.log(script.textContent)
+            (document.head || document.documentElement).appendChild(script);
+            script.parentNode.removeChild(script);
         }
 
         var laserPointer = {
