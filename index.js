@@ -29,7 +29,7 @@ repeat(function () {
     var now = new Date().valueOf();
     Object.keys(sessions).forEach(function (key) {
         var session = sessions[key];
-        if (now - session.lastActivity > 1.8e+6) {// 30 mins
+        if (now - session.lastActivity > 3.6e+6) {// 1 hour
             expiredSessions.push(key);
         }
     });
@@ -40,7 +40,7 @@ repeat(function () {
             delete sessions[session];
         });
     }
-}).every(10, "minutes").during(function () {
+}).every(30, "minutes").during(function () {
     return true;
 }).start();
 
@@ -80,7 +80,7 @@ app.get("/api/session", function (req, res) {// Continue or create session
 
     // Set session cookie
     cookies.set("rs-session-id", sessionId, {
-        maxAge: 1.2e+6
+        maxAge: 3.6e+6
     });
 
     qrcode.toDataURL("https://remote-sli.de/" + sessionId, {margin: 1, scale: 5}, function (err, url) {

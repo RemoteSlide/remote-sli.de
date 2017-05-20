@@ -7,3 +7,4 @@
 - vibrate on successful control
 - draw effect under finder when swiping
 - laser calibration (4 corners, to set the offset angle)
+- presentation timer
