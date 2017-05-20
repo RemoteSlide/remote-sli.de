@@ -42,8 +42,8 @@
             currentVectorRaw: [],
             currentVector: [],
             range: {
-                yaw: 0,
-                pitch: 0
+                yaw: 90,// default
+                pitch: 90// default
             },
             lastPoint: [],
             currentPoint: [],
@@ -63,11 +63,19 @@
             var cx = screenWidth * vector[0] / laserPointer.range.yaw;//90
             var cy = screenHeight * vector[1] / laserPointer.range.pitch;//90
 
-            cx = screenWidth - Math.abs(cx);
-            cx = Math.min(screenWidth, cx);
+            cx = screenWidth - cx;
 
-            cy = screenHeight - Math.abs(cy);
+
+
+            cy = screenHeight - cy;
+
+
+
+            $(".laser-pos").text(cx+", "+cy)
+            cx = Math.min(screenWidth, cx);
             cy = Math.min(screenHeight, cy);
+            cx = Math.max(0, cx);
+            cy = Math.max(0, cy);
 
             console.log("Screen: " + screenWidth + "," + screenHeight)
             console.info("Cursor Position: " + cx + "," + cy);
@@ -79,7 +87,7 @@
                 laserPointer.visible = true;
 
                 laserPointer.hideTimer = setInterval(function () {
-                    if (new Date().valueOf() - laserPointer.lastMessage > 100) {
+                    if (new Date().valueOf() - laserPointer.lastMessage > 200) {
                         if (laserPointer.visible) {
                             laserPointer.visible = false;
                             $("#rs-laser-dot").fadeOut("fast");
@@ -88,7 +96,7 @@
                             clearInterval(laserPointer.hideTimer);
                         }
                     }
-                }, 100)
+                }, 200)
             }
 
             $("#rs-laser-dot").css("left", cx).css("top", cy);

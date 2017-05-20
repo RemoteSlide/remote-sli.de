@@ -235,7 +235,16 @@
                 $scope.settings = {
                     navigationType: 'button',
                     vibration: true,
-                    laserOffsets: {},
+                    laserCalibration: {
+                        center: {
+                            yaw: 0,
+                            pitch: 0
+                        },
+                        range: {
+                            yaw: 90,
+                            pitch: 90
+                        }
+                    },
 
                     put: function (name, value) {
                         $timeout(function () {
@@ -377,7 +386,7 @@
                             bottomLeft: [],
                             bottomRight: []
                         },
-                        active: true,
+                        active: false,
                         step: "center",
                         startCalibration: function () {
                             $scope.deviceOrientation.calibration.step = "center";// reset step
@@ -393,11 +402,17 @@
                             $scope.deviceOrientation.center.pitch = $scope.deviceOrientation.calibration.angles.center[1];
 
                             // Ranges
-                            $scope.deviceOrientation.range.yaw = ($scope.deviceOrientation.calibration.angles.topLeft[0] - $scope.deviceOrientation.calibration.angles.topRight[0]) + 10;
-                            $scope.deviceOrientation.range.pitch = ($scope.deviceOrientation.calibration.angles.topLeft[1] - $scope.deviceOrientation.calibration.angles.bottomLeft[1]) + 10;
+                            $scope.deviceOrientation.range.yaw = Math.abs((($scope.deviceOrientation.calibration.angles.topLeft[0] + $scope.deviceOrientation.calibration.angles.bottomLeft[0]) / 2) - (($scope.deviceOrientation.calibration.angles.topRight[0] + $scope.deviceOrientation.calibration.angles.bottomRight[0]) / 2));
+                            $scope.deviceOrientation.range.pitch = Math.abs((($scope.deviceOrientation.calibration.angles.topLeft[1] + $scope.deviceOrientation.calibration.angles.topRight[1]) / 2) - (($scope.deviceOrientation.calibration.angles.bottomLeft[1] + $scope.deviceOrientation.calibration.angles.bottomRight[1]) / 2));
 
                             console.info("Center: " + $scope.deviceOrientation.center.yaw + ", " + $scope.deviceOrientation.center.pitch)
                             console.info("Range:  " + $scope.deviceOrientation.range.yaw + ", " + $scope.deviceOrientation.range.pitch)
+
+                            $scope.settings.laserCalibration = {
+                                center: $scope.deviceOrientation.center,
+                                range: $scope.deviceOrientation.range
+                            };
+                            $scope.settings.save();
 
                             $scope.deviceOrientation.calibration.sendRange($scope.deviceOrientation.range.yaw, $scope.deviceOrientation.range.pitch)
                         },
@@ -429,7 +444,9 @@
                             }
                             $scope.deviceOrientation.calibration.angles[$scope.deviceOrientation.calibration.step] = [$scope.deviceOrientation.lastAlpha, $scope.deviceOrientation.lastBeta];
                             console.log(JSON.stringify($scope.deviceOrientation.calibration.angles))
-                            $scope.deviceOrientation.calibration.nextStep();
+                            $timeout(function () {
+                                $scope.deviceOrientation.calibration.nextStep();
+                            }, 250);
                         }
                     },
                     updateYawOffset: function () {// Use the current device yaw as the new offset
@@ -439,7 +456,8 @@
                     },
                     getVector: function () {
                         if ($scope.deviceOrientation.center.yaw == 0) {
-                            $scope.deviceOrientation.center.yaw = $scope.settings.yawOffset;
+                            $scope.deviceOrientation.center = $scope.settings.laserCalibration.center;
+                            $scope.deviceOrientation.range = $scope.settings.laserCalibration.range;
                         }
 //                        return [$scope.deviceOrientation.lastAlpha, $scope.deviceOrientation.lastBeta, $scope.deviceOrientation.lastGamma]
 //                        var pitch = ($scope.deviceOrientation.lastBeta * Math.PI) / 180;
@@ -462,17 +480,17 @@
                         //TODO: change 45 to a calibrated value (angle from center)
                         yaw -= yawCenter;
                         $scope.deviceOrientation.currentYaw = yaw;
-                        if (yaw > (yawRange / 2))yaw = (yawRange / 2);
-                        if (yaw < (-(yawRange / 2)))yaw = (-(yawRange / 2));
-                        yaw += (pitchRange / 2);
+                        if (yaw > (yawRange))yaw = (yawRange);
+                        if (yaw < (-(yawRange)))yaw = (-(yawRange));
+                        yaw += (yawRange/2);
 
                         // taking 0 as center
                         //TODO: change 45 to a calibrated value (angle from center)
                         pitch -= pitchCenter;
                         $scope.deviceOrientation.currentPitch = pitch;
-                        if (pitch > (pitchRange / 2))pitch = (pitchRange / 2);
-                        if (pitch < (-(pitchRange / 2)))pitch = (-(pitchRange / 2));
-                        pitch += (pitchRange / 2);
+                        if (pitch > (pitchRange))pitch = (pitchRange);
+                        if (pitch < (-(pitchRange)))pitch = (-(pitchRange));
+                        pitch += (pitchRange/2);
 
                         //TODO: also consider the 'gamma' value for a more accurate pitch/yaw
                         // https://engineering.stackexchange.com/questions/3348/calculating-pitch-yaw-and-roll-from-mag-acc-and-gyro-data
@@ -713,7 +731,7 @@
                 $("#btn-control-laser").on("mousedown touchstart", function () {
                     laserDataTimer = setInterval(function () {
                         $scope.deviceOrientation.sendData();
-                    }, 20);
+                    }, 50);
                 }).on("mouseup touchend mouseleave", function () {
                     clearInterval(laserDataTimer)
                 })
