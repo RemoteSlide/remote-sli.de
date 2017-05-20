@@ -147,7 +147,7 @@ io.on('connection', function (socket) {
             }
         }
 
-        socket.emit("init", {state: "success"});
+        socket.emit("init", {state: "success", youAre: clientType});
         console.log("[+]" + (clientType == 'host' ? "Host" : clientType == 'remote' ? "Remote" : clientType == 'observer' ? "Observer" : "???" ) + " for #" + sessionId + " connected (Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)");
     });
 
@@ -234,7 +234,7 @@ io.on('connection', function (socket) {
         }
     })
 
-    socket.on("orientationRange",function(data) {
+    socket.on("orientationRange", function (data) {
         console.log(data)
         if (!socket.sessionId || !socket.clientType) {
             socket.emit("err", {code: 400, msg: "Invalid session"});

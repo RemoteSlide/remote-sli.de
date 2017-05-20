@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="slideApp" ng-controller="slideController" style="touch-action: none;" id="outer-html-wrapper">
+<html ng-app="slideApp" ng-controller="slideController" ng-style="(session.type=='remote' && settings.navigationType=='swipe') && {'touch-action':'none'}" id="outer-html-wrapper">
     <head>
         <title>Remote Slide</title>
         <link id="favicon" rel="shortcut icon" type="image/png" href="/favicon.png"/>
@@ -231,6 +231,14 @@
             });
 
             authApp.controller("slideController", ["$scope", "$route", "$cookies", "$location", "$http", "$interval", "$timeout", "$window", function ($scope, $route, $cookies, $location, $http, $interval, $timeout, $window) {
+                window.__$scope = $scope;
+
+                $scope.session = {
+                    session: "",
+                    qr: "",
+                    bookmarkContent: "",
+                    type: ""
+                };
                 //TODO: disable some (most) settings for the host
                 $scope.settings = {
                     navigationType: 'button',
@@ -482,7 +490,7 @@
                         $scope.deviceOrientation.currentYaw = yaw;
                         if (yaw > (yawRange))yaw = (yawRange);
                         if (yaw < (-(yawRange)))yaw = (-(yawRange));
-                        yaw += (yawRange/2);
+                        yaw += (yawRange / 2);
 
                         // taking 0 as center
                         //TODO: change 45 to a calibrated value (angle from center)
@@ -490,7 +498,7 @@
                         $scope.deviceOrientation.currentPitch = pitch;
                         if (pitch > (pitchRange))pitch = (pitchRange);
                         if (pitch < (-(pitchRange)))pitch = (-(pitchRange));
-                        pitch += (pitchRange/2);
+                        pitch += (pitchRange / 2);
 
                         //TODO: also consider the 'gamma' value for a more accurate pitch/yaw
                         // https://engineering.stackexchange.com/questions/3348/calculating-pitch-yaw-and-roll-from-mag-acc-and-gyro-data
@@ -505,12 +513,6 @@
             }]);
 
             authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", function ($scope, $http, $cookies, $timeout, $interval, $location) {
-                $scope.session = {
-                    session: "",
-                    qr: "",
-                    bookmarkContent: ""
-                };
-
                 $http.get("/api/session").then(function (data) {
                     data = data.data;
                     $scope.session = data;
@@ -534,6 +536,7 @@
                                 console.info("Session initialized.")
                                 $timeout(function () {
                                     $scope.session.initialized = true;
+                                    $scope.session.type = data.youAre;
                                     $scope.statusIcon.showMessage("check", "lime");
 
                                     // Notify extension
@@ -546,6 +549,9 @@
                                 $timeout(function () {
                                     $scope.statusIcon.showMessage("times", "red", "Session not found", 20000);
                                 })
+                                $timeout(function () {
+                                    window.location.reload(true);
+                                }, 500);
                             }
                         })
                         socket.on("info", function (data) {
@@ -575,10 +581,7 @@
 
             authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", "$routeParams", "$window", function ($scope, $http, $cookies, $timeout, $interval, $location, $routeParams, $window) {
                 var socket = io();
-                $scope.session = {
-                    session: $routeParams.session,
-                    initialized: false
-                };
+                $scope.session.session = $routeParams.session;
 
                 $scope.sendControl = function (keyCode, keys) {
                     socket.emit("control", {keyCode: keyCode, keys: keys});
@@ -650,6 +653,7 @@
                         console.info("Session initialized.")
                         $timeout(function () {
                             $scope.session.initialized = true;
+                            $scope.session.type = data.youAre;
                             $scope.statusIcon.showMessage("check", "lime", "Connected", 2500);
                         });
                     } else if (data.state == "not_found") {
@@ -657,6 +661,9 @@
                         $timeout(function () {
                             $scope.statusIcon.showMessage("times", "red", "Session not found", 20000);
                         })
+                        $timeout(function () {
+                            window.location = "https://remote-sli.de";
+                        }, 1500);
                     }
                 })
                 socket.on("control", function (data) {
