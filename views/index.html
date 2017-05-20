@@ -306,7 +306,7 @@
                             }
                             if ($scope.settings.vibration) {
                                 if (type == "times") {// error
-                                    window.navigator.vibrate(100, 100);
+                                    window.navigator.vibrate([100, 30, 100]);
                                 } else {// info
                                     window.navigator.vibrate(200);
                                 }
