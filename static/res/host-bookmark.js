@@ -1,12 +1,9 @@
 (function () {
     $.getScript("https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js", function () {
-        $.getScript("https://remote-sli.de/js/vector.js");
-
-        var socket = io("https://remote-sli.de");
-
         $("body").append("<div id='remoteSlideOverlayHtmlContainer'></div>");
         $("#remoteSlideOverlayHtmlContainer").load("https://remote-sli.de/res/overlay.html");
 
+        var socket = io("https://remote-sli.de");
         socket.on("init", function (data) {
             if (data.state == "start") {
                 console.info("Initializing session #" + remote_slide.session);
@@ -30,6 +27,19 @@
             console.log("Remote Key Event: " + (ctrlKey ? "[ctrl] + " : shiftKey ? "[shift] + " : altKey ? "[alt] + " : "") + keyCode);
             keyEvent(keyCode, ctrlKey, shiftKey, altKey);
         });
+        function keyEvent(keyCode, ctrlKey, shiftKey, altKey) {
+            var event = new Event("keydown");
+            event.keyCode = keyCode;
+            event.which = keyCode;
+
+            event.ctrlKey = ctrlKey;
+            event.shiftKey = shiftKey;
+            event.altKey = altKey;
+
+            document.dispatchEvent(event);
+            document.body.dispatchEvent(event);
+            window.dispatchEvent(event);
+        }
 
         var laserPointer = {
             setupVectorsRaw: [
@@ -66,12 +76,10 @@
             cx = screenWidth - cx;
 
 
-
             cy = screenHeight - cy;
 
 
-
-            $(".laser-pos").text(cx+", "+cy)
+            $(".laser-pos").text(cx + ", " + cy)
             cx = Math.min(screenWidth, cx);
             cy = Math.min(screenHeight, cy);
             cx = Math.max(0, cx);
@@ -119,65 +127,6 @@
             laserPointer.range = msg;
         })
 
-        // TODO: understand this shit
-        function mmulti(a, b) {
-            if (a.length != b.length)
-                return undefined;
-
-            var c = [];
-            var m = a.length;
-            var n = b[0].length;
-            var l = a[0].length;
-
-            for (var i = 0; i < m; i++) {
-                var r = [];
-                for (var j = 0; j < n; j++) {
-                    var t = 0.0;
-                    for (var k = 0; k < l; k++) {
-                        t += a[i][k] * b[k][j];
-                    }
-                    r.push(t);
-                }
-                c.push(r);
-            }
-            return c;
-        }
-
-        // TODO: understand this shit
-        function rv_to_rot(x, y, z) {
-            var xx = Math.pow(x, 2);
-            var yy = Math.pow(y, 2);
-            var zz = Math.pow(z, 2);
-            var w = 1.0 - xx - yy - zz;
-
-            var xy = x * y;
-            var zw = z * w;
-            var xz = x * z;
-            var yw = y * w;
-            var yz = y * z;
-            var xw = x * w;
-
-            return [
-                [1.0 - 2 * yy - 2 * zz, 2 * xy - 2 * zw, 2 * xz + 2 * yw],
-                [2 * xy + 2 * zw, 1.0 - 2 * xx - 2 * zz, 2 * yz - 2 * xw],
-                [2 * xz - 2 * yw, 2 * yz + 2 * xw, 1 - 2 * xx - 2 * yy]
-            ]
-        }
-
-
-        function keyEvent(keyCode, ctrlKey, shiftKey, altKey) {
-            var event = new Event("keydown");
-            event.keyCode = keyCode;
-            event.which = keyCode;
-
-            event.ctrlKey = ctrlKey;
-            event.shiftKey = shiftKey;
-            event.altKey = altKey;
-
-            document.dispatchEvent(event);
-            document.body.dispatchEvent(event);
-            window.dispatchEvent(event);
-        }
 
         socket.on("err", function (msg) {
             alert("Slide Error #" + msg.code + ": " + msg.msg)
