@@ -10,14 +10,15 @@
 </div>
 
 <!-- Laser -->
-<div id='rs-laser-dot' style='width: 1px; height: 1px; border: solid red; position: absolute; z-index: 9999; display: none;'><span class="laser-pos"></span></div>
+<div id='rs-laser-dot' style='width: 1px; height: 1px; border: solid red; position: fixed; z-index: 9999; display: none;'><span class="laser-pos"></span></div>
 
 
 <!-- Laser Calibration -->
 <style>
     .laser-calibration-dot {
-        position: absolute;
+        position: fixed;
         color: lime;
+        z-index: 9999;
     }
 
     .laser-calibration-dot.topLeft {
