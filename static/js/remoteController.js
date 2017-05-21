@@ -74,6 +74,8 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                 $scope.session.initialized = true;
                 $scope.session.type = data.youAre;
                 $scope.statusIcon.showMessage("check", "lime", "Connected", 2500);
+
+                $scope.sendLaserStyle();// Directly send on load, since the host doesn't know the style yet
             });
         } else if (data.state == "not_found") {
             console.warn("Session not found");
@@ -321,7 +323,12 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
     }).on("mouseup touchend mouseleave", function () {
         $timeout(function () {
             $scope.deviceOrientation.laserActive = false;
-        });
+        }, 250);
         clearInterval(laserDataTimer)
     })
+
+    $scope.sendLaserStyle = function () {
+        console.log($scope.settings.laserStyle)
+        socket.emit("laserStyle", {style: $scope.settings.laserStyle});
+    };
 }]);

@@ -21,6 +21,10 @@ authApp.controller("slideController", ["$scope", "$route", "$cookies", "$locatio
                 pitch: 90
             }
         },
+        laserStyle: {
+            color: "red",
+            'font-size': 15
+        },
 
         put: function (name, value) {
             $timeout(function () {

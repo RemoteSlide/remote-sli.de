@@ -9,17 +9,23 @@ socket.on("init", function (data) {
     } else if (data.state == "success") {
         console.info("Session initialized");
         status("green", "check", "", 5000);
-        chrome.runtime.sendMessage({action: "session_initialized"}, function (response) {
-        });
+        try {
+            chrome.runtime.sendMessage({action: "session_initialized"}, function (response) {
+            });
+        } catch (ignored) {
+        }
     }
 });
-chrome.extension.onMessage.addListener(function (msg, sender, sendResponse) {
-    console.log(msg)
-    if (msg.action == 'state_request') {
-        chrome.runtime.sendMessage({action: "session_initialized"}, function (response) {
-        });
-    }
-});
+try {
+    chrome.extension.onMessage.addListener(function (msg, sender, sendResponse) {
+        console.log(msg)
+        if (msg.action == 'state_request') {
+            chrome.runtime.sendMessage({action: "session_initialized"}, function (response) {
+            });
+        }
+    });
+} catch (ignored) {
+}
 
 socket.on("control", function (msg) {
     var keyCode = msg.keyCode;
@@ -78,6 +84,16 @@ var laserPointer = {
     setupVectors: [],
     currentVectorRaw: [],
     currentVector: [],
+    style: {
+        color: 'red'
+        //TODO: width & height
+    },
+    applyStyle: function () {
+        var element = $("#rs-laser-dot");
+        $.each(laserPointer.style, function (key, value) {
+            element.css(key, value);
+        })
+    },
     range: {
         yaw: 90,// default
         pitch: 90// default
@@ -153,7 +169,10 @@ socket.on("orientationRange", function (msg) {
     console.info(msg)
     laserPointer.range = msg;
 })
-
+socket.on("laserStyle", function (msg) {
+    laserPointer.style = msg.style;
+    laserPointer.applyStyle();
+});
 
 socket.on("err", function (msg) {
     alert("Slide Error #" + msg.code + ": " + msg.msg)
