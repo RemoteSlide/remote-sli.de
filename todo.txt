@@ -8,3 +8,4 @@
 - draw effect under finder when swiping
 - laser calibration (4 corners, to set the offset angle)
 - presentation timer
+- option to keep screen active

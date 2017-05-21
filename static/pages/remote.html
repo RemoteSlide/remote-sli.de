@@ -83,3 +83,47 @@
         </div>
     </div>
 </div>
+
+<div id="settingsModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title">Settings</h5>
+            </div>
+
+            <div class="modal-body">
+                <div>
+                    <div class="form-group">
+                        <div>
+                            <label for="navigationTypeButtons">Navigation Method</label>
+                        </div>
+                        <div class="btn-group" id="navigationTypeButtons">
+                            <button class="btn controls-toggle" id="controls-toggle-buttons" ng-click="settings.put('navigationType','button')" ng-class="{'btn-success':settings.navigationType=='button'}">Buttons</button>
+                            <button class="btn controls-toggle" id="controls-toggle-swipe" ng-click="settings.put('navigationType','swipe')" ng-class="{'btn-success':settings.navigationType=='swipe'}">Swipe</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="checkbox">
+                            <label>
+                                <input id="controls-vibration" type="checkbox" ng-model="settings.vibration" ng-change="settings.save()">
+                                Vibration
+                            </label>
+                        </div>
+                    </div>
+
+                    <br/>
+                    <div>
+                        <div>
+                            <label>Laser Pointer</label>
+                        </div>
+                        <div>
+                            <button class="btn" ng-class="{'btn-success':deviceOrientation.calibration.active, 'btn-primary':!deviceOrientation.calibration.active}" ng-click="deviceOrientation.calibration.toggleCalibration()">{{ deviceOrientation.calibration.active ? "Calibration active! Tap to stop" : "Start Laser Calibration" }}</button>
+                            <!--<span class="help-block">Point your phone at the screen and tap the button above</span>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
