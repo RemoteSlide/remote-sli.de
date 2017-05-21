@@ -90,77 +90,6 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             window.navigator.vibrate(50);
     })
 
-    $scope.deviceOrientation.sendData = function () {
-        if ($scope.deviceOrientation.calibration.active) {
-            $scope.deviceOrientation.calibration.onCalibrationStepFinished($scope.deviceOrientation.getVector());
-            return;
-        }
-        console.log(JSON.stringify($scope.deviceOrientation.getVector()))
-        socket.emit("deviceOrientation", {v: $scope.deviceOrientation.getVector()})
-    };
-    $scope.deviceOrientation.calibration.showOrHidePosition = function (action, which) {
-        socket.emit("calibrationDot", {action: action, which: which});
-    };
-    $scope.deviceOrientation.calibration.sendRange = function (yaw, pitch) {
-        socket.emit("orientationRange", {yaw: yaw, pitch: pitch})
-    };
-    window.laserPointer = $scope.deviceOrientation;
-    window.addEventListener("deviceorientation", function (event) {
-        var absolute = event.absolute;
-        var alpha = event.alpha;//  yaw (rotation) | z-axis | [0-360]
-        var beta = event.beta;//    pitch          | x-axis | [-180-180]
-        var gamma = event.gamma;//  roll           | y-axis | [-90-90]
-
-        if (Math.abs(alpha - $scope.deviceOrientation.lastAlpha) > 0.2 ||
-            Math.abs(beta - $scope.deviceOrientation.lastBeta) > 0.2 ||
-            Math.abs(gamma - $scope.deviceOrientation.lastGamma) > 0.2) {
-
-            alpha -= 180;
-
-            /*
-             // push the original values before modification
-             $scope.deviceOrientation.previousOrientations.push([alpha, beta, gamma]);
-
-             // take averages to smooth
-             var length = $scope.deviceOrientation.previousOrientations.length;
-             if (length > 0) {
-             $scope.deviceOrientation.previousOrientations.forEach(function (orientation) {
-             alpha += orientation[0];
-             beta += orientation[1];
-             gamma += orientation[2];
-             });
-             alpha /= length;
-             beta /= length;
-             gamma /= length;
-             }
-             */
-
-            // save the smoothed values
-            $scope.deviceOrientation.lastAlpha = alpha;
-            $scope.deviceOrientation.lastBeta = beta;
-            $scope.deviceOrientation.lastGamma = gamma;
-
-            // remove the oldest orientation
-            // TODO: maybe make smoothness level configurable
-            if ($scope.deviceOrientation.previousOrientations.length > 4) {
-                $scope.deviceOrientation.previousOrientations.shift();
-            }
-
-
-//                        console.log(" ")
-//                        console.log("alpha: " + alpha)
-//                        console.log(" beta: " + beta)
-//                        console.log("gamma: " + gamma)
-        }
-    }, true);
-    var laserDataTimer;
-    $("#btn-control-laser").on("mousedown touchstart", function () {
-        laserDataTimer = setInterval(function () {
-            $scope.deviceOrientation.sendData();
-        }, 50);
-    }).on("mouseup touchend mouseleave", function () {
-        clearInterval(laserDataTimer)
-    })
 
     socket.on("err", function (data) {
         console.warn("err: " + JSON.stringify(data))
@@ -262,6 +191,12 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                 $timeout(function () {
                     $scope.deviceOrientation.calibration.nextStep();
                 }, 250);
+            },
+            showOrHidePosition: function (action, which) {
+                socket.emit("calibrationDot", {action: action, which: which});
+            },
+            sendRange: function (yaw, pitch) {
+                socket.emit("orientationRange", {yaw: yaw, pitch: pitch})
             }
         },
         updateYawOffset: function () {// Use the current device yaw as the new offset
@@ -315,6 +250,71 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                 yaw,
                 pitch
             ]
+        },
+        sendData: function () {
+            if ($scope.deviceOrientation.calibration.active) {
+                $scope.deviceOrientation.calibration.onCalibrationStepFinished($scope.deviceOrientation.getVector());
+                return;
+            }
+            console.log(JSON.stringify($scope.deviceOrientation.getVector()))
+            socket.emit("deviceOrientation", {v: $scope.deviceOrientation.getVector()})
         }
     };
+    window.laserPointer = $scope.deviceOrientation;
+    window.addEventListener("deviceorientation", function (event) {
+        var absolute = event.absolute;
+        var alpha = event.alpha;//  yaw (rotation) | z-axis | [0-360]
+        var beta = event.beta;//    pitch          | x-axis | [-180-180]
+        var gamma = event.gamma;//  roll           | y-axis | [-90-90]
+
+        if (Math.abs(alpha - $scope.deviceOrientation.lastAlpha) > 0.2 ||
+            Math.abs(beta - $scope.deviceOrientation.lastBeta) > 0.2 ||
+            Math.abs(gamma - $scope.deviceOrientation.lastGamma) > 0.2) {
+
+            alpha -= 180;
+
+            /*
+             // push the original values before modification
+             $scope.deviceOrientation.previousOrientations.push([alpha, beta, gamma]);
+
+             // take averages to smooth
+             var length = $scope.deviceOrientation.previousOrientations.length;
+             if (length > 0) {
+             $scope.deviceOrientation.previousOrientations.forEach(function (orientation) {
+             alpha += orientation[0];
+             beta += orientation[1];
+             gamma += orientation[2];
+             });
+             alpha /= length;
+             beta /= length;
+             gamma /= length;
+             }
+             */
+
+            // save the smoothed values
+            $scope.deviceOrientation.lastAlpha = alpha;
+            $scope.deviceOrientation.lastBeta = beta;
+            $scope.deviceOrientation.lastGamma = gamma;
+
+            // remove the oldest orientation
+            // TODO: maybe make smoothness level configurable
+            if ($scope.deviceOrientation.previousOrientations.length > 4) {
+                $scope.deviceOrientation.previousOrientations.shift();
+            }
+
+
+//                        console.log(" ")
+//                        console.log("alpha: " + alpha)
+//                        console.log(" beta: " + beta)
+//                        console.log("gamma: " + gamma)
+        }
+    }, true);
+    var laserDataTimer;
+    $("#btn-control-laser").on("mousedown touchstart", function () {
+        laserDataTimer = setInterval(function () {
+            $scope.deviceOrientation.sendData();
+        }, 50);
+    }).on("mouseup touchend mouseleave", function () {
+        clearInterval(laserDataTimer)
+    })
 }]);
