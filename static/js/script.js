@@ -193,14 +193,26 @@ authApp.controller("slideController", ["$scope", "$route", "$cookies", "$locatio
             },
             active: false,
             step: "center",
+            toggleCalibration: function () {
+                if (!$scope.deviceOrientation.calibration.active) {
+                    $scope.deviceOrientation.calibration.startCalibration();
+                } else {
+                    $scope.deviceOrientation.calibration.active = false;
+                    $scope.deviceOrientation.calibration.showOrHidePosition("hide", "all");
+                }
+            },
             startCalibration: function () {
                 $scope.deviceOrientation.calibration.step = "center";// reset step
                 $scope.deviceOrientation.calibration.active = true;
 
+                $scope.deviceOrientation.calibration.showOrHidePosition("show", "start");
                 $scope.deviceOrientation.calibration.showOrHidePosition("show", "center");
+
+                $("#settingsModal").modal("hide");
             },
             onCalibrationFinished: function () {
                 $scope.deviceOrientation.calibration.active = false;
+                $scope.deviceOrientation.calibration.showOrHidePosition("hide", "all");
 
                 // Center
                 $scope.deviceOrientation.center.yaw = $scope.deviceOrientation.calibration.angles.center[0];
@@ -219,7 +231,7 @@ authApp.controller("slideController", ["$scope", "$route", "$cookies", "$locatio
                 };
                 $scope.settings.save();
 
-                $scope.deviceOrientation.calibration.sendRange($scope.deviceOrientation.range.yaw, $scope.deviceOrientation.range.pitch)
+                $scope.deviceOrientation.calibration.sendRange($scope.deviceOrientation.range.yaw, $scope.deviceOrientation.range.pitch);
             },
             nextStep: function () {
                 var currentStep = $scope.deviceOrientation.calibration.step;

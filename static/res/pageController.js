@@ -9,6 +9,15 @@ socket.on("init", function (data) {
     } else if (data.state == "success") {
         console.info("Session initialized");
         status("green", "check", "", 5000);
+        chrome.runtime.sendMessage({action: "session_initialized"}, function (response) {
+        });
+    }
+});
+chrome.extension.onMessage.addListener(function (msg, sender, sendResponse) {
+    console.log(msg)
+    if (msg.action == 'state_request') {
+        chrome.runtime.sendMessage({action: "session_initialized"}, function (response) {
+        });
     }
 });
 
@@ -132,7 +141,7 @@ socket.on("deviceOrientation", function (msg) {
 socket.on("calibrationDot", function (msg) {
     var action = msg.action;
     var which = msg.which;
-    var $element = $(".laser-calibration-dot." + which);
+    var $element = which == 'all' ? $(".laser-calibration-dot, .laser-calibration-backdrop") : which == 'start' ? $(".laser-calibration-backdrop") : $(".laser-calibration-dot." + which);
     if (action == 'show') {
         $element.fadeIn();
     } else if (action == 'hide') {

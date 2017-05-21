@@ -151,7 +151,7 @@
                                     <label>Rotation Offset</label>
                                 </div>
                                 <div>
-                                    <button class="btn" ng-click="deviceOrientation.calibration.startCalibration()">Start Laser Calibration</button>
+                                    <button class="btn" ng-class="{'btn-success':deviceOrientation.calibration.active, 'btn-primary':!deviceOrientation.calibration.active}" ng-click="deviceOrientation.calibration.toggleCalibration()">{{ deviceOrientation.calibration.active ? "Calibration active! Tap to stop" : "Start Laser Calibration" }}</button>
                                     <!--<span class="help-block">Point your phone at the screen and tap the button above</span>-->
                                 </div>
                             </div>

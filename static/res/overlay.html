@@ -21,6 +21,15 @@
         z-index: 9999;
     }
 
+    .laser-calibration-backdrop {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
     .laser-calibration-dot.topLeft {
         left: 10px;
         top: 10px;
@@ -47,29 +56,30 @@
     }
 </style>
 <div>
+    <div class="laser-calibration-backdrop" style="display:none;"></div>
     <div><!-- Top Left -->
         <div class="laser-calibration-dot topLeft" style="display: none;">
-            <i class="fa fa-plus" aria-hidden="true"></i>
+            <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
         </div>
     </div>
     <div><!-- Top Right -->
         <div class="laser-calibration-dot topRight" style="display: none;">
-            <i class="fa fa-plus" aria-hidden="true"></i>
+            <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
         </div>
     </div>
     <div><!-- Center -->
         <div class="laser-calibration-dot center" style="display: none;">
-            <i class="fa fa-plus" aria-hidden="true"></i>
+            <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
         </div>
     </div>
     <div><!-- Bottom Left -->
         <div class="laser-calibration-dot bottomLeft" style="display: none;">
-            <i class="fa fa-plus" aria-hidden="true"></i>
+            <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
         </div>
     </div>
     <div><!-- Bottom Right -->
         <div class="laser-calibration-dot bottomRight" style="display: none;">
-            <i class="fa fa-plus" aria-hidden="true"></i>
+            <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
         </div>
     </div>
 </div>
