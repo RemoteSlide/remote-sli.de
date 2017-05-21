@@ -110,6 +110,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             yaw: 0,
             pitch: 0
         },
+        laserActive: false,
         calibration: {
             angles: {
                 center: [],
@@ -309,16 +310,18 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
 //                        console.log("gamma: " + gamma)
         }
     }, true);
-    var laserStartTimeout;
     var laserDataTimer;
     $("#btn-control-laser").on("mousedown touchstart", function () {
-        laserStartTimeout = setTimeout(function () {
-            laserDataTimer = setInterval(function () {
-                $scope.deviceOrientation.sendData();
-            }, 50);
-        }, 500);
+        $timeout(function () {
+            $scope.deviceOrientation.laserActive = true;
+        });
+        laserDataTimer = setInterval(function () {
+            $scope.deviceOrientation.sendData();
+        }, 50);
     }).on("mouseup touchend mouseleave", function () {
-        clearTimeout(laserStartTimeout);
+        $timeout(function () {
+            $scope.deviceOrientation.laserActive = false;
+        });
         clearInterval(laserDataTimer)
     })
 }]);
