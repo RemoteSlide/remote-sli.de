@@ -25,3 +25,29 @@
         <a class="btn btn-primary" href="" id="session-bookmark">Bookmark</a>
     </div>
 </div>
+
+<div id="qrScannerModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="qrCodeScan.stop()"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title">QR Code Scan</h5>
+            </div>
+
+            <div class="modal-body">
+                <div>
+                    <div ng-show="qrCodeScan.status=='none'">Loading...</div>
+                    <div ng-show="qrCodeScan.status=='scanning'">Scanning... (this might take a few seconds)</div>
+                    <div ng-show="qrCodeScan.status=='success'">Done! Redirecting...</div>
+                    <div ng-show="qrCodeScan.status=='videoError'">Couldn't get video. Please make sure your camera is enabled.</div>
+                    <div ng-show="qrCodeScan.status=='cancelled'">Cancelled.</div>
+                </div>
+                <div>
+                    <div ng-class="{'scanning': qrCodeScan.status=='scanning'}">
+                        <div id="qrScanner" style="width: 100%;height:100%;min-height: 300px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

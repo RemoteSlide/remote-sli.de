@@ -97,47 +97,6 @@ authApp.controller("slideController", ["$scope", "$route", "$cookies", "$locatio
         }
     };
 
-    $scope.qrCodeScan = {
-        start: function () {
-            $("#qrScanner").empty();
-
-            $("#qrScannerModal").modal("show");
-            $timeout(function () {
-                $scope.qrCodeScan.status = "scanning";
-                $("#qrScanner").html5_qrcode(function (data) {
-                    console.info(data)
-                    //TODO show different status on invalid data
-                    $timeout(function () {
-                        $scope.qrCodeScan.status = "success";
-                        if (data.startsWith("https://remote-sli.de/")) {
-                            $timeout(function () {
-                                window.location = data;
-                            }, 100);
-                        }
-                    }, 50);
-                }, function (error) {
-                    console.warn("error:")
-                    console.warn(error)
-                }, function (videoError) {
-                    console.warn("Video error:")
-                    console.warn(videoError);
-                    $timeout(function () {
-                        $scope.qrCodeScan.status = "videoError";
-                    })
-                })
-            }, 250);
-        },
-        stop: function () {
-            $scope.qrCodeScan.status = "cancelled";
-            $("#qrScanner").html5_qrcode_stop()
-        },
-        cameraToggle: false,// switch front/back camera
-        flipCamera: function () {
-            $scope.qrCodeScan.cameraToggle = !$scope.qrCodeScan.cameraToggle;
-        },
-        status: 'none'
-    }
-
 //TODO: move to remote
     $scope.deviceOrientation = {
         lastAlpha: 0,// Yaw
