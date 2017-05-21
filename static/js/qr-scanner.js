@@ -39,7 +39,7 @@ angular.module('qrScanner', ["ng"]).directive('qrScanner', ['$interval', '$windo
     
       var scan = function() {
         if ($window.localMediaStream) {
-          context.drawImage(video, 0, 0, 307,250);
+          context.drawImage(video, 0, 0, width,height);
           try {
             qrcode.decode();
           } catch(e) {
