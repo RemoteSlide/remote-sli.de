@@ -309,12 +309,16 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
 //                        console.log("gamma: " + gamma)
         }
     }, true);
+    var laserStartTimeout;
     var laserDataTimer;
     $("#btn-control-laser").on("mousedown touchstart", function () {
-        laserDataTimer = setInterval(function () {
-            $scope.deviceOrientation.sendData();
-        }, 50);
+        laserStartTimeout = setTimeout(function () {
+            laserDataTimer = setInterval(function () {
+                $scope.deviceOrientation.sendData();
+            }, 50);
+        }, 500);
     }).on("mouseup touchend mouseleave", function () {
+        clearTimeout(laserStartTimeout);
         clearInterval(laserDataTimer)
     })
 }]);
