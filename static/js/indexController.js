@@ -105,3 +105,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
         status: 'none'
     };
 }]);
+
+$("#session-bookmark").on("click", function (e) {
+    e.preventDefault();
+})
