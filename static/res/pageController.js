@@ -27,6 +27,29 @@ try {
 } catch (ignored) {
 }
 
+var settings = {
+    navigationType: 'button',
+    vibration: true,
+    laserCalibration: {
+        center: {
+            yaw: 0,
+            pitch: 0
+        },
+        range: {
+            yaw: 90,
+            pitch: 90
+        }
+    },
+    laserStyle: {
+        color: "red",
+        'font-size': 15
+    }
+};
+socket.on("settings", function (msg) {
+    settings = msg.settings;
+});
+window.__remoteSlideSettings=settings;
+
 socket.on("control", function (msg) {
     var keyCode = msg.keyCode;
     var ctrlKey = msg.keys && msg.keys.ctrl;

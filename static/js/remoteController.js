@@ -42,25 +42,6 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
 
 
     // Init
-    socket.on("info", function (data) {
-        console.log(data);
-        if (data.type == 'client_connected') {
-            if (data.clientType == 'remote') {
-//                            $scope.statusIcon.showMessage("Remote connected", 2500);
-            } else if (data.clientType == 'host') {
-                $scope.statusIcon.showMessage("check", "lime", "Host connected", 2500);
-            }
-        }
-        if (data.type == 'client_disconnected') {
-            if (data.clientType == 'remote') {
-//                            $scope.statusIcon.showMessage("Remote disconnected", 2500);
-            } else if (data.clientType == 'host') {
-                $scope.statusIcon.showMessage("times", "red", "Host disconnected", 2000, function () {
-                    $scope.statusIcon.showMessage("check", "lime");
-                });
-            }
-        }
-    });
     socket.on("init", function (data) {
         console.log("init: " + JSON.stringify(data));
         if (data.state == "start") {
@@ -76,6 +57,8 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                 $scope.statusIcon.showMessage("check", "lime", "Connected", 2500);
 
                 $scope.sendLaserStyle();// Directly send on load, since the host doesn't know the style yet
+                // Synchronize settings
+                socket.emit("_forward", {event: "settings", settings: $scope.settings});
             });
         } else if (data.state == "not_found") {
             console.warn("Session not found");
@@ -87,6 +70,29 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             }, 1500);
         }
     })
+    socket.on("info", function (data) {
+        console.log(data);
+        if (data.type == 'client_connected') {
+            if (data.clientType == 'remote') {
+//                            $scope.statusIcon.showMessage("Remote connected", 2500);
+            } else if (data.clientType == 'host') {
+                $scope.statusIcon.showMessage("check", "lime", "Host connected", 2500);
+
+                // Synchronize settings
+                socket.emit("_forward", {event: "settings", settings: $scope.settings});
+            }
+        }
+        if (data.type == 'client_disconnected') {
+            if (data.clientType == 'remote') {
+//                            $scope.statusIcon.showMessage("Remote disconnected", 2500);
+            } else if (data.clientType == 'host') {
+                $scope.statusIcon.showMessage("times", "red", "Host disconnected", 2000, function () {
+                    $scope.statusIcon.showMessage("check", "lime");
+                });
+            }
+        }
+    });
+
     socket.on("control", function (data) {
         if ($scope.settings.vibration)
             window.navigator.vibrate(50);
