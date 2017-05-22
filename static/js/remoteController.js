@@ -196,10 +196,10 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                 }, 250);
             },
             showOrHidePosition: function (action, which) {
-                socket.emit("calibrationDot", {action: action, which: which});
+                socket.emit("_forward", {event: "calibrationDot", action: action, which: which});
             },
             sendRange: function (yaw, pitch) {
-                socket.emit("orientationRange", {yaw: yaw, pitch: pitch})
+                socket.emit("_forward", {event: "orientationRange", yaw: yaw, pitch: pitch})
             }
         },
         updateYawOffset: function () {// Use the current device yaw as the new offset
@@ -260,7 +260,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                 return;
             }
             console.log(JSON.stringify($scope.deviceOrientation.getVector()))
-            socket.emit("deviceOrientation", {v: $scope.deviceOrientation.getVector()})
+            socket.emit("_forward", {event: "deviceOrientation", v: $scope.deviceOrientation.getVector()})
         }
     };
     window.laserPointer = $scope.deviceOrientation;
@@ -329,6 +329,6 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
 
     $scope.sendLaserStyle = function () {
         console.log($scope.settings.laserStyle)
-        socket.emit("laserStyle", {style: $scope.settings.laserStyle});
+        socket.emit("_forward", {event: "laserStyle", style: $scope.settings.laserStyle});
     };
 }]);

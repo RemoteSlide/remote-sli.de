@@ -195,8 +195,7 @@ io.on('connection', function (socket) {
         }
     });
 
-    // TODO: this can probably all be moved to a 'forward' message, since it basically all does the same
-    socket.on("deviceOrientation", function (data) {
+    socket.on("_forward", function (data) {
         if (!socket.sessionId || !socket.clientType) {
             socket.emit("err", {code: 400, msg: "Invalid session"});
             return;
@@ -207,73 +206,31 @@ io.on('connection', function (socket) {
             return;
         }
 
-        if (session.host) {
-            session.host.emit("deviceOrientation", data);
-        } else {
-            //TODO: maybe change to err
-            socket.emit("info", {code: 200, msg: "Session host not yet connected"});
+        if (!data.event) {
+            socket.emit("err", {code: 400, msg: "Missing 'event' value for forward"});
+            return;
+        }
+        var event = data.event;
+        delete data.event;
+
+        if (socket.clientType == 'remote') {
+            if (session.host) {
+                session.host.emit(event, data);
+            } else {
+                //TODO: maybe change to err
+                socket.emit("info", {code: 200, msg: "Session host not yet connected"});
+            }
+        } else if (socket.clientType == 'host') {
+            if (session.remotes.length > 0) {
+                session.remotes.forEach(function (remote) {
+                    remote.emit(event, data);
+                })
+            } else {
+                //TODO: maybe change to err
+                socket.emit("info", {code: 200, msg: "No session remotes are connected yet"});
+            }
         }
     });
-
-    socket.on("calibrationDot", function (data) {
-        console.log(data)
-        if (!socket.sessionId || !socket.clientType) {
-            socket.emit("err", {code: 400, msg: "Invalid session"});
-            return;
-        }
-        var session = sessions[socket.sessionId];
-        if (!session) {
-            socket.emit("err", {code: 400, msg: "Invalid session"});
-            return;
-        }
-
-        if (session.host) {
-            session.host.emit("calibrationDot", data);
-        } else {
-            //TODO: maybe change to err
-            socket.emit("info", {code: 200, msg: "Session host not yet connected"});
-        }
-    })
-
-    socket.on("orientationRange", function (data) {
-        console.log(data)
-        if (!socket.sessionId || !socket.clientType) {
-            socket.emit("err", {code: 400, msg: "Invalid session"});
-            return;
-        }
-        var session = sessions[socket.sessionId];
-        if (!session) {
-            socket.emit("err", {code: 400, msg: "Invalid session"});
-            return;
-        }
-
-        if (session.host) {
-            session.host.emit("orientationRange", data);
-        } else {
-            //TODO: maybe change to err
-            socket.emit("info", {code: 200, msg: "Session host not yet connected"});
-        }
-    })
-
-    socket.on("laserStyle", function (data) {
-        console.log(data)
-        if (!socket.sessionId || !socket.clientType) {
-            socket.emit("err", {code: 400, msg: "Invalid session"});
-            return;
-        }
-        var session = sessions[socket.sessionId];
-        if (!session) {
-            socket.emit("err", {code: 400, msg: "Invalid session"});
-            return;
-        }
-
-        if (session.host) {
-            session.host.emit("laserStyle", data);
-        } else {
-            //TODO: maybe change to err
-            socket.emit("info", {code: 200, msg: "Session host not yet connected"});
-        }
-    })
 
     socket.on('disconnect', function () {
         if (socket.sessionId) {
