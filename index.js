@@ -232,6 +232,10 @@ io.on('connection', function (socket) {
         }
     });
 
+    socket.on('latency', function () {
+        socket.emit('latency', {t: Date.now()});
+    });
+
     socket.on('disconnect', function () {
         if (socket.sessionId) {
             // Remove the client

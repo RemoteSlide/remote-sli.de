@@ -337,4 +337,17 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
         console.log($scope.settings.laserStyle)
         socket.emit("_forward", {event: "laserStyle", style: $scope.settings.laserStyle});
     };
+
+    //// Latency
+    var startTime;
+    setInterval(function () {
+        startTime = Date.now();
+        socket.emit('latency', {t: startTime});
+    }, 2000);
+    socket.on('latency', function () {
+        $timeout(function () {
+            $scope.session.latency = Date.now() - startTime;
+        });
+        console.log("Latency: " + $scope.session.latency);
+    });
 }]);

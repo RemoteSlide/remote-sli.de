@@ -5,7 +5,8 @@ authApp.controller("slideController", ["$scope", "$route", "$cookies", "$locatio
         session: "",
         qr: "",
         bookmarkContent: "",
-        type: ""
+        type: "",
+        latency: 0
     };
     //TODO: disable some (most) settings for the host
     $scope.settings = {

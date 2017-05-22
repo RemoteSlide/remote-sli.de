@@ -201,6 +201,18 @@ socket.on("err", function (msg) {
     alert("Slide Error #" + msg.code + ": " + msg.msg)
 });
 
+//// Latency
+var startTime;
+var latency;
+setInterval(function () {
+    startTime = Date.now();
+    socket.emit('latency', {t: startTime});
+}, 2000);
+socket.on('latency', function () {
+    latency = Date.now() - startTime;
+    console.log("Latency: " + latency);
+});
+
 function status(color, type, msg, timeout) {
     // $(".remote-slide-overlay-status").fadeOut(function() {
     //     $("#remoteSlideStatusIcons").css("color", color);

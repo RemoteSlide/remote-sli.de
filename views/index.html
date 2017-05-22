@@ -103,7 +103,7 @@
         <div>
             <div>
                 <div style="position: absolute; right: 2px; top: 2px;" id="statusIcons">
-                    <div ng-style="{'color': statusIcon.color}" data-toggle="tooltip" data-placement="left" title="test">
+                    <div ng-style="{'color': statusIcon.color}" data-toggle="tooltip" data-placement="left">
                         <i ng-show="statusIcon.type=='times'" class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i>
                         <i ng-show="statusIcon.type=='check'" class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i>
                         <i ng-show="statusIcon.type=='question'" class="fa fa-question-circle-o fa-2x" aria-hidden="true"></i>
@@ -115,6 +115,9 @@
                 </div>
             </div>
             <div ng-view></div>
+            <div style="position:absolute; right: 2px; bottom: 2px;" class="text-muted">
+                {{ session.latency }}ms
+            </div>
         </div>
 
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>

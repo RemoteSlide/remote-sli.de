@@ -1,7 +1,7 @@
 authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", function ($scope, $http, $cookies, $timeout, $interval, $location) {
     $http.get("/api/session").then(function (data) {
         data = data.data;
-        $scope.session = data;
+        $.extend($scope.session, data);
         $http.get("/res/bookmark.js").then(function (data) {
             data = data.data;
             console.log(data)
@@ -61,6 +61,19 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
                     }
                 }
             })
+
+            //// Latency
+            var startTime;
+            setInterval(function () {
+                startTime = Date.now();
+                socket.emit('latency', {t: startTime});
+            }, 2000);
+            socket.on('latency', function () {
+                $timeout(function () {
+                    $scope.session.latency = Date.now() - startTime;
+                });
+                console.log("Latency: " + $scope.session.latency);
+            });
         })
     });
 
@@ -104,6 +117,8 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
         },
         status: 'none'
     };
+
+
 }]);
 
 $("#session-bookmark").on("click", function (e) {
