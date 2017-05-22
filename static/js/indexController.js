@@ -45,6 +45,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
             socket.on("info", function (data) {
                 console.log(data);
                 if (data.type == 'client_connected') {
+                    $scope.session.info = data.info;
                     if (data.clientType == 'remote') {
                         $scope.statusIcon.showMessage("check", "lime", "Remote connected", 2500);
                     } else if (data.clientType == 'host') {
@@ -52,6 +53,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
                     }
                 }
                 if (data.type == 'client_disconnected') {
+                    $scope.session.info = data.info;
                     if (data.clientType == 'remote') {
                         $scope.statusIcon.showMessage("times", "red", "Remote disconnected", 2000, function () {
                             $scope.statusIcon.showMessage("check", "lime");

@@ -101,6 +101,14 @@ app.get("*", function (req, res) {
     res.sendFile(__dirname + "/views/index.html");
 });
 
+function getConnectionInfo(session) {
+    return {
+        observer: session.observer ? true : false,
+        host: session.host ? true : false,
+        remotes: session.remotes.length
+    };
+}
+
 io.on('connection', function (socket) {
     console.log("connection");
     socket.emit("init", {state: "start"});
@@ -131,19 +139,19 @@ io.on('connection', function (socket) {
         if (socket.clientType == 'host') {
             session.host = socket;
             if (session.observer) {
-                session.observer.emit("info", {type: "client_connected", clientType: "host"});
+                session.observer.emit("info", {type: "client_connected", clientType: "host", info: getConnectionInfo(session)});
             }
             session.remotes.forEach(function (remote) {
-                remote.emit("info", {type: "client_connected", clientType: "host"});
+                remote.emit("info", {type: "client_connected", clientType: "host", info: getConnectionInfo(session)});
             });
         }
         if (socket.clientType == 'remote') {
             session.remotes.push(socket);
             if (session.observer) {
-                session.observer.emit("info", {type: "client_connected", clientType: "remote"});
+                session.observer.emit("info", {type: "client_connected", clientType: "remote", info: getConnectionInfo(session)});
             }
             if (session.host) {
-                session.host.emit("info", {type: "client_connected", clientType: "remote"});
+                session.host.emit("info", {type: "client_connected", clientType: "remote", info: getConnectionInfo(session)});
             }
         }
 
@@ -250,10 +258,10 @@ io.on('connection', function (socket) {
                     console.log("[-] Host of #" + socket.sessionId + " disconnected (Observer: " + (session.observer ? "connected" : "not connected") + ", Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)");
 
                     if (session.observer) {
-                        session.observer.emit("info", {type: "client_disconnected", clientType: "host"});
+                        session.observer.emit("info", {type: "client_disconnected", clientType: "host", info: getConnectionInfo(session)});
                     }
                     session.remotes.forEach(function (remote) {
-                        remote.emit("info", {type: "client_disconnected", clientType: "host"});
+                        remote.emit("info", {type: "client_disconnected", clientType: "host", info: getConnectionInfo(session)});
                     });
                 }
                 if (socket.clientType == 'remote') {
@@ -264,13 +272,13 @@ io.on('connection', function (socket) {
                     console.log("[-] A remote of #" + socket.sessionId + " disconnected (Observer: " + (session.observer ? "connected" : "not connected") + ", Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)")
 
                     if (session.observer) {
-                        session.observer.emit("info", {type: "client_disconnected", clientType: "remote"});
+                        session.observer.emit("info", {type: "client_disconnected", clientType: "remote", info: getConnectionInfo(session)});
                     }
                     if (session.host) {
-                        session.host.emit("info", {type: "client_disconnected", clientType: "remote"});
+                        session.host.emit("info", {type: "client_disconnected", clientType: "remote", info: getConnectionInfo(session)});
                     }
                     session.remotes.forEach(function (remote) {
-                        remote.emit("info", {type: "client_disconnected", clientType: "remote"});
+                        remote.emit("info", {type: "client_disconnected", clientType: "remote", info: getConnectionInfo(session)});
                     });
                 }
             }

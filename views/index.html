@@ -102,7 +102,7 @@
     <body ng-cloak>
         <div>
             <div>
-                <div style="position: absolute; right: 2px; top: 2px;" id="statusIcons">
+                <div style="position: absolute; right: 2px; top: 2px;" id="statusIcons" ng-attr-title="{{ 'Host: ' + (session.info.host ? 'connected':'not connected') + ', ' + (session.info.remotes || 0) + ' remotes connected' }}">
                     <div ng-style="{'color': statusIcon.color}" data-toggle="tooltip" data-placement="left">
                         <i ng-show="statusIcon.type=='times'" class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i>
                         <i ng-show="statusIcon.type=='check'" class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i>
