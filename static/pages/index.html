@@ -42,11 +42,14 @@
 
             <div class="modal-body">
                 <div>
-                    <div ng-show="qrCodeScan.status=='none'">Loading...</div>
-                    <div ng-show="qrCodeScan.status=='scanning'">Scanning... (this might take a few seconds)</div>
-                    <div ng-show="qrCodeScan.status=='success'">Done! Redirecting...</div>
-                    <div ng-show="qrCodeScan.status=='videoError'">Couldn't get video. Please make sure your camera is enabled.</div>
-                    <div ng-show="qrCodeScan.status=='cancelled'">Cancelled.</div>
+                    <div style="font-weight: bold;">
+                        <div ng-show="qrCodeScan.status=='none'">Loading...</div>
+                        <div ng-show="qrCodeScan.status=='scanning'">Scanning... (this might take a few seconds)</div>
+                        <div ng-show="qrCodeScan.status=='success'">Done! Redirecting...</div>
+                        <div ng-show="qrCodeScan.status=='videoError'">Couldn't get video. Please make sure your camera is enabled.</div>
+                        <div ng-show="qrCodeScan.status=='cancelled'">Cancelled.</div>
+                    </div>
+                    <div class="text-muted" ng-show="qrCodeScan.status=='scanning'">Point your camera at your screen and scan the QR code from the main page</div>
                 </div>
                 <div>
                     <div ng-class="{'scanning': qrCodeScan.status=='scanning'}">

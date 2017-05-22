@@ -26,9 +26,11 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
                         $scope.statusIcon.showMessage("check", "lime");
 
                         // Notify extension
-                        chrome.runtime.sendMessage($scope.chromeExtensionId, {session: $scope.session}, function () {
-
-                        });
+                        try {
+                            chrome.runtime.sendMessage($scope.chromeExtensionId, {session: $scope.session}, function () {
+                            });
+                        } catch (ignoerd) {
+                        }
                     });
                 } else if (data.state == "not_found") {// This should be impossible here, since the observer generates the new session ID
                     console.warn("Session not found");
@@ -117,6 +119,11 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
         },
         status: 'none'
     };
+    if (window.mobilecheck()) {
+        $timeout(function () {
+            $scope.qrCodeScan.start();
+        }, 500);
+    }
 
 
 }]);
