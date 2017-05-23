@@ -76,7 +76,6 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
                 $timeout(function () {
                     $scope.session.latency = Date.now() - startTime;
                 });
-                console.log("Latency: " + $scope.session.latency);
             });
         })
     });

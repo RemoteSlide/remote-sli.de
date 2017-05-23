@@ -1,6 +1,10 @@
 authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", "$routeParams", "$window", function ($scope, $http, $cookies, $timeout, $interval, $location, $routeParams, $window) {
     var socket = io();
     $scope.session.session = $routeParams.session;
+    $scope.settings.saveCallback = function (settings) {
+        // Synchronize settings
+        socket.emit("_forward", {event: "settings", settings: settings});
+    };
 
     $scope.sendControl = function (keyCode, keys) {
         socket.emit("control", {keyCode: keyCode, keys: keys});
@@ -57,6 +61,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                 $scope.statusIcon.showMessage("check", "lime", "Connected", 2500);
 
                 $scope.sendLaserStyle();// Directly send on load, since the host doesn't know the style yet
+
                 // Synchronize settings
                 socket.emit("_forward", {event: "settings", settings: $scope.settings});
             });
@@ -350,6 +355,5 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
         $timeout(function () {
             $scope.session.latency = Date.now() - startTime;
         });
-        console.log("Latency: " + $scope.session.latency);
     });
 }]);

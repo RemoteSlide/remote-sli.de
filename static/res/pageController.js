@@ -47,6 +47,8 @@ var settings = {
 };
 socket.on("settings", function (msg) {
     settings = msg.settings;
+
+    laserPointer.applyStyle();
 });
 window.__remoteSlideSettings=settings;
 
@@ -107,13 +109,9 @@ var laserPointer = {
     setupVectors: [],
     currentVectorRaw: [],
     currentVector: [],
-    style: {
-        color: 'red'
-        //TODO: width & height
-    },
     applyStyle: function () {
         var element = $("#rs-laser-dot");
-        $.each(laserPointer.style, function (key, value) {
+        $.each(settings.laserStyle, function (key, value) {
             element.css(key, value);
         })
     },
@@ -136,8 +134,8 @@ socket.on("deviceOrientation", function (msg) {
 
     var vector = msg.v;
 
-    var cx = screenWidth * vector[0] / laserPointer.range.yaw;//90
-    var cy = screenHeight * vector[1] / laserPointer.range.pitch;//90
+    var cx = screenWidth * vector[0] / settings.laserCalibration.range.yaw;//90
+    var cy = screenHeight * vector[1] / settings.laserCalibration.range.pitch;//90
 
     cx = screenWidth - cx;
 
@@ -210,7 +208,6 @@ setInterval(function () {
 }, 2000);
 socket.on('latency', function () {
     latency = Date.now() - startTime;
-    console.log("Latency: " + latency);
 });
 
 function status(color, type, msg, timeout) {

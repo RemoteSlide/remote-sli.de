@@ -38,9 +38,12 @@ authApp.controller("slideController", ["$scope", "$route", "$cookies", "$locatio
                 localStorage.setItem("rs-settings", JSON.stringify($scope.settings));
             });
         },
-        save: function () {
+        save: function (callback) {
             localStorage.setItem("rs-settings", JSON.stringify($scope.settings));
-        }
+            if (callback) callback();
+            if ($scope.settings.saveCallback)$scope.settings.saveCallback($scope.settings);
+        },
+        saveCallback: undefined
     };
 
     // Load settings

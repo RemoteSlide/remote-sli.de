@@ -204,6 +204,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on("_forward", function (data) {
+        console.log(data)
         if (!socket.sessionId || !socket.clientType) {
             socket.emit("err", {code: 400, msg: "Invalid session"});
             return;
