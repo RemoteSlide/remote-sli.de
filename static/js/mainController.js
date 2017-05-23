@@ -114,19 +114,17 @@ authApp.controller("slideController", ["$scope", "$route", "$cookies", "$locatio
         }
     };
 
-    $timeout(function () {
-        //// Latency
-        var startTime;
-        setInterval(function () {
-            if ($scope.session.socket) {
-                startTime = Date.now();
-                $scope.session.socket.emit('latency', {t: startTime});
-            }
-        }, 2000);
-        $scope.session.socket.on('latency', function () {
-            $timeout(function () {
-                $scope.session.latency = Date.now() - startTime;
-            });
+    //// Latency
+    var startTime;
+    setInterval(function () {
+        if ($scope.session.socket) {
+            startTime = Date.now();
+            $scope.session.socket.emit('latency', {t: startTime});
+        }
+    }, 2000);
+    $scope.session.socket.on('latency', function () {
+        $timeout(function () {
+            $scope.session.latency = Date.now() - startTime;
         });
-    }, 1000);
+    });
 }]);
