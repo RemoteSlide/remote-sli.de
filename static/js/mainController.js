@@ -61,7 +61,7 @@ authApp.controller("slideController", ["$scope", "$route", "$cookies", "$locatio
 
 
     // Non-settings stuff
-    $scope.chromeExtensionId = "bablpajeibomldijmnkliinaealllklb";
+    $scope.chromeExtensionId = "enmfbjneielhjagdgebkmcdhgbbionek";
 
     $scope.isMobile = function () {
         return window.mobilecheck();

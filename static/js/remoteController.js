@@ -62,6 +62,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                 $scope.session.type = data.youAre;
                 $scope.statusIcon.showMessage("check", "lime", "Connected", 2500);
 
+                //TODO: remove
                 $scope.sendLaserStyle();// Directly send on load, since the host doesn't know the style yet
 
                 // Synchronize settings
@@ -342,6 +343,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
         clearInterval(laserDataTimer)
     })
 
+    //TODO: remove
     $scope.sendLaserStyle = function () {
         console.log($scope.settings.laserStyle)
         socket.emit("_forward", {event: "laserStyle", style: $scope.settings.laserStyle});
