@@ -1,5 +1,5 @@
 authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", "$routeParams", "$window", function ($scope, $http, $cookies, $timeout, $interval, $location, $routeParams, $window) {
-    var socket = io();
+    var socket = $scope.socket = io();
     $scope.session.session = $routeParams.session;
     $scope.settings.saveCallback = function (settings) {
         // Synchronize settings

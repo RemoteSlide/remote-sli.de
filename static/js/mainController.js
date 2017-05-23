@@ -13,6 +13,8 @@ authApp.controller("slideController", ["$scope", "$route", "$cookies", "$locatio
             remotes: 0
         }
     };
+    $scope.socket = undefined;
+
     //TODO: disable some (most) settings for the host
     $scope.settings = {
         navigationType: 'button',

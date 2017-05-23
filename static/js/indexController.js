@@ -10,7 +10,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
             $("#session-bookmark").attr("href", data);
 
             // Wait for socket init
-            var socket = io();
+            var socket = $scope.socket = io();
             socket.on("init", function (data) {
                 console.log("init: " + JSON.stringify(data));
                 if (data.state == "start") {
