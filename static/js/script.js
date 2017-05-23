@@ -26,3 +26,31 @@ authApp.config(function ($routeProvider, $locationProvider, $httpProvider) {
     // Required for session cookies to be sent in $http
     $httpProvider.defaults.withCredentials = true;
 });
+
+
+////// Utils
+
+/**
+ * Waits for a condition specified by 'conditionF' to be 'true' and calls the 'callbackF' function afterwards.
+ *
+ * @param conditionF function called to check the condition
+ * @param callbackF function called when the condition was met, or when the 'maxTime' expired
+ * @param interval (optional) interval to check
+ * @param maxTime (optional) maximum time to expire
+ */
+function waitForCondition(conditionF, callbackF, interval, maxTime) {
+    if (!interval) interval = 500;
+    var startTime = Date.now();
+    var timer = setInterval(function () {
+        if (conditionF()) {
+            clearInterval(timer);
+            callbackF(true);
+        }
+
+        if (maxTime) {
+            if (Date.now() - startTime > maxTime) {
+                callbackF(false);
+            }
+        }
+    }, interval)
+}

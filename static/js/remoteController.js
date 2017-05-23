@@ -1,5 +1,7 @@
 authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", "$routeParams", "$window", function ($scope, $http, $cookies, $timeout, $interval, $location, $routeParams, $window) {
-    var socket = $scope.socket = io();
+    console.info("[load] remoteController @" + Date.now());
+
+    var socket = $scope.session.socket;
     $scope.session.session = $routeParams.session;
     $scope.settings.saveCallback = function (settings) {
         // Synchronize settings
@@ -344,16 +346,4 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
         console.log($scope.settings.laserStyle)
         socket.emit("_forward", {event: "laserStyle", style: $scope.settings.laserStyle});
     };
-
-    //// Latency
-    var startTime;
-    setInterval(function () {
-        startTime = Date.now();
-        socket.emit('latency', {t: startTime});
-    }, 2000);
-    socket.on('latency', function () {
-        $timeout(function () {
-            $scope.session.latency = Date.now() - startTime;
-        });
-    });
 }]);

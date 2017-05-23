@@ -1,4 +1,6 @@
 authApp.controller("slideController", ["$scope", "$route", "$cookies", "$location", "$http", "$interval", "$timeout", "$window", function ($scope, $route, $cookies, $location, $http, $interval, $timeout, $window) {
+    console.info("[load] mainController @" + Date.now());
+
     window.__$scope = $scope;
 
     $scope.session = {
@@ -11,9 +13,9 @@ authApp.controller("slideController", ["$scope", "$route", "$cookies", "$locatio
             observer: false,
             host: false,
             remotes: 0
-        }
+        },
+        socket: io()
     };
-    $scope.socket = undefined;
 
     //TODO: disable some (most) settings for the host
     $scope.settings = {
@@ -111,4 +113,20 @@ authApp.controller("slideController", ["$scope", "$route", "$cookies", "$locatio
             $scope.statusIcon.messageVisible = false;
         }
     };
+
+    $timeout(function () {
+        //// Latency
+        var startTime;
+        setInterval(function () {
+            if ($scope.session.socket) {
+                startTime = Date.now();
+                $scope.session.socket.emit('latency', {t: startTime});
+            }
+        }, 2000);
+        $scope.session.socket.on('latency', function () {
+            $timeout(function () {
+                $scope.session.latency = Date.now() - startTime;
+            });
+        });
+    }, 1000);
 }]);
