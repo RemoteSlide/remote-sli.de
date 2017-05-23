@@ -1,8 +1,8 @@
 authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", function ($scope, $http, $cookies, $timeout, $interval, $location) {
     console.info("[load] indexController @" + Date.now());
 
-    var socket = $scope.session.socket;
-    console.info($scope.session.socket)
+    var socket = $scope.socket;
+    console.info($scope.socket)
 
     socket.on("init", function (data) {
         console.log("init: " + JSON.stringify(data));

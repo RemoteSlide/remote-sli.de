@@ -13,9 +13,9 @@ authApp.controller("slideController", ["$scope", "$route", "$cookies", "$locatio
             observer: false,
             host: false,
             remotes: 0
-        },
-        socket: io()
+        }
     };
+    $scope.socket = io()
 
     //TODO: disable some (most) settings for the host
     $scope.settings = {
@@ -117,12 +117,10 @@ authApp.controller("slideController", ["$scope", "$route", "$cookies", "$locatio
     //// Latency
     var startTime;
     setInterval(function () {
-        if ($scope.session.socket) {
             startTime = Date.now();
-            $scope.session.socket.emit('latency', {t: startTime});
-        }
+            $scope.socket.emit('latency', {t: startTime});
     }, 2000);
-    $scope.session.socket.on('latency', function () {
+    $scope.socket.on('latency', function () {
         $timeout(function () {
             $scope.session.latency = Date.now() - startTime;
         });
