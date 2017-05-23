@@ -206,7 +206,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                 console.log(JSON.stringify($scope.deviceOrientation.calibration.angles))
                 $timeout(function () {
                     $scope.deviceOrientation.calibration.nextStep();
-                }, 250);
+                }, 500);
             },
             showOrHidePosition: function (action, which) {
                 socket.emit("_forward", {event: "calibrationDot", action: action, which: which});
