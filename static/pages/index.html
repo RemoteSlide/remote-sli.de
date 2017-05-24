@@ -19,8 +19,8 @@
             </div>
         </form>
     </div>
-    <hr/>
-    <div>
+    <div ng-hide="extension.installed">
+        <hr/>
         <div>
             <!-- TODO: open a modal with installation instructions -->
             <a href="https://remote-sli.de/download/extension/chrome/RemoteSlide-Chrome.zip" target="_blank" download="RemoteSlide.zip" onclick="$('#extensionDownloadModal').modal('show')">Download Chrome Extension</a>
