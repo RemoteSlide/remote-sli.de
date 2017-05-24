@@ -12,6 +12,20 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
         socket.emit("control", {keyCode: keyCode, keys: keys});
     };
 
+    $scope.overlayMessage = {
+        message: '',
+        show: function (msg) {
+            $timeout(function () {
+                $scope.overlayMessage.message = msg;
+            });
+        },
+        hide: function () {
+            $timeout(function () {
+                $scope.overlayMessage.message = '';
+            });
+        }
+    };
+
     // (mobile)
     $(document).swipe({
         swipe: function (event, direction, distance, duration, fingerCount, fingerData) {

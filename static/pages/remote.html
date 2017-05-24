@@ -14,8 +14,29 @@
         padding: 0 5px;
         margin-left: -3px;
     }
+
+    .overlay-message-backdrop {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 9998;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .overlay-message-content {
+        z-index: 9999;
+        font-size: 36px;
+        font-weight: bold;
+    }
 </style>
-<!-- TODO: display overlay while no host is connected -->
+
+<div ng-show="overlayMessage.message.length > 0">
+    <div class="overlay-message-backdrop"></div>
+    <div class="overlay-message-content centered">{{ overlayMessage.message }}</div>
+</div>
+
 <div style="position: absolute; left: 4px; top: 4px;" id="settings" ng-click="openSettings()">
     <i class="fa fa-cog fa-2x" aria-hidden="true"></i>
 </div>

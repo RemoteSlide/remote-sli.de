@@ -50,7 +50,7 @@ socket.on("settings", function (msg) {
 
     laserPointer.applyStyle();
 });
-window.__remoteSlideSettings=settings;
+window.__remoteSlideSettings = settings;
 
 socket.on("control", function (msg) {
     var keyCode = msg.keyCode;
@@ -98,6 +98,18 @@ function simulateKeyEvent(keyCode, ctrlKey, shiftKey, altKey) {
     (document.head || document.documentElement).appendChild(script);
     script.parentNode.removeChild(script);
 }
+
+var overlayMessage = {
+    show: function (msg) {
+        $(".overlay-message-content").text(msg);
+        $(".laser-calibration-backdrop").fadeIn();
+    },
+    hide: function () {
+        $(".laser-calibration-backdrop").fadeOut(function () {
+            $(".overlay-message-content").empty()
+        });
+    }
+};
 
 var laserPointer = {
     setupVectorsRaw: [

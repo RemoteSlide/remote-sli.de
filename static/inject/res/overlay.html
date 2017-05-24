@@ -57,9 +57,17 @@
         left: 50%;
         top: 50%;
     }
+
+    .overlay-message-content {
+        z-index: 9999;
+        font-size: 36px;
+        font-weight: bold;
+    }
 </style>
 <div>
     <div class="laser-calibration-backdrop" style="display:none;"></div>
+    <div class="overlay-message-content" style=" position: fixed; top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%);"></div>
+
     <div><!-- Top Left -->
         <div class="laser-calibration-dot topLeft" style="display: none;">
             <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
