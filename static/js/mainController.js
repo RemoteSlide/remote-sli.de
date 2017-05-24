@@ -1,4 +1,4 @@
-authApp.controller("slideController", ["$scope", "$route", "$cookies", "$location", "$http", "$interval", "$timeout", "$window", function ($scope, $route, $cookies, $location, $http, $interval, $timeout, $window) {
+authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http", "$interval", "$timeout", "$window", function ($scope, $cookies, $location, $http, $interval, $timeout, $window) {
     console.info("[load] mainController @" + Date.now());
 
     window.__$scope = $scope;
@@ -117,8 +117,8 @@ authApp.controller("slideController", ["$scope", "$route", "$cookies", "$locatio
     //// Latency
     var startTime;
     setInterval(function () {
-            startTime = Date.now();
-            $scope.socket.emit('latency', {t: startTime});
+        startTime = Date.now();
+        $scope.socket.emit('latency', {t: startTime});
     }, 2000);
     $scope.socket.on('latency', function () {
         $timeout(function () {

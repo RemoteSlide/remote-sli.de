@@ -1,8 +1,8 @@
-authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", "$routeParams", "$window", function ($scope, $http, $cookies, $timeout, $interval, $location, $routeParams, $window) {
+authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", "$stateParams", "$window", function ($scope, $http, $cookies, $timeout, $interval, $location, $stateParams, $window) {
     console.info("[load] remoteController @" + Date.now());
 
     var socket = $scope.socket;
-    $scope.session.session = $routeParams.session;
+    $scope.session.session = $stateParams.session;
     $scope.settings.saveCallback = function (settings) {
         // Synchronize settings
         socket.emit("_forward", {event: "settings", settings: settings});

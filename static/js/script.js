@@ -6,19 +6,33 @@ window.mobilecheck = function () {
     return check;
 };
 
-var authApp = angular.module("slideApp", ["ngRoute", "ngCookies"]);
+var authApp = angular.module("slideApp", ["ui.router", "ngCookies"]);
 
-authApp.config(function ($routeProvider, $locationProvider, $httpProvider) {
+authApp.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
 
-    $routeProvider
-        .when("/", {
+    // $routeProvider
+    //     .when("/", {
+    //         templateUrl: "/pages/index.html",
+    //         controller: "indexController"
+    //     })
+    //     .when("/:session", {
+    //         templateUrl: "/pages/remote.html",
+    //         controller: "remoteController"
+    //     })
+
+    $stateProvider
+        .state("index", {
+            url: "/",
             templateUrl: "/pages/index.html",
             controller: "indexController"
         })
-        .when("/:session", {
+        .state("remote", {
+            url: "/{session:[a-zA-Z0-9]{10}}",
             templateUrl: "/pages/remote.html",
             controller: "remoteController"
-        })
+        });
+    $urlRouterProvider.when("", "/");
+    $urlRouterProvider.otherwise("/");
 
 
     $locationProvider.html5Mode(true);
