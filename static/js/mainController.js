@@ -89,6 +89,7 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
                     $scope.statusIcon.messageVisible = true;
                 }
                 if ($scope.settings.vibration) {
+                    //TODO: don't base vibration of of the 'type', mainly because it vibrates twice when setting it to 'times' first and then changing it to something else
                     if (type == "times") {// error
                         window.navigator.vibrate([100, 30, 100]);
                     } else {// info
