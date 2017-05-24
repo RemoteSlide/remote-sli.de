@@ -66,7 +66,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
     $http.get("/api/session").then(function (data) {
         data = data.data;
         $.extend($scope.session, data);
-        $http.get("/res/bookmark.js").then(function (data) {
+        $http.get("/inject/bookmark.js").then(function (data) {
             data = data.data;
             console.log(data)
             data = data.replace(":sessionId:", $scope.session.session);
