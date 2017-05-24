@@ -76,6 +76,8 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                 $scope.session.type = data.youAre;
                 $scope.statusIcon.showMessage("check", "lime", "Connected", 2500);
 
+                $scope.overlayMessage.show("Waiting for host to connect...");
+
                 //TODO: remove
                 $scope.sendLaserStyle();// Directly send on load, since the host doesn't know the style yet
 
@@ -100,6 +102,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
 //                            $scope.statusIcon.showMessage("Remote connected", 2500);
             } else if (data.clientType == 'host') {
                 $scope.statusIcon.showMessage("check", "lime", "Host connected", 2500);
+                $scope.overlayMessage.hide();
 
                 // Synchronize settings
                 socket.emit("_forward", {event: "settings", settings: $scope.settings});
@@ -113,6 +116,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                 $scope.statusIcon.showMessage("times", "red", "Host disconnected", 2000, function () {
                     $scope.statusIcon.showMessage("check", "lime");
                 });
+                $scope.overlayMessage.show("Waiting for host to connect...");
             }
         }
     });

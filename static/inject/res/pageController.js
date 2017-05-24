@@ -9,10 +9,24 @@ socket.on("init", function (data) {
     } else if (data.state == "success") {
         console.info("Session initialized");
         status("green", "check", "", 5000);
+        overlayMessage.show("Waiting for a remote to connect....");
         try {
             chrome.runtime.sendMessage({action: "session_initialized"}, function (response) {
             });
         } catch (ignored) {
+        }
+    }
+});
+socket.on("info", function (data) {
+    console.log(data);
+    if (data.type == 'client_connected') {
+        if (data.clientType == 'remote') {
+            overlayMessage.hide();
+        }
+    }
+    if (data.type == 'client_disconnected') {
+        if (data.clientType == 'remote') {
+            overlayMessage.show("Waiting for a remote to connect....");
         }
     }
 });
