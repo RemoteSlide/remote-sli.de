@@ -74,9 +74,12 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             $timeout(function () {
                 $scope.session.initialized = true;
                 $scope.session.type = data.youAre;
+                $scope.session.info = data.info;
                 $scope.statusIcon.showMessage("check", "lime", "Connected", 2500);
 
-                $scope.overlayMessage.show("Waiting for host to connect...");
+                if (!$scope.session.info.host) {
+                    $scope.overlayMessage.show("Waiting for host to connect...");
+                }
 
                 //TODO: remove
                 $scope.sendLaserStyle();// Directly send on load, since the host doesn't know the style yet

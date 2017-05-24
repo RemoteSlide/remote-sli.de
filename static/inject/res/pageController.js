@@ -9,7 +9,10 @@ socket.on("init", function (data) {
     } else if (data.state == "success") {
         console.info("Session initialized");
         status("green", "check", "", 5000);
-        overlayMessage.show("Waiting for a remote to connect....");
+        session.info = data.info;
+        if (session.info.remotes <= 0) {
+            overlayMessage.show("Waiting for a remote to connect....");
+        }
         try {
             chrome.runtime.sendMessage({action: "session_initialized"}, function (response) {
             });
@@ -20,13 +23,17 @@ socket.on("init", function (data) {
 socket.on("info", function (data) {
     console.log(data);
     if (data.type == 'client_connected') {
+        session.info = data.info;
         if (data.clientType == 'remote') {
             overlayMessage.hide();
         }
     }
     if (data.type == 'client_disconnected') {
+        session.info = data.info;
         if (data.clientType == 'remote') {
-            overlayMessage.show("Waiting for a remote to connect....");
+            if (session.info.remotes <= 0) {
+                overlayMessage.show("Waiting for a remote to connect....");
+            }
         }
     }
 });
@@ -40,6 +47,15 @@ try {
     });
 } catch (ignored) {
 }
+
+var session = {
+    session: remote_slide.session,
+    info: {
+        observer: false,
+        host: false,
+        remotes: 0
+    }
+};
 
 var settings = {
     navigationType: 'button',
@@ -119,9 +135,8 @@ var overlayMessage = {
         $(".laser-calibration-backdrop").fadeIn();
     },
     hide: function () {
-        $(".laser-calibration-backdrop").fadeOut(function () {
-            $(".overlay-message-content").empty()
-        });
+        $(".laser-calibration-backdrop").fadeOut();
+        $(".overlay-message-content").empty()
     }
 };
 

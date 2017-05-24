@@ -155,7 +155,7 @@ io.on('connection', function (socket) {
             }
         }
 
-        socket.emit("init", {state: "success", youAre: clientType});
+        socket.emit("init", {state: "success", youAre: clientType, info: getConnectionInfo(session)});
         console.log("[+]" + (clientType == 'host' ? "Host" : clientType == 'remote' ? "Remote" : clientType == 'observer' ? "Observer" : "???" ) + " for #" + sessionId + " connected (Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)");
     });
 
