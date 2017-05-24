@@ -25,8 +25,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
 
                 // Notify extension
                 try {
-                    chrome.runtime.sendMessage($scope.extension.id.chrome, {session: $scope.session}, function () {
-                        $scope.extension.installed = true;
+                    chrome.runtime.sendMessage($scope.extension.id.chrome, {session: $scope.session}, function (msg) {
                     });
                 } catch (ignoerd) {
                 }

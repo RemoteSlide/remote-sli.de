@@ -67,6 +67,15 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
         },
         installed: false
     };
+    try {
+        chrome.runtime.sendMessage($scope.extension.id.chrome, {ping: "hello"}, function (msg) {
+            console.log(msg)
+            if (msg.pong && msg.pong == 'hello') {
+                $scope.extension.installed = true;
+            }
+        });
+    } catch (ignoerd) {
+    }
 
     $scope.isMobile = function () {
         return window.mobilecheck();
