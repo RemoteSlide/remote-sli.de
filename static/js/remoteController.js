@@ -9,6 +9,9 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
     };
 
     $scope.sendControl = function (keyCode, keys) {
+        if (!$scope.session.info.host) {
+            return;
+        }
         socket.emit("control", {keyCode: keyCode, keys: keys});
     };
 
