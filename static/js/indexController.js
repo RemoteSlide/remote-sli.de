@@ -121,8 +121,25 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
             $scope.qrCodeScan.start();
         }, 500);
     }
-}]);
 
-$("#session-bookmark").on("click", function (e) {
-    e.preventDefault();
-})
+    // Bookmark stuff
+
+    $("#session-bookmark").on("click", function (e) {
+        e.preventDefault();
+    });
+
+    var bookmarkDragCounter = 0;
+    var bookmarkInfoTimer;
+    var bookmarkInfoTriggered = false;
+    $("#session-bookmark").on("drag", function () {
+        if (bookmarkInfoTriggered) return;
+        bookmarkDragCounter++;
+        clearTimeout(bookmarkInfoTimer);
+        bookmarkInfoTimer = setTimeout(function () {
+            if (bookmarkDragCounter > 200) {
+                bookmarkInfoTriggered = true;
+                $scope.infoModal.show("Bookmark", "/pages/instructions/bookmark.html");
+            }
+        }, 200)
+    });
+}]);
