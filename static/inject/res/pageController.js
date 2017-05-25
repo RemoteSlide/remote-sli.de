@@ -23,6 +23,8 @@ socket.on("init", function (data) {
 
     try {
         chrome.runtime.sendMessage({action: "socketEvent", event: 'init', data: data});
+        chrome.runtime.sendMessage({action: "sessionUpdate", session: session});
+        chrome.runtime.sendMessage({action: "controlUpdate", active: true});
     } catch (ignored) {
     }
 });
@@ -45,19 +47,24 @@ socket.on("info", function (data) {
 
     try {
         chrome.runtime.sendMessage({action: "socketEvent", event: 'info', data: data});
+        chrome.runtime.sendMessage({action: "sessionUpdate", session: session});
     } catch (ignored) {
     }
 });
 try {
     chrome.extension.onMessage.addListener(function (msg, sender, sendResponse) {
         console.log(msg)
-        if (msg.action == 'state_request') {
-            chrome.runtime.sendMessage({action: "session_initialized"}, function (response) {
-            });
+        if (msg.action == 'stateRequest') {
+            chrome.runtime.sendMessage({action: "controlUpdate", active: true});
         }
     });
 } catch (ignored) {
 }
+window.onunload=function() {
+    console.info("UNLOAD")
+    chrome.runtime.sendMessage({action: "controlUpdate", active: false});
+}
+
 
 var session = {
     session: remote_slide.session,
