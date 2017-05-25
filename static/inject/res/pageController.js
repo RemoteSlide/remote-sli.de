@@ -64,6 +64,10 @@ window.onunload=function() {
     console.info("UNLOAD")
     chrome.runtime.sendMessage({action: "controlUpdate", active: false});
 }
+socket.on('disconnect', function() {
+    console.log("DISCONNECT")
+    chrome.runtime.sendMessage({action: "controlUpdate", active: false});
+});
 
 
 var session = {

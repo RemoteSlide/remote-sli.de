@@ -134,9 +134,15 @@ io.on('connection', function (socket) {
         socket.sessionId = sessionId;
 
         if (socket.clientType == 'observer') {
+            if (session.observer) {
+                session.observer.disconnect();
+            }
             session.observer = socket;
         }
         if (socket.clientType == 'host') {
+            if (session.host) {
+                session.host.disconnect();
+            }
             session.host = socket;
             if (session.observer) {
                 session.observer.emit("info", {type: "client_connected", clientType: "host", info: getConnectionInfo(session)});
