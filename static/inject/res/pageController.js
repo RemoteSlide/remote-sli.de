@@ -249,10 +249,6 @@ socket.on("orientationRange", function (msg) {
     console.info(msg)
     laserPointer.range = msg;
 })
-socket.on("laserStyle", function (msg) {
-    laserPointer.style = msg.style;
-    laserPointer.applyStyle();
-});
 
 socket.on("err", function (msg) {
     alert("Slide Error #" + msg.code + ": " + msg.msg)
