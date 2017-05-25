@@ -70,7 +70,7 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
     try {
         chrome.runtime.sendMessage($scope.extension.id.chrome, {ping: "hello"}, function (msg) {
             console.log(msg)
-            if (msg.pong && msg.pong == 'hello') {
+            if (msg && msg.pong && msg.pong == 'hello') {
                 $scope.extension.installed = true;
             }
         });
