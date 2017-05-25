@@ -19,6 +19,12 @@ socket.on("init", function (data) {
         } catch (ignored) {
         }
     }
+
+
+    try {
+        chrome.runtime.sendMessage({action: "socketEvent", event: 'init', data: data});
+    } catch (ignored) {
+    }
 });
 socket.on("info", function (data) {
     console.log(data);
@@ -35,6 +41,11 @@ socket.on("info", function (data) {
                 overlayMessage.show("Waiting for a remote to connect....");
             }
         }
+    }
+
+    try {
+        chrome.runtime.sendMessage({action: "socketEvent", event: 'info', data: data});
+    } catch (ignored) {
     }
 });
 try {
