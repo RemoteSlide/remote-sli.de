@@ -138,13 +138,13 @@
                         <div>
                             <label for="laser-style-color">
                                 Color
-                                <input type="text" class="form-control" id="laser-style-color" ng-model="settings.laserStyle.color" ng-change="settings.save();sendLaserStyle()" ng-style="{'background-color':settings.laserStyle.color}">
+                                <input type="text" class="form-control" id="laser-style-color" ng-model="settings.laserStyle.color" ng-change="settings.save();" ng-style="{'background-color':settings.laserStyle.color}">
                             </label>
                         </div>
                         <div>
                             <label for="laser-style-size">
                                 Size
-                                <input type="number" class="form-control" id="laser-style-size" ng-model="settings.laserStyle['font-size']" ng-change="settings.save();sendLaserStyle()">
+                                <input type="number" class="form-control" id="laser-style-size" ng-model="settings.laserStyle['font-size']" ng-change="settings.save();">
                             </label>
                         </div>
                     </div>

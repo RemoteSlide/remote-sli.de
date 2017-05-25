@@ -84,9 +84,6 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                     $scope.overlayMessage.show("Waiting for host to connect...");
                 }
 
-                //TODO: remove
-                $scope.sendLaserStyle();// Directly send on load, since the host doesn't know the style yet
-
                 // Synchronize settings
                 socket.emit("_forward", {event: "settings", settings: $scope.settings});
             });
