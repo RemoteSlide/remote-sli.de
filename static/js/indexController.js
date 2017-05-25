@@ -121,8 +121,6 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
             $scope.qrCodeScan.start();
         }, 500);
     }
-
-
 }]);
 
 $("#session-bookmark").on("click", function (e) {

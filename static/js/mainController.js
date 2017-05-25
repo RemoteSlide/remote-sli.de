@@ -129,6 +129,21 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
         }
     };
 
+    $scope.infoModal = {
+        title: "",
+        show: function (title, source) {
+            $scope.infoModal.title = title;
+            $("#infoModalContent").load(source, function () {
+                $("#infoModal").modal("show");
+            });
+        },
+        onClose: function () {
+            $timeout(function () {
+                $("#infoModalContent").empty();
+            }, 500);
+        }
+    }
+
     //// Latency
     var startTime;
     setInterval(function () {

@@ -23,7 +23,7 @@
         <hr/>
         <div>
             <!-- TODO: open a modal with installation instructions -->
-            <a href="https://remote-sli.de/download/extension/chrome/RemoteSlide-Chrome.zip" target="_blank" download="RemoteSlide.zip" onclick="$('#extensionDownloadModal').modal('show')">Download Chrome Extension</a>
+            <a href="https://remote-sli.de/download/extension/chrome/RemoteSlide-Chrome.zip" target="_blank" download="RemoteSlide.zip" ng-click="infoModal.show('Download Extension','/pages/instructions/extension.html')">Download Chrome Extension</a>
         </div>
         or
         <div>
@@ -56,44 +56,6 @@
                 <div>
                     <div ng-class="{'scanning': qrCodeScan.status=='scanning'}">
                         <div id="qrScanner" style="width: 100%;height:100%;min-height: 300px;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="extensionDownloadModal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="qrCodeScan.stop()"><span aria-hidden="true">&times;</span></button>
-                <h5 class="modal-title">Download Extension</h5>
-            </div>
-
-            <div class="modal-body">
-                <div class="text-center" style="font-size: 18px;">
-                    <div>
-                        <div>
-                            <strong>Download & Extract</strong> the extension.
-
-                            <img src="/img/instructions/extension_download/download.png" class="img-responsive instructions-image">
-                            <img src="/img/instructions/extension_download/extract.png" class="img-responsive instructions-image">
-                        </div>
-                        <br/>
-                        <br/>
-                        <div>
-                            Go to <a href="chrome://extensions"><strong>chrome://extensions</strong></a>.
-
-                            <img src="/img/instructions/extension_download/extensions.png" class="img-responsive instructions-image">
-                        </div>
-                        <br/>
-                        <br/>
-                        <div>
-                            <strong>Drag & Drop</strong> the extracted folder into your chrome window.
-
-                            <img src="/img/instructions/extension_download/drag_drop.png" class="img-responsive instructions-image">
-                        </div>
                     </div>
                 </div>
             </div>
