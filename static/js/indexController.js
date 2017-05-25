@@ -92,6 +92,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
                             $timeout(function () {
                                 window.location = data;
                             }, 100);
+                            window.navigator.vibrate(100);
                         }
                     }, 50);
                 }, function (error) {

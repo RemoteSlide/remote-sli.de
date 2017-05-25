@@ -5,7 +5,7 @@
 - transmit remote client keyboard input
 - zoom & rotate ("pinch")
 - vibrate on successful control
-- draw effect under finder when swiping
+- draw effect under finger when swiping
 - laser calibration (4 corners, to set the offset angle)
 - presentation timer
 - option to keep screen active
