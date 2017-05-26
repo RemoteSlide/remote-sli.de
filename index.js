@@ -93,7 +93,7 @@ app.get("/api/session", function (req, res) {// Continue or create session
 
 app.get("*", function (req, res) {
     // redirects
-    if ('remote-slide.ga' == req.headers.host) {
+    if ('remote-slide.ga' == req.headers.host || 'www.remote-sli.de' == req.headers.host) {
         res.redirect("https://remote-sli.de" + req.originalUrl);
         return;
     }
