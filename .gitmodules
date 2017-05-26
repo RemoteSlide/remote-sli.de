@@ -1,0 +1,3 @@
+[submodule "static/inject/controller"]
+	path = static/inject/controller
+	url = https://github.com/RemoteSlide/RemoteSlide-Controller
