@@ -116,7 +116,7 @@
                 </div>
             </div>
             <div ui-view></div>
-            <div style="position:absolute; right: 2px; bottom: 2px;" class="text-muted">
+            <div style="position:absolute; right: 2px; bottom: 2px;" ng-style="session.latency > 200 && {'color':'red'}" class="text-muted">
                 {{ session.latency }}ms
             </div>
         </div>
