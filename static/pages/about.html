@@ -1,3 +1,47 @@
-<div class="container">
+<style>
+    #about-container.container p {
+        font-size: 16px;
+    }
+</style>
+<div class="jumbotron">
+    <div class="container">
+        <h1>Remote Slide</h1>
+        <p>Remotely control your slides/presentations from your Smartphone!</p>
+    </div>
+</div>
+<div class="container" id="about-container">
+    <div>
+        <h2>About</h2>
+        <p>
+            <strong>Remote Slide</strong> provides an incredibly simple way to remotely control your presentations,
+            for example on <strong><a href="https://www.google.com/slides/about/" target="_blank">Google Slides</a></strong>,
+            <strong><a href="https://slides.com/" target="_blank">slides.com</a></strong> or <strong><a href="https://prezi.com" target="_blank">Prezi</a></strong>.
+        </p>
+        <p>
+            It's really easy to set up. You don't need to install any external applications - but you can, if you want to!
+            <br/>
+            <span>Just <a href="#" ng-click="infoModal.show('Bookmark','/pages/instructions/bookmark.html')">drag the bookmark into your bookmarks bar</a>, <a href="#"><!-- TODO -->scan the QR code</a> on your Smartphone and <a href="#"><!-- TODO -->click the bookmark</a> on the page you want to control. <strong>That's it!</strong></span>
+        </p>
+        <p>
+            Alternatively, you can <a href="https://remote-sli.de/download/extension/chrome/RemoteSlide-Chrome.zip" target="_blank" download="RemoteSlide.zip" ng-click="infoModal.show('Download Extension','/pages/instructions/extension.html')">install the browser extension for Google Chrome</a>, to get access to more features.
+        </p>
+    </div>
 
+    <div>
+        <h2>Features</h2>
+
+        <ul>
+            <li>Control your presentation in <strong>just 3 steps</strong>!</li>
+            <li>No need for external applications</li>
+
+            <li>Control via buttons, or by swiping on your screen</li>
+            <li><strong>Virtual Laser Pointer</strong> to show off the important parts of your presentation!
+                <ul>
+                    <li>Customizable color & size</li>
+                </ul>
+            </li>
+            <li><span class="text-muted">Timer, to keep track of your presentation pace (Coming Soon)</span></li>
+
+        </ul>
+    </div>
 </div>

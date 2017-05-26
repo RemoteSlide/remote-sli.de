@@ -26,6 +26,10 @@ authApp.config(function ($stateProvider, $urlRouterProvider, $locationProvider, 
             templateUrl: "/pages/index.html",
             controller: "indexController"
         })
+        .state("about", {
+            url: "/about",
+            templateUrl: "/pages/about.html"
+        })
         .state("remote", {
             url: "/{session:[a-zA-Z0-9]{10}}",
             templateUrl: "/pages/remote.html",
