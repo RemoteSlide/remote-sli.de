@@ -132,6 +132,9 @@ io.on('connection', function (socket) {
         // Assign session ID
         socket.clientType = clientType;
         socket.sessionId = sessionId;
+        if (msg.injector) {
+            session.injectorType = msg.injector;
+        }
 
         if (socket.clientType == 'observer') {
             if (session.observer) {
