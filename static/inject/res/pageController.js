@@ -18,6 +18,12 @@ socket.on("init", function (data) {
             });
         } catch (ignored) {
         }
+    } else if (data.state == "not_found") {
+        console.warn("Session not found");
+        overlayMessage.show("Session not found");
+        setTimeout(function () {
+            window.open("https://remote-sli.de", "_blank")
+        }, 1000);
     }
 
 
@@ -255,7 +261,7 @@ socket.on("orientationRange", function (msg) {
 })
 
 socket.on("err", function (msg) {
-    alert("Slide Error #" + msg.code + ": " + msg.msg)
+    console.warn("Slide Error #" + msg.code + ": " + msg.msg)
 });
 
 //// Latency
