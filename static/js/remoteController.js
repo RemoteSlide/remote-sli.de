@@ -78,7 +78,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                 $scope.session.initialized = true;
                 $scope.session.type = data.youAre;
                 $scope.session.info = data.info;
-                $scope.statusIcon.showMessage("check", "lime", "Connected", 2500);
+                $scope.statusIcon.showMessage("check", "lime", [200], "Connected", 2500);
 
                 if (!$scope.session.info.host) {
                     $scope.overlayMessage.show("Waiting for host to connect...");
@@ -90,7 +90,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
         } else if (data.state == "not_found") {
             console.warn("Session not found");
             $timeout(function () {
-                $scope.statusIcon.showMessage("times", "red", "Session not found", 20000);
+                $scope.statusIcon.showMessage("times", "red", [100, 30, 100], "Session not found", 20000);
             })
             $timeout(function () {
                 window.location = "https://remote-sli.de";
@@ -104,7 +104,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             if (data.clientType == 'remote') {
 //                            $scope.statusIcon.showMessage("Remote connected", 2500);
             } else if (data.clientType == 'host') {
-                $scope.statusIcon.showMessage("check", "lime", "Host connected", 2500);
+                $scope.statusIcon.showMessage("check", "lime", [200], "Host connected", 2500);
                 $scope.overlayMessage.hide();
 
                 // Synchronize settings
@@ -116,7 +116,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             if (data.clientType == 'remote') {
 //                            $scope.statusIcon.showMessage("Remote disconnected", 2500);
             } else if (data.clientType == 'host') {
-                $scope.statusIcon.showMessage("times", "red", "Host disconnected", 2000, function () {
+                $scope.statusIcon.showMessage("times", "red", [100, 30, 100], "Host disconnected", 2000, function () {
                     $scope.statusIcon.showMessage("check", "lime");
                 });
                 $scope.overlayMessage.show("Waiting for host to connect...");

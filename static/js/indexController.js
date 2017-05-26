@@ -33,7 +33,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
         } else if (data.state == "not_found") {// This should be impossible here, since the observer generates the new session ID
             console.warn("Session not found");
             $timeout(function () {
-                $scope.statusIcon.showMessage("times", "red", "Session not found", 20000);
+                $scope.statusIcon.showMessage("times", "red", [100, 30, 100], "Session not found", 20000);
             })
             $timeout(function () {
                 window.location.reload(true);
@@ -45,19 +45,19 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
         if (data.type == 'client_connected') {
             $scope.session.info = data.info;
             if (data.clientType == 'remote') {
-                $scope.statusIcon.showMessage("check", "lime", "Remote connected", 2500);
+                $scope.statusIcon.showMessage("check", "lime",false, "Remote connected", 2500);
             } else if (data.clientType == 'host') {
-                $scope.statusIcon.showMessage("check", "lime", "Host connected", 2500);
+                $scope.statusIcon.showMessage("check", "lime", false,"Host connected", 2500);
             }
         }
         if (data.type == 'client_disconnected') {
             $scope.session.info = data.info;
             if (data.clientType == 'remote') {
-                $scope.statusIcon.showMessage("times", "red", "Remote disconnected", 2000, function () {
+                $scope.statusIcon.showMessage("times", "red",false, "Remote disconnected", 2000, function () {
                     $scope.statusIcon.showMessage("check", "lime");
                 });
             } else if (data.clientType == 'host') {
-                $scope.statusIcon.showMessage("times", "red", "Host disconnected", 2000, function () {
+                $scope.statusIcon.showMessage("times", "red",false, "Host disconnected", 2000, function () {
                     $scope.statusIcon.showMessage("check", "lime");
                 });
             }

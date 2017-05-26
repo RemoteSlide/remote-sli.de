@@ -90,7 +90,7 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
         message: '',
         messageVisible: false,
         hideTimeout: undefined,
-        showMessage: function (type, color, msg, timeout, doneCallback) {
+        showMessage: function (type, color, vibration, msg, timeout, doneCallback) {
             $timeout(function () {
                 if (type)
                     $scope.statusIcon.type = type;
@@ -102,13 +102,8 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
                     $scope.statusIcon.message = msg;
                     $scope.statusIcon.messageVisible = true;
                 }
-                if ($scope.settings.vibration) {
-                    //TODO: don't base vibration of of the 'type', mainly because it vibrates twice when setting it to 'times' first and then changing it to something else
-                    if (type == "times") {// error
-                        window.navigator.vibrate([100, 30, 100]);
-                    } else {// info
-                        window.navigator.vibrate(200);
-                    }
+                if ($scope.settings.vibration && vibration) {
+                    window.navigator.vibrate(vibration);
                 }
 
                 if (timeout) {
