@@ -3,7 +3,7 @@ socket.on("init", function (data) {
     if (data.state == "start") {
         console.info("Initializing session #" + remote_slide.session);
         setTimeout(function () {
-            socket.emit("init", {iAm: "host", session: remote_slide.session});
+            socket.emit("init", {iAm: "host", session: remote_slide.session, injector: remote_slide.injector});
         }, 500);
         status("orange", "question", "");
     } else if (data.state == "success") {
@@ -60,11 +60,11 @@ try {
     });
 } catch (ignored) {
 }
-window.onunload=function() {
+window.onunload = function () {
     console.info("UNLOAD")
     chrome.runtime.sendMessage({action: "controlUpdate", active: false});
 }
-socket.on('disconnect', function() {
+socket.on('disconnect', function () {
     console.log("DISCONNECT")
     chrome.runtime.sendMessage({action: "controlUpdate", active: false});
 });

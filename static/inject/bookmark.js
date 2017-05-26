@@ -1,7 +1,8 @@
 javascript:if (!remote_slide) {
     console.log("hi");
     var remote_slide = {
-        session: ':sessionId:'
+        session: ':sessionId:',
+        injector: 'bookmark'
     };
     (function () {
         var sc = document.createElement('SCRIPT');
