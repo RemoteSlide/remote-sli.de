@@ -82,6 +82,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
 
             $("#qrScannerModal").modal("show");
             $timeout(function () {
+                $("#qrScanner").fadeIn();
                 $scope.qrCodeScan.status = "scanning";
                 $("#qrScanner").html5_qrcode(function (data) {
                     console.info(data)
@@ -103,6 +104,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
                 }, function (videoError) {
                     console.warn("Video error:")
                     console.warn(videoError);
+                    $("#qrScanner").hide();
                     $timeout(function () {
                         $scope.qrCodeScan.status = "videoError";
                     })
@@ -120,6 +122,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
         status: 'none'
     };
     if (window.mobilecheck()) {
+        //TODO: don't directly scan on first visit
         $timeout(function () {
             $scope.qrCodeScan.start();
         }, 500);
