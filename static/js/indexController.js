@@ -45,19 +45,19 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
         if (data.type == 'client_connected') {
             $scope.session.info = data.info;
             if (data.clientType == 'remote') {
-                $scope.statusIcon.showMessage("check", "lime",false, "Remote connected", 2500);
+                $scope.statusIcon.showMessage("check", "lime", false, "Remote connected", 2500);
             } else if (data.clientType == 'host') {
-                $scope.statusIcon.showMessage("check", "lime", false,"Host connected", 2500);
+                $scope.statusIcon.showMessage("check", "lime", false, "Host connected", 2500);
             }
         }
         if (data.type == 'client_disconnected') {
             $scope.session.info = data.info;
             if (data.clientType == 'remote') {
-                $scope.statusIcon.showMessage("times", "red",false, "Remote disconnected", 2000, function () {
+                $scope.statusIcon.showMessage("times", "red", false, "Remote disconnected", 2000, function () {
                     $scope.statusIcon.showMessage("check", "lime");
                 });
             } else if (data.clientType == 'host') {
-                $scope.statusIcon.showMessage("times", "red",false, "Host disconnected", 2000, function () {
+                $scope.statusIcon.showMessage("times", "red", false, "Host disconnected", 2000, function () {
                     $scope.statusIcon.showMessage("check", "lime");
                 });
             }
@@ -123,6 +123,15 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
         $timeout(function () {
             $scope.qrCodeScan.start();
         }, 500);
+    }
+
+    // First time visit message
+    var lastVisitCookie = $cookies.get("rs-last-visit");
+    if (!lastVisitCookie) {
+        $scope.infoModal.show("Welcome!", "/pages/instructions/welcome.html");
+        $cookies.put("rs-last-visit", Date.now(), {
+            expires: new Date(Date.now() + 2.628e+9)
+        })
     }
 
     // Bookmark stuff
