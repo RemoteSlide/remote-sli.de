@@ -313,23 +313,21 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
 
             alpha -= 180;
 
-            /*
-             // push the original values before modification
-             $scope.deviceOrientation.previousOrientations.push([alpha, beta, gamma]);
+            // push the original values before modification
+            $scope.deviceOrientation.previousOrientations.push([alpha, beta, gamma]);
 
-             // take averages to smooth
-             var length = $scope.deviceOrientation.previousOrientations.length;
-             if (length > 0) {
-             $scope.deviceOrientation.previousOrientations.forEach(function (orientation) {
-             alpha += orientation[0];
-             beta += orientation[1];
-             gamma += orientation[2];
-             });
-             alpha /= length;
-             beta /= length;
-             gamma /= length;
-             }
-             */
+            // take averages to smooth
+            var length = $scope.deviceOrientation.previousOrientations.length;
+            if (length > 0) {
+                $scope.deviceOrientation.previousOrientations.forEach(function (orientation) {
+                    alpha += orientation[0];
+                    beta += orientation[1];
+                    gamma += orientation[2];
+                });
+                alpha /= length;
+                beta /= length;
+                gamma /= length;
+            }
 
             // save the smoothed values
             $scope.deviceOrientation.lastAlpha = alpha;
