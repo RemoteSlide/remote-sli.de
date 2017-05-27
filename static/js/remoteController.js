@@ -234,11 +234,6 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                 socket.emit("_forward", {event: "calibrationDot", action: action, which: which});
             }
         },
-        updateYawOffset: function () {// Use the current device yaw as the new offset
-            $scope.settings.yawOffset = $scope.deviceOrientation.center.yaw = $scope.deviceOrientation.lastAlpha;
-            console.info("New Yaw offset: " + $scope.deviceOrientation.lastAlpha);
-            $scope.settings.save()
-        },
         getVector: function () {
             if ($scope.deviceOrientation.center.yaw == 0) {
                 $scope.deviceOrientation.center = $scope.settings.laserCalibration.center;
