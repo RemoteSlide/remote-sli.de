@@ -197,8 +197,6 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                     range: $scope.deviceOrientation.range
                 };
                 $scope.settings.save();
-
-                $scope.deviceOrientation.calibration.sendRange($scope.deviceOrientation.range.yaw, $scope.deviceOrientation.range.pitch);
             },
             nextStep: function () {
                 var currentStep = $scope.deviceOrientation.calibration.step;
@@ -234,9 +232,6 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             },
             showOrHidePosition: function (action, which) {
                 socket.emit("_forward", {event: "calibrationDot", action: action, which: which});
-            },
-            sendRange: function (yaw, pitch) {
-                socket.emit("_forward", {event: "orientationRange", yaw: yaw, pitch: pitch})
             }
         },
         updateYawOffset: function () {// Use the current device yaw as the new offset
