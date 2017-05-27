@@ -49,6 +49,7 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
         },
         saveCallback: undefined
     };
+    //TODO: track some settings, like navigationType, vibration and laserStyle via GoogleAnalytics
 
     // Load settings
     var storedSettings = JSON.parse(localStorage.getItem("rs-settings")) || {};
