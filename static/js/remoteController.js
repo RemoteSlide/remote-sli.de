@@ -175,6 +175,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                 $scope.deviceOrientation.calibration.showOrHidePosition("show", "start");
                 $scope.deviceOrientation.calibration.showOrHidePosition("show", "center");
 
+                $scope.settings.put("navigationType", "laser");
                 $("#settingsModal").modal("hide");
             },
             onCalibrationFinished: function () {
@@ -339,13 +340,17 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
     }, true);
     var laserDataTimer;
     $("#btn-control-laser").on("mousedown touchstart", function () {
+        if ($scope.deviceOrientation.calibration.active)return;
+        console.log("touchstart")
         $timeout(function () {
             $scope.deviceOrientation.laserActive = true;
         });
         laserDataTimer = setInterval(function () {
+            if (!$scope.deviceOrientation.laserActive)return;
             $scope.deviceOrientation.sendData();
         }, 50);
-    }).on("mouseup touchend mouseleave", function () {
+    }).on("mouseup touchend touchcancel mouseleave", function () {
+        console.log("touchend")
         $timeout(function () {
             $scope.deviceOrientation.laserActive = false;
         }, 250);
