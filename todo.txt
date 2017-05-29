@@ -10,3 +10,5 @@
 - presentation timer
 - option to keep screen active
 - smartwatch controls
+- multiple laser pointer tools (pointer, drawing, shapes, ...)
+- multiple laser pointers at once

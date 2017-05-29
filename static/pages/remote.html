@@ -54,10 +54,7 @@
                     <button class="btn-control btn" id="btn-control-left" data-keycode="37" ng-disabled="!session.initialized" ng-click="sendControl(37)">
                         <i class="fa fa-arrow-left" aria-hidden="true"></i>
                     </button>
-                    <!--<button class="btn-control btn" id="btn-control-space" data-keycode="32" ng-disabled="!session.initialized" ng-click="sendControl(32)">-->
-                    <!--<i class="fa fa-circle" aria-hidden="true"></i>-->
-                    <!--</button>-->
-                    <button class="btn-control btn" id="btn-control-laser" data-keycode="32" ng-disabled="!session.initialized" ng-click="deviceOrientation.sendData()" ng-style="deviceOrientation.laserActive && {'color':settings.laserStyle.color}">
+                    <button class="btn-control btn" id="btn-control-space" data-keycode="32" ng-disabled="!session.initialized" ng-click="sendControl(32)">
                         <i class="fa fa-circle" aria-hidden="true"></i>
                     </button>
                     <button class="btn-control btn" id="btn-control-right" data-keycode="39" ng-disabled="!session.initialized" ng-click="sendControl(39)">
@@ -88,12 +85,31 @@
             <!--</button>-->
 
             <div>
-               {{ session.info }}
+                {{ session.info }}
             </div>
         </div>
 
         <div id="swipe-controls" ng-show="settings.navigationType=='swipe'">
             Swipe or tap to navigate
+        </div>
+
+        <div id="laser-controls" ng-show="settings.navigationType=='laser'">
+            <div class="text-center">
+                <div>
+                    <button class="btn-control btn" id="btn-control-laser" style="width:64px; height:64px;" ng-disabled="!session.initialized" ng-click="deviceOrientation.sendData()" ng-style="deviceOrientation.laserActive && {'color':settings.laserStyle.color}">
+                        <i class="fa fa-circle" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <br/>
+                <div>
+                    <div class="btn-group">
+                        <button class="btn" ng-click="settings.put('laserTool','pointer')" ng-class="{'btn-success':settings.laserTool=='pointer'}"><i class="fa fa-circle" aria-hidden="true"></i></button>
+                        <button class="btn" disabled ng-click="settings.put('laserTool','pencil')" ng-class="{'btn-success':settings.laserTool=='pencil'}"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                        <button class="btn" disabled ng-click="settings.put('laserTool','eraser')" ng-class="{'btn-success':settings.laserTool=='eraser'}"><i class="fa fa-eraser" aria-hidden="true"></i></button>
+                        <button class="btn" disabled ng-click="settings.put('laserTool','mouse_pointer')" ng-class="{'btn-success':settings.laserTool=='mouse_pointer'}"><i class="fa fa-mouse-pointer" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -117,6 +133,7 @@
                             <div class="btn-group" id="navigationTypeButtons">
                                 <button class="btn controls-toggle" id="controls-toggle-buttons" ng-click="settings.put('navigationType','button')" ng-class="{'btn-success':settings.navigationType=='button'}">Buttons</button>
                                 <button class="btn controls-toggle" id="controls-toggle-swipe" ng-click="settings.put('navigationType','swipe')" ng-class="{'btn-success':settings.navigationType=='swipe'}">Swipe</button>
+                                <button class="btn controls-toggle" id="controls-toggle-laser" ng-click="settings.put('navigationType','laser')" ng-class="{'btn-success':settings.navigationType=='laser'}">Laser</button>
                             </div>
                         </div>
                         <div>

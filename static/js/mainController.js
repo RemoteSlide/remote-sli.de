@@ -35,6 +35,7 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
             color: "red",
             'font-size': 15
         },
+        laserTool: 'pointer',
 
         put: function (name, value) {
             $timeout(function () {
