@@ -94,7 +94,7 @@
         </div>
 
         <div id="laser-controls" ng-show="settings.navigationType=='laser'">
-            <div class="text-center">
+            <div class="text-center" style="min-width:200px">
                 <div>
                     <button class="btn-control btn" id="btn-control-laser" style="width:64px; height:64px;" ng-disabled="!session.initialized" ng-click="deviceOrientation.sendData()" ng-style="deviceOrientation.laserActive && {'color':settings.laserStyle.color}">
                         <i class="fa fa-circle" aria-hidden="true"></i>
