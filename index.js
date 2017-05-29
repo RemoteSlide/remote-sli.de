@@ -70,7 +70,8 @@ app.get("/api/session", function (req, res) {// Continue or create session
             lastActivity: new Date().valueOf(),
             observer: undefined,
             host: undefined,
-            remotes: []
+            remotes: [],
+            remoteCounter: 0
         };
 
         console.info("New Session: " + sessionId)
@@ -155,6 +156,7 @@ io.on('connection', function (socket) {
             });
         }
         if (socket.clientType == 'remote') {
+            socket.remoteId = session.remoteCounter++;
             session.remotes.push(socket);
             if (session.observer) {
                 session.observer.emit("info", {type: "client_connected", clientType: "remote", info: getConnectionInfo(session)});
@@ -232,6 +234,7 @@ io.on('connection', function (socket) {
         delete data.event;
 
         if (socket.clientType == 'remote') {
+            data.from = socket.remoteId;
             if (session.host) {
                 session.host.emit(event, data);
             } else {
@@ -239,6 +242,7 @@ io.on('connection', function (socket) {
                 socket.emit("info", {code: 200, msg: "Session host not yet connected"});
             }
         } else if (socket.clientType == 'host') {
+            data.from = "host";
             if (session.remotes.length > 0) {
                 session.remotes.forEach(function (remote) {
                     remote.emit(event, data);
