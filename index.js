@@ -149,20 +149,20 @@ io.on('connection', function (socket) {
             }
             session.host = socket;
             if (session.observer) {
-                session.observer.emit("info", {type: "client_connected", clientType: "host", info: getConnectionInfo(session)});
+                session.observer.emit("info", {type: "client_connected", clientType: "host", info: getConnectionInfo(session), who: "host"});
             }
             session.remotes.forEach(function (remote) {
-                remote.emit("info", {type: "client_connected", clientType: "host", info: getConnectionInfo(session)});
+                remote.emit("info", {type: "client_connected", clientType: "host", info: getConnectionInfo(session), who: "host"});
             });
         }
         if (socket.clientType == 'remote') {
             socket.remoteId = session.remoteCounter++;
             session.remotes.push(socket);
             if (session.observer) {
-                session.observer.emit("info", {type: "client_connected", clientType: "remote", info: getConnectionInfo(session)});
+                session.observer.emit("info", {type: "client_connected", clientType: "remote", info: getConnectionInfo(session), who: socket.remoteId});
             }
             if (session.host) {
-                session.host.emit("info", {type: "client_connected", clientType: "remote", info: getConnectionInfo(session)});
+                session.host.emit("info", {type: "client_connected", clientType: "remote", info: getConnectionInfo(session), who: socket.remoteId});
             }
         }
 
@@ -272,10 +272,10 @@ io.on('connection', function (socket) {
                     console.log("[-] Host of #" + socket.sessionId + " disconnected (Observer: " + (session.observer ? "connected" : "not connected") + ", Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)");
 
                     if (session.observer) {
-                        session.observer.emit("info", {type: "client_disconnected", clientType: "host", info: getConnectionInfo(session)});
+                        session.observer.emit("info", {type: "client_disconnected", clientType: "host", info: getConnectionInfo(session), who: "host"});
                     }
                     session.remotes.forEach(function (remote) {
-                        remote.emit("info", {type: "client_disconnected", clientType: "host", info: getConnectionInfo(session)});
+                        remote.emit("info", {type: "client_disconnected", clientType: "host", info: getConnectionInfo(session), who: "host"});
                     });
                 }
                 if (socket.clientType == 'remote') {
@@ -286,13 +286,13 @@ io.on('connection', function (socket) {
                     console.log("[-] A remote of #" + socket.sessionId + " disconnected (Observer: " + (session.observer ? "connected" : "not connected") + ", Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)")
 
                     if (session.observer) {
-                        session.observer.emit("info", {type: "client_disconnected", clientType: "remote", info: getConnectionInfo(session)});
+                        session.observer.emit("info", {type: "client_disconnected", clientType: "remote", info: getConnectionInfo(session), who: socket.remoteId});
                     }
                     if (session.host) {
-                        session.host.emit("info", {type: "client_disconnected", clientType: "remote", info: getConnectionInfo(session)});
+                        session.host.emit("info", {type: "client_disconnected", clientType: "remote", info: getConnectionInfo(session), who: socket.remoteId});
                     }
                     session.remotes.forEach(function (remote) {
-                        remote.emit("info", {type: "client_disconnected", clientType: "remote", info: getConnectionInfo(session)});
+                        remote.emit("info", {type: "client_disconnected", clientType: "remote", info: getConnectionInfo(session), who: socket.remoteId});
                     });
                 }
             }
