@@ -84,7 +84,7 @@ app.get("/api/session", function (req, res) {// Continue or create session
         maxAge: 3.6e+6
     });
 
-    qrcode.toDataURL("https://remote-sli.de/" + sessionId, {margin: 1, scale: 5}, function (err, url) {
+    qrcode.toDataURL("https://remote-sli.de/" + sessionId, {margin: 1, scale: 10}, function (err, url) {
         res.send({
             session: sessionId,
             qr: url
