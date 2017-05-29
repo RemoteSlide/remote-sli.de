@@ -126,6 +126,10 @@
                 <div>
                     <div>
                         <h3>General</h3>
+                        <div>
+                            <label for="username">Your Name</label>
+                            <input type="text" id="username" placeholder="Username" class="form-control" ng-model="settings.username" ng-change="settings.save()">
+                        </div>
                         <div class="form-group">
                             <div>
                                 <label for="navigationTypeButtons">Navigation Method</label>
