@@ -46,6 +46,7 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
         },
         save: function (callback) {
             localStorage.setItem("rs-settings", JSON.stringify($scope.settings));
+            console.info("[Settings] Saved!")
             if (callback) callback();
             if ($scope.settings.saveCallback)$scope.settings.saveCallback($scope.settings);
         },

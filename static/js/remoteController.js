@@ -357,6 +357,10 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
         clearInterval(laserDataTimer)
     })
 
+    $("#settingsModal").on("hidden.bs.modal",function () {
+       $scope.settings.save();
+    });
+
     //TODO: remove
     $scope.sendLaserStyle = function () {
         console.log($scope.settings.laserStyle)
