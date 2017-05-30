@@ -31,6 +31,10 @@
         font-weight: bold;
         color: white;
     }
+
+    .btn.btn-alt:not(.btn-success){
+        background-color: #bbbbbb;
+    }
 </style>
 
 <div ng-show="overlayMessage.message.length > 0">
@@ -136,7 +140,7 @@
                             </div>
                             <div class="btn-group" id="navigationTypeButtons">
                                 <button class="btn controls-toggle" id="controls-toggle-buttons" ng-click="settings.put('navigationType','button')" ng-class="{'btn-success':settings.navigationType=='button'}">Buttons</button>
-                                <button class="btn controls-toggle" id="controls-toggle-swipe" ng-click="settings.put('navigationType','swipe')" ng-class="{'btn-success':settings.navigationType=='swipe'}">Swipe</button>
+                                <button class="btn controls-toggle btn-alt" id="controls-toggle-swipe" ng-click="settings.put('navigationType','swipe')" ng-class="{'btn-success':settings.navigationType=='swipe'}">Swipe</button>
                                 <button class="btn controls-toggle" id="controls-toggle-laser" ng-click="settings.put('navigationType','laser')" ng-class="{'btn-success':settings.navigationType=='laser'}">Laser</button>
                             </div>
                         </div>
