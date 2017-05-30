@@ -32,7 +32,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
     // (mobile)
     $(document).swipe({
         swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
-            if ($scope.settings.navigationType != 'swipe')
+            if ($scope.settings.navigationType != 'swipe' && $scope.settings.navigationType != 'laser')
                 return;
             event.preventDefault();
 
@@ -55,7 +55,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             console.log(target == $(document));
             console.log($(target) == $(document))
             console.log(target.id)
-            if ($scope.settings.navigationType != 'swipe')
+            if ($scope.settings.navigationType != 'swipe' && $scope.settings.navigationType != 'laser')
                 return;
             if (target.id != 'outer-html-wrapper' && target.id != 'swipe-controls')// ignore taps on any other controls
                 return;
@@ -358,7 +358,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
         clearInterval(laserDataTimer)
     })
 
-    $("#settingsModal").on("hidden.bs.modal",function () {
-       $scope.settings.save();
+    $("#settingsModal").on("hidden.bs.modal", function () {
+        $scope.settings.save();
     });
 }]);
