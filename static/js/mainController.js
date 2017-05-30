@@ -34,7 +34,8 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
         },
         laserStyle: {
             color: "red",
-            'font-size': 15
+            'font-size': 15,
+            _icon: "circle"
         },
         laserTool: 'pointer',
 

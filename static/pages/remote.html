@@ -87,6 +87,10 @@
             <!--<button class="btn-control btn" id="btn-control-zoomout" data-keycode="34" ng-disabled="!session.initialized" ng-click="sendControl(109,{ctrl:true})">-->
             <!--Zoom out-->
             <!--</button>-->
+
+            <div>
+                {{ deviceOrientation.lastGamma }}
+            </div>
         </div>
 
         <div id="swipe-controls" ng-show="settings.navigationType=='swipe'">
@@ -166,6 +170,12 @@
                             <label for="laser-style-size">
                                 Size
                                 <input type="number" class="form-control" id="laser-style-size" ng-model="settings.laserStyle['font-size']">
+                            </label>
+                        </div>
+                        <div>
+                            <label for="laser-style-icon">
+                                Icon
+                                <input type="text" class="form-control" id="laser-style-icon" ng-model="settings.laserStyle._icon">
                             </label>
                         </div>
                     </div>
