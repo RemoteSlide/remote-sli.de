@@ -361,10 +361,4 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
     $("#settingsModal").on("hidden.bs.modal",function () {
        $scope.settings.save();
     });
-
-    //TODO: remove
-    $scope.sendLaserStyle = function () {
-        console.log($scope.settings.laserStyle)
-        socket.emit("_forward", {event: "laserStyle", style: $scope.settings.laserStyle});
-    };
 }]);
