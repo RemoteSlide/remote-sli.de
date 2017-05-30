@@ -279,7 +279,8 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
 
             return [
                 yaw,
-                pitch
+                pitch,
+                $scope.deviceOrientation.lastGamma
             ]
         },
         sendData: function () {
