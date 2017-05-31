@@ -63,6 +63,9 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
     $scope.openSettings = function () {
         $("#settingsModal").modal("show");
     };
+    $scope.closeSettings=function () {
+        $("#settingsModal").modal("hide");
+    };
 
 
     // Non-settings stuff
