@@ -107,7 +107,7 @@
     <body ng-cloak>
         <div>
             <div>
-                <div style="position: absolute; right: 2px; top: 2px;" id="statusIcons" ng-attr-title="{{ 'Host: ' + (session.info.host ? 'connected':'not connected') + ', ' + (session.info.remotes || 0) + ' remotes connected' }}">
+                <div style="position: absolute; right: 2px; top: 2px;" id="statusIcons" ng-attr-title="{{ 'Host: ' + (session.info.host ? 'connected':'not connected') + ', ' + (session.info.remotes.length || 0) + ' remotes connected' }}">
                     <div ng-style="{'color': statusIcon.color}" data-toggle="tooltip" data-placement="left">
                         <i ng-show="statusIcon.type=='times'" class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i>
                         <i ng-show="statusIcon.type=='check'" class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i>
@@ -141,6 +141,23 @@
 
                     <div class="modal-body">
                         <div id="infoModalContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="connectionInfoModal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h5 class="modal-title">Connection Info</h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <div>
+
+                        </div>
                     </div>
                 </div>
             </div>
