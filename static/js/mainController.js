@@ -50,6 +50,11 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
             console.info("[Settings] Saved!")
             if (callback) callback();
             if ($scope.settings.saveCallback)$scope.settings.saveCallback($scope.settings);
+
+            _gaq.push(["_trackEvent", "settings", $scope.settings.navigationType, "navigationType"]);
+            _gaq.push(["_trackEvent", "settings", $scope.settings.vibration, "vibration"]);
+            _gaq.push(["_trackEvent", "settings", $scope.settings.laserTool, "laserTool"]);
+            _gaq.push(["_trackEvent", "settings", $scope.settings.laserStyle.color, "laserStyle.color"]);
         },
         saveCallback: undefined
     };
