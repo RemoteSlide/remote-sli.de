@@ -242,6 +242,8 @@ io.on('connection', function (socket) {
         var event = data.event;
         delete data.event;
 
+        session.lastActivity = new Date().valueOf();
+
         if (socket.clientType == 'remote') {
             data.from = socket.remoteId;
             if (session.host) {
