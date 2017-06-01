@@ -103,19 +103,16 @@ app.get("*", function (req, res) {
 });
 
 function getConnectionInfo(session) {
+    var r = [];
+    session.remotes.forEach(function (item1) {
+        r.push({
+            id: item1.remoteId
+        })
+    });
     return {
         observer: session.observer ? true : false,
         host: session.host ? true : false,
-        remotes: (function () {
-            var r = [];
-            sessions.forEach(function (item) {
-                item.remotes.forEach(function (item1) {
-                    r.push({
-                        id: item1.remoteId
-                    })
-                });
-            })
-        })
+        remotes: r
     };
 }
 
