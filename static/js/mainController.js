@@ -72,6 +72,10 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
         $("#settingsModal").modal("hide");
     };
 
+    $scope.showConnectionInfo=function() {
+        $("#connectionInfoModal").modal("show")
+    };
+
 
     // Non-settings stuff
     $scope.extension = {

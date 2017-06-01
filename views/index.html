@@ -107,7 +107,7 @@
     <body ng-cloak>
         <div>
             <div>
-                <div style="position: absolute; right: 2px; top: 2px;" id="statusIcons" ng-attr-title="{{ 'Host: ' + (session.info.host ? 'connected':'not connected') + ', ' + (session.info.remotes.length || 0) + ' remotes connected' }}">
+                <div ng-click="showConnectionInfo()" style="position: absolute; right: 2px; top: 2px;" id="statusIcons" ng-attr-title="{{ 'Host: ' + (session.info.host ? 'connected':'not connected') + ', ' + (session.info.remotes.length || 0) + ' remotes connected' }}">
                     <div ng-style="{'color': statusIcon.color}" data-toggle="tooltip" data-placement="left">
                         <i ng-show="statusIcon.type=='times'" class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i>
                         <i ng-show="statusIcon.type=='check'" class="fa fa-check-circle-o fa-2x" aria-hidden="true"></i>
@@ -155,8 +155,34 @@
                     </div>
 
                     <div class="modal-body">
-                        <div>
-
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3>General</h3>
+                                <div>
+                                    <div>
+                                        <span ng-style="session.info.observer && {color:'lime'} || {color:'red'}" style="padding:5px;"><i class='fa fa-circle fa-2x' aria-hidden='true' style='vertical-align: middle'></i></span>&nbsp;<strong>Observer</strong>
+                                    </div>
+                                    <div>
+                                        <span ng-style="session.info.host && {color:'lime'} || {color:'red'}" style="padding:5px;"><i class='fa fa-circle fa-2x' aria-hidden='true' style='vertical-align: middle'></i></span>&nbsp;<strong>Host</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h3>Remotes</h3>
+                                <div>
+                                    <div>
+                                        <div ng-repeat="remote in session.info.remotes">
+                                            <div>
+                                                <span style="color:lime;padding:5px;"><i class='fa fa-circle fa-2x' aria-hidden='true' style='vertical-align: middle'></i></span>
+                                                <strong><!-- TODO: username --></strong> ({{remote.id}})
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ng-if="session.info.remotes.length == 0">
+                                        No remotes connected
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

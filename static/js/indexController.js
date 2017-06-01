@@ -21,6 +21,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
                 $scope.session.initialized = true;
                 $scope.session.type = data.youAre;
                 $scope.session.info = data.info;
+                console.log(data.info)
                 $scope.statusIcon.showMessage("check", "lime");
 
                 // Notify extension
@@ -44,6 +45,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
         console.log(data);
         if (data.type == 'client_connected') {
             $scope.session.info = data.info;
+            console.log(data.info)
             if (data.clientType == 'remote') {
                 $scope.statusIcon.showMessage("check", "lime", false, "Remote connected", 2500);
             } else if (data.clientType == 'host') {
