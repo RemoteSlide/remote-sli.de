@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
-var http = require('http').Server(app);
+var http = require('http');
+var https = require("https");
+var server = http.Server(app);
 var io = require('socket.io')(http);
 var randomstring = require("randomstring");
 var qrcode = require("qrcode");
@@ -54,11 +56,6 @@ app.use(function (req, res, next) {
 });
 app.use(express.static("static"));
 app.use(cookieParser());
-
-app.get("/download/extension/chrome", function (req, res) {
-    res.redirect("https://github.com/RemoteSlide/RemoteSlide-Chrome/archive/master.zip");
-});
-
 
 app.get("/api/session", function (req, res) {// Continue or create session
     var cookies = new Cookies(req, res);
@@ -313,6 +310,6 @@ io.on('connection', function (socket) {
 });
 
 
-http.listen(port, function () {
+server.listen(port, function () {
     console.log('listening on *:' + port);
 });
