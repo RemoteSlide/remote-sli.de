@@ -55,6 +55,10 @@ app.use(function (req, res, next) {
 app.use(express.static("static"));
 app.use(cookieParser());
 
+app.get("/download/extension/chrome", function (req, res) {
+    res.redirect("https://github.com/RemoteSlide/RemoteSlide-Chrome/archive/master.zip");
+});
+
 
 app.get("/api/session", function (req, res) {// Continue or create session
     var cookies = new Cookies(req, res);
