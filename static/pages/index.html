@@ -4,17 +4,14 @@
 <div class="centered text-center">
     <div>
         <p class="instructions">
-            Scan the QR code,<br/>
+            <strong>Scan the QR code</strong>,<br/>
             or open the link below on your Smartphone
         </p>
 
         <img class="img-responsive" src="" ng-src="{{ session.qr }}" draggable="false" style="margin: 0 auto;">
-        <br/>
-        <form class="form-inline">
-            <div class="form-group">
-                <a href="https://remote-sli.de/{{ session.session }}" target="_blank"><span class="text-muted" style="font-size:16px;">remote-sli.de/{{ session.session }}&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
-            </div>
-        </form>
+        <div>
+            <a href="https://remote-sli.de/{{ session.session }}" target="_blank"><span class="text-muted" style="font-size:16px;">remote-sli.de/<strong><samp>{{ session.session }}</samp></strong>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
+        </div>
     </div>
     <div ng-hide="extension.installed">
         <hr/>
