@@ -132,7 +132,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
 
     // First time visit message
     var lastVisitCookie = $cookies.get("rs-last-visit");
-    if (!lastVisitCookie) {
+    if (!lastVisitCookie && $scope.isDesktop()) {
         $scope.infoModal.show("Welcome!", "/pages/instructions/welcome.html");
         $cookies.put("rs-last-visit", Date.now(), {
             expires: new Date(Date.now() + 2.628e+9)
