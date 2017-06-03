@@ -77,6 +77,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             $timeout(function () {
                 $scope.session.initialized = true;
                 $scope.session.type = data.youAre;
+                $scope.session.clientId = data.yourId;
                 $scope.session.info = data.info;
                 $scope.statusIcon.showMessage("check", "lime", [200], "Connected", 2500);
 

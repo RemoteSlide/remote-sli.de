@@ -161,10 +161,10 @@
                                 <h3>General</h3>
                                 <div>
                                     <div>
-                                        <span ng-style="session.info.observer && {color:'lime'} || {color:'red'}" style="padding:5px;"><i class='fa fa-circle fa-2x' aria-hidden='true' style='vertical-align: middle'></i></span>&nbsp;<strong>Observer</strong>
+                                        <span ng-style="session.info.observer && {color:'lime'} || {color:'red'}" style="padding:5px;"><i class='fa fa-circle fa-2x' aria-hidden='true' style='vertical-align: middle'></i></span>&nbsp;<strong>Observer</strong> {{ session.type=='observer' ? " (that's you!)":"" }}
                                     </div>
                                     <div>
-                                        <span ng-style="session.info.host && {color:'lime'} || {color:'red'}" style="padding:5px;"><i class='fa fa-circle fa-2x' aria-hidden='true' style='vertical-align: middle'></i></span>&nbsp;<strong>Host</strong>
+                                        <span ng-style="session.info.host && {color:'lime'} || {color:'red'}" style="padding:5px;"><i class='fa fa-circle fa-2x' aria-hidden='true' style='vertical-align: middle'></i></span>&nbsp;<strong>Host</strong> {{ session.type=='host' ? " (that's you!)":"" }}
                                     </div>
                                 </div>
                             </div>
@@ -175,7 +175,7 @@
                                         <div ng-repeat="remote in session.info.remotes">
                                             <div>
                                                 <span style="color:lime;padding:5px;"><i class='fa fa-circle fa-2x' aria-hidden='true' style='vertical-align: middle'></i></span>
-                                                <strong><!-- TODO: username --></strong> ({{remote.id}})
+                                                <strong>{{ remote.username ? remote.username : "#"+remote.id }}</strong> {{ session.clientId == remote.id ? " (that's you!)":"" }}
                                             </div>
                                         </div>
                                     </div>

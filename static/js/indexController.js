@@ -20,6 +20,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
             $timeout(function () {
                 $scope.session.initialized = true;
                 $scope.session.type = data.youAre;
+                $scope.session.clientId = data.yourId;
                 $scope.session.info = data.info;
                 console.log(data.info)
                 $scope.statusIcon.showMessage("check", "lime");
