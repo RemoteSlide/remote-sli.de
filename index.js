@@ -109,17 +109,20 @@ function getConnectionInfo(session) {
         r.push({
             id: item1.rs.clientId,
             latency: item1.rs.latency,
-            settings: item1.rs.settings
+            settings: item1.rs.settings,
+            ip: item1.realAddress
         })
     });
     return {
         observer: session.observer ? {
             id: session.observer.rs.clientId,
-            latency: session.observer.rs.latency
+            latency: session.observer.rs.latency,
+            ip: session.observer.realAddress
         } : false,
         host: session.host ? {
             id: session.host.rs.clientId,
             latency: session.host.rs.latency,
+            ip: session.host.realAddress,
             injector: session.injectorType
         } : false,
         remotes: r
@@ -127,7 +130,8 @@ function getConnectionInfo(session) {
 }
 
 io.on('connection', function (socket) {
-    console.log("connection");
+    socket.realAddress = socket.handshake.headers["x-real-ip"];
+    console.log("connection: " + socket.realAddress);
     socket.emit("init", {state: "start"});
 
     socket.rs = {};

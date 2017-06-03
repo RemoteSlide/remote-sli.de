@@ -174,7 +174,7 @@
                                     <div>
                                         <div ng-repeat="remote in session.info.remotes">
                                             <div>
-                                                <span style="color:lime;padding:5px;" ng-style="{'color':remote.settings.laserStyle.color}"><i class='fa fa-2x' ng-class="'fa-'+remote.settings.laserStyle._icon" aria-hidden='true' style='vertical-align: middle'></i></span>
+                                                <span style="color:lime;padding:5px;" ng-style="{'color':remote.settings.laserStyle.color}"><i class='fa fa-2x' ng-class="(remote.settings.laserStyle._icon?'fa-'+remote.settings.laserStyle._icon:'fa-circle')" aria-hidden='true' style='vertical-align: middle'></i></span>
                                                 <strong>{{ remote.settings.username ? remote.settings.username : "#"+remote.id }}</strong> {{ session.clientId == remote.id ? " (that's you!)":"" }}
                                             </div>
                                         </div>
