@@ -17,6 +17,10 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
     };
     $scope.socket = io()
 
+    $scope.getFromServer = function (what) {
+        $scope.socket.emit("_get", {what: what})
+    };
+
     //TODO: disable some (most) settings for the host
     $scope.settings = {
         username: '',
@@ -68,11 +72,12 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
     $scope.openSettings = function () {
         $("#settingsModal").modal("show");
     };
-    $scope.closeSettings=function () {
+    $scope.closeSettings = function () {
         $("#settingsModal").modal("hide");
     };
 
-    $scope.showConnectionInfo=function() {
+    $scope.showConnectionInfo = function () {
+        $scope.getFromServer("connectionInfo");
         $("#connectionInfoModal").modal("show")
     };
 
@@ -160,7 +165,7 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
     var startTime;
     setInterval(function () {
         startTime = Date.now();
-        $scope.socket.emit('latency', {t: startTime});
+        $scope.socket.emit('latency', {t: startTime, l: $scope.session.latency});
     }, 2000);
     $scope.socket.on('latency', function () {
         $timeout(function () {

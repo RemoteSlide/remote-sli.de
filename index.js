@@ -107,15 +107,20 @@ function getConnectionInfo(session) {
     var r = [];
     session.remotes.forEach(function (item1) {
         r.push({
-            id: item1.clientId
+            id: item1.rs.clientId,
+            latency: item1.rs.latency,
+            settings: item1.rs.settings
         })
     });
     return {
         observer: session.observer ? {
-            id: session.observer.clientId
+            id: session.observer.rs.clientId,
+            latency: session.observer.rs.latency
         } : false,
         host: session.host ? {
-            id: session.host.clientId
+            id: session.host.rs.clientId,
+            latency: session.host.rs.latency,
+            injector: session.injectorType
         } : false,
         remotes: r
     };
@@ -124,6 +129,8 @@ function getConnectionInfo(session) {
 io.on('connection', function (socket) {
     console.log("connection");
     socket.emit("init", {state: "start"});
+
+    socket.rs = {};
 
     socket.on('init', function (msg) {
         console.log(msg)
@@ -142,20 +149,23 @@ io.on('connection', function (socket) {
         }
 
         // Assign session ID
-        socket.clientType = clientType;
-        socket.sessionId = sessionId;
-        socket.clientId = session.clientCounter++;
+        socket.rs = {
+            sessionId: sessionId,
+            clientId: session.clientCounter++,
+            clientType: clientType,
+            injectorType: msg.injector
+        };
         if (msg.injector) {
             session.injectorType = msg.injector;
         }
 
-        if (socket.clientType == 'observer') {
+        if (socket.rs.clientType == 'observer') {
             if (session.observer) {
                 session.observer.disconnect();
             }
             session.observer = socket;
         }
-        if (socket.clientType == 'host') {
+        if (socket.rs.clientType == 'host') {
             if (session.host) {
                 session.host.disconnect();
             }
@@ -167,34 +177,34 @@ io.on('connection', function (socket) {
                 remote.emit("info", {type: "client_connected", clientType: "host", info: getConnectionInfo(session), who: "host"});
             });
         }
-        if (socket.clientType == 'remote') {
+        if (socket.rs.clientType == 'remote') {
             session.remotes.push(socket);
             if (session.observer) {
-                session.observer.emit("info", {type: "client_connected", clientType: "remote", info: getConnectionInfo(session), who: socket.clientId});
+                session.observer.emit("info", {type: "client_connected", clientType: "remote", info: getConnectionInfo(session), who: socket.rs.clientId});
             }
             if (session.host) {
-                session.host.emit("info", {type: "client_connected", clientType: "remote", info: getConnectionInfo(session), who: socket.clientId});
+                session.host.emit("info", {type: "client_connected", clientType: "remote", info: getConnectionInfo(session), who: socket.rs.clientId});
             }
         }
 
-        socket.emit("init", {state: "success", youAre: clientType, yourId: socket.clientId, info: getConnectionInfo(session)});
+        socket.emit("init", {state: "success", youAre: clientType, yourId: socket.rs.clientId, info: getConnectionInfo(session)});
         console.log("[+]" + (clientType == 'host' ? "Host" : clientType == 'remote' ? "Remote" : clientType == 'observer' ? "Observer" : "???" ) + " for #" + sessionId + " connected (Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)");
     });
 
     socket.on("control", function (msg) {
         console.log(msg);
-        if (!socket.sessionId || !socket.clientType) {
+        if (!socket.rs.sessionId || !socket.rs.clientType) {
             socket.emit("err", {code: 400, msg: "Invalid session"});
             return;
         }
-        var session = sessions[socket.sessionId];
+        var session = sessions[socket.rs.sessionId];
         if (!session) {
             socket.emit("err", {code: 400, msg: "Invalid session"});
             return;
         }
 
         // we should only need to listen for control messages by clients
-        if (socket.clientType == 'remote') {
+        if (socket.rs.clientType == 'remote') {
             var keyCode = msg["keyCode"];
 
             if (!keyCode) {
@@ -227,11 +237,11 @@ io.on('connection', function (socket) {
 
     socket.on("_forward", function (data) {
         console.log(data)
-        if (!socket.sessionId || !socket.clientType) {
+        if (!socket.rs.sessionId || !socket.rs.clientType) {
             socket.emit("err", {code: 400, msg: "Invalid session"});
             return;
         }
-        var session = sessions[socket.sessionId];
+        var session = sessions[socket.rs.sessionId];
         if (!session) {
             socket.emit("err", {code: 400, msg: "Invalid session"});
             return;
@@ -246,8 +256,12 @@ io.on('connection', function (socket) {
 
         session.lastActivity = new Date().valueOf();
 
-        data.from = socket.clientId;
-        if (socket.clientType == 'remote') {
+        if (event == "settings") {
+            socket.rs.settings = data.settings;
+        }
+
+        data.from = socket.rs.clientId;
+        if (socket.rs.clientType == 'remote') {
             data.fromType = "remote";
             if (session.host) {
                 session.host.emit(event, data);
@@ -255,7 +269,7 @@ io.on('connection', function (socket) {
                 //TODO: maybe change to err
                 socket.emit("info", {code: 200, msg: "Session host not yet connected"});
             }
-        } else if (socket.clientType == 'host') {
+        } else if (socket.rs.clientType == 'host') {
             data.fromType = "host";
             if (session.remotes.length > 0) {
                 session.remotes.forEach(function (remote) {
@@ -268,22 +282,33 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on('latency', function () {
+    socket.on("_get", function (data) {
+        console.log(data);
+        if (!socket.rs || !socket.rs.sessionId)return;
+        if (!sessions[socket.rs.sessionId])return;
+        var what = data.what;
+        if ("connectionInfo" == what) {
+            socket.emit("connectionInfo", {info: getConnectionInfo(sessions[socket.rs.sessionId])})
+        }
+    });
+
+    socket.on('latency', function (msg) {
+        if (msg.l)socket.rs.latency = msg.l;
         socket.emit('latency', {t: Date.now()});
     });
 
     socket.on('disconnect', function () {
-        if (socket.sessionId) {
+        if (socket.rs.sessionId) {
             // Remove the client
-            var session = sessions[socket.sessionId];
+            var session = sessions[socket.rs.sessionId];
             if (session) {
-                if (socket.clientType == 'observer') {
+                if (socket.rs.clientType == 'observer') {
                     session.observer = undefined;
-                    console.log("[-] Observer of #" + socket.sessionId + " disconnected (Observer: " + (session.observer ? "connected" : "not connected") + ", Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)");
+                    console.log("[-] Observer of #" + socket.rs.sessionId + " disconnected (Observer: " + (session.observer ? "connected" : "not connected") + ", Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)");
                 }
-                if (socket.clientType == 'host') {
+                if (socket.rs.clientType == 'host') {
                     session.host = undefined;
-                    console.log("[-] Host of #" + socket.sessionId + " disconnected (Observer: " + (session.observer ? "connected" : "not connected") + ", Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)");
+                    console.log("[-] Host of #" + socket.rs.sessionId + " disconnected (Observer: " + (session.observer ? "connected" : "not connected") + ", Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)");
 
                     if (session.observer) {
                         session.observer.emit("info", {type: "client_disconnected", clientType: "host", info: getConnectionInfo(session), who: "host"});
@@ -292,21 +317,21 @@ io.on('connection', function (socket) {
                         remote.emit("info", {type: "client_disconnected", clientType: "host", info: getConnectionInfo(session), who: "host"});
                     });
                 }
-                if (socket.clientType == 'remote') {
+                if (socket.rs.clientType == 'remote') {
                     var index = session.remotes.indexOf(socket);
                     if (index !== -1) {
                         session.remotes.splice(index, 1);
                     }
-                    console.log("[-] A remote of #" + socket.sessionId + " disconnected (Observer: " + (session.observer ? "connected" : "not connected") + ", Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)")
+                    console.log("[-] A remote of #" + socket.rs.sessionId + " disconnected (Observer: " + (session.observer ? "connected" : "not connected") + ", Host: " + (session.host ? "connected" : "not connected") + ", " + session.remotes.length + " Remotes connected)")
 
                     if (session.observer) {
-                        session.observer.emit("info", {type: "client_disconnected", clientType: "remote", info: getConnectionInfo(session), who: socket.clientId});
+                        session.observer.emit("info", {type: "client_disconnected", clientType: "remote", info: getConnectionInfo(session), who: socket.rs.clientId});
                     }
                     if (session.host) {
-                        session.host.emit("info", {type: "client_disconnected", clientType: "remote", info: getConnectionInfo(session), who: socket.clientId});
+                        session.host.emit("info", {type: "client_disconnected", clientType: "remote", info: getConnectionInfo(session), who: socket.rs.clientId});
                     }
                     session.remotes.forEach(function (remote) {
-                        remote.emit("info", {type: "client_disconnected", clientType: "remote", info: getConnectionInfo(session), who: socket.clientId});
+                        remote.emit("info", {type: "client_disconnected", clientType: "remote", info: getConnectionInfo(session), who: socket.rs.clientId});
                     });
                 }
             }

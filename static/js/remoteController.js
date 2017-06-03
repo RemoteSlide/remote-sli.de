@@ -124,6 +124,10 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             }
         }
     });
+    socket.on("connectionInfo", function (data) {
+        console.log(data)
+        $scope.session.info = data.info;
+    })
 
     socket.on("control", function (data) {
         if ($scope.settings.vibration)

@@ -164,7 +164,7 @@
                                         <span ng-style="session.info.observer && {color:'lime'} || {color:'red'}" style="padding:5px;"><i class='fa fa-circle fa-2x' aria-hidden='true' style='vertical-align: middle'></i></span>&nbsp;<strong>Observer</strong> {{ session.type=='observer' ? " (that's you!)":"" }}
                                     </div>
                                     <div>
-                                        <span ng-style="session.info.host && {color:'lime'} || {color:'red'}" style="padding:5px;"><i class='fa fa-circle fa-2x' aria-hidden='true' style='vertical-align: middle'></i></span>&nbsp;<strong>Host</strong> {{ session.type=='host' ? " (that's you!)":"" }}
+                                        <span ng-style="session.info.host && {color:'lime'} || {color:'red'}" style="padding:5px;"><i class='fa fa-circle fa-2x' aria-hidden='true' style='vertical-align: middle'></i></span>&nbsp;<strong>Host</strong> {{ session.type=='host' ? " (that's you!)":"" }} <span class="text-muted">{{ session.info.host.injector ? "("+session.info.host.injector+")":"" }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -174,8 +174,8 @@
                                     <div>
                                         <div ng-repeat="remote in session.info.remotes">
                                             <div>
-                                                <span style="color:lime;padding:5px;"><i class='fa fa-circle fa-2x' aria-hidden='true' style='vertical-align: middle'></i></span>
-                                                <strong>{{ remote.username ? remote.username : "#"+remote.id }}</strong> {{ session.clientId == remote.id ? " (that's you!)":"" }}
+                                                <span style="color:lime;padding:5px;" ng-style="{'color':remote.settings.laserStyle.color}"><i class='fa fa-2x' ng-class="'fa-'+remote.settings.laserStyle._icon" aria-hidden='true' style='vertical-align: middle'></i></span>
+                                                <strong>{{ remote.settings.username ? remote.settings.username : "#"+remote.id }}</strong> {{ session.clientId == remote.id ? " (that's you!)":"" }}
                                             </div>
                                         </div>
                                     </div>

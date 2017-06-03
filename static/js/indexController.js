@@ -66,6 +66,10 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
             }
         }
     })
+    socket.on("connectionInfo",function (data) {
+        console.log(data)
+        $scope.session.info=data.info;
+    })
 
     $http.get("/api/session").then(function (data) {
         data = data.data;
