@@ -236,6 +236,8 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
                 }
                 $scope.deviceOrientation.calibration.angles[$scope.deviceOrientation.calibration.step] = [$scope.deviceOrientation.lastAlpha, $scope.deviceOrientation.lastBeta];
                 console.log(JSON.stringify($scope.deviceOrientation.calibration.angles))
+                if ($scope.settings.vibration)
+                    window.navigator.vibrate(50);
                 $timeout(function () {
                     $scope.deviceOrientation.calibration.nextStep();
                 }, 500);
