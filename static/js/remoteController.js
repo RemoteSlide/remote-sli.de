@@ -98,6 +98,10 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             }, 1500);
         }
     })
+    socket.on("disconnect", function (data) {
+        console.warn("DISCONNECT")
+        $scope.statusIcon.showMessage("times", "red", [100, 30, 100], "Lost connection", 2000);
+    })
     socket.on("info", function (data) {
         console.log(data);
         if (data.type == 'client_connected') {

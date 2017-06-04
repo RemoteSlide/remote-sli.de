@@ -23,7 +23,7 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
                 $scope.session.clientId = data.yourId;
                 $scope.session.info = data.info;
                 console.log(data.info)
-                $scope.statusIcon.showMessage("check", "lime");
+                $scope.statusIcon.showMessage("check", "lime", [200], "Connected", 2000);
 
                 // Notify extension
                 try {
@@ -41,6 +41,10 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
                 window.location.reload(true);
             }, 500);
         }
+    })
+    socket.on("disconnect", function (data) {
+        console.warn("DISCONNECT")
+        $scope.statusIcon.showMessage("times", "red", [100, 30, 100], "Lost connection", 2000);
     })
     socket.on("info", function (data) {
         console.log(data);
@@ -66,9 +70,9 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
             }
         }
     })
-    socket.on("connectionInfo",function (data) {
+    socket.on("connectionInfo", function (data) {
         console.log(data)
-        $scope.session.info=data.info;
+        $scope.session.info = data.info;
     })
 
     $http.get("/api/session").then(function (data) {
