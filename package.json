@@ -10,6 +10,7 @@
     "repeat": "^0.0.6",
     "cookies": "^0.7.0",
     "cookie-parser": "^1.4.3",
-    "console-stamp": "^0.2.5"
+    "console-stamp": "^0.2.5",
+    "node-persist": "^2.0.11"
   }
 }

@@ -9,6 +9,7 @@ var qrcode = require("qrcode");
 var repeat = require("repeat");
 var cookieParser = require("cookie-parser");
 var Cookies = require("cookies");
+var storage = require("node-persist");
 var port = 3011;
 
 require('console-stamp')(console, 'HH:MM:ss.l');
@@ -25,6 +26,38 @@ require('console-stamp')(console, 'HH:MM:ss.l');
 
  */
 var sessions = {};
+
+storage.initSync();
+{
+    var s = storage.getItemSync("sessions") || [];
+    console.log("Loading " + s.length + " sessions from storage...");
+    s.forEach(function (item) {
+        sessions[item.id] = {
+            id: item.id,
+            lastActivity: item.lastActivity,
+            observer: undefined,
+            host: undefined,
+            remotes: [],
+            clientCounter: item.clientCounter
+        };
+    })
+}
+
+function exitHandler() {
+    console.log(sessions)
+    var s = [];
+    Object.keys(sessions).forEach(function (key) {
+        var session = sessions[key];
+        s.push({
+            id: session.id,
+            lastActivity: session.lastActivity,
+            clientCounter: session.clientCounter
+        })
+    });
+    console.log("Saving " + s.length + " sessions to storage...");
+    storage.setItemSync("sessions", s);
+    process.exit();
+}
 
 repeat(function () {
     var expiredSessions = [];
@@ -347,3 +380,7 @@ io.on('connection', function (socket) {
 server.listen(port, function () {
     console.log('listening on *:' + port);
 });
+
+process.on("exit", exitHandler);
+process.on("SIGINT", exitHandler);
+process.on("uncaughtException", exitHandler);
