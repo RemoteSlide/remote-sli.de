@@ -24,7 +24,7 @@ authApp.controller("slideController", ["$scope", "$cookies", "$location", "$http
     //TODO: disable some (most) settings for the host
     $scope.settings = {
         username: '',
-        navigationType: 'button',
+        navigationType: 'swipe',
         vibration: true,
         laserCalibration: {
             center: {
