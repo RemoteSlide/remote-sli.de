@@ -273,7 +273,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on("_forward", function (data) {
-        console.log(data)
+        console.log(JSON.stringify(data))
         if (!socket.rs.sessionId || !socket.rs.clientType) {
             socket.emit("err", {code: 400, msg: "Invalid session"});
             return;

@@ -138,6 +138,19 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             window.navigator.vibrate(50);
     })
 
+    $scope.slideInfo = {
+        page: {
+            index: 0,
+            size: 0
+        }
+    };
+    socket.on("slideInfo", function (data) {
+        $timeout(function () {
+            $scope.slideInfo = data.data.info;
+        })
+        console.log($scope.slideInfo)
+        console.log($scope.slideInfo.page.index + "/" + $scope.slideInfo.page.size);
+    })
 
     socket.on("err", function (data) {
         console.warn("err: " + JSON.stringify(data))
