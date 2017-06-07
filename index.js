@@ -3,7 +3,7 @@ var app = express();
 var http = require('http');
 var https = require("https");
 var server = http.Server(app);
-var io = require('socket.io')(server,{'pingInterval': 2000, 'pingTimeout': 5000});
+var io = require('socket.io')(server, {'pingInterval': 2000, 'pingTimeout': 5000});
 var randomstring = require("randomstring");
 var qrcode = require("qrcode");
 var repeat = require("repeat");
@@ -273,7 +273,6 @@ io.on('connection', function (socket) {
     });
 
     socket.on("_forward", function (data) {
-        console.log(JSON.stringify(data))
         if (!socket.rs.sessionId || !socket.rs.clientType) {
             socket.emit("err", {code: 400, msg: "Invalid session"});
             return;
@@ -288,6 +287,8 @@ io.on('connection', function (socket) {
             socket.emit("err", {code: 400, msg: "Missing 'event' value for forward"});
             return;
         }
+        if (data.event != 'screenshot')
+            console.log(JSON.stringify(data))
         var event = data.event;
         delete data.event;
 

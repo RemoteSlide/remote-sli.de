@@ -94,7 +94,10 @@
         </div>
 
         <div id="swipe-controls" ng-show="settings.navigationType=='swipe'">
-            Swipe or tap to navigate
+            <img class="img-responsive" src="" data-ng-src="{{ slideInfo.screenshot }}" ng-show="slideInfo.screenshot">
+            <div>
+                Swipe or tap to navigate
+            </div>
         </div>
 
         <div id="laser-controls" ng-show="settings.navigationType=='laser'">
