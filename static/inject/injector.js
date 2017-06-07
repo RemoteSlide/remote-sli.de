@@ -8,6 +8,7 @@
             console.info("[RS] Injection complete.");
         });
     };
+    $.getScript("https://cdn.rawgit.com/meetselva/attrchange/master/js/attrchange.js");
     if (!io) {
         console.info("[RS] Loading socket.io");
         $.getScript("https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js", inject);
