@@ -94,12 +94,6 @@
         </div>
 
         <div id="swipe-controls" ng-show="settings.navigationType=='swipe'">
-            <div>
-                <div style="position:relative;width: 100%;padding: 0px;" ng-show="slideInfo.screenshot">
-                    <img class="img-responsive" src="" data-ng-src="{{ slideInfo.screenshot }}">
-                    <div ng-show="slideInfo.waitingForScreenshot" style="background-color: gray; opacity:0.7;color: #fff;position: absolute;bottom: 0;left: 0;top:0;width: 100%;"><img class="centered" src="img/ring.svg"></div>
-                </div>
-            </div>
             <div class="text-center">
                 Swipe or tap to navigate
             </div>
@@ -123,6 +117,12 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<div style="padding: 30px">
+    <div style="position:relative;width: 100%;padding: 0px;" ng-show="slideInfo.screenshot">
+        <img class="img-responsive" src="" data-ng-src="{{ slideInfo.screenshot }}" style="margin: 0 auto">
+        <div ng-show="slideInfo.waitingForScreenshot" style="background-color: gray; opacity:0.7;color: #fff;position: absolute;bottom: 0;left: 0;top:0;width: 100%;text-align:center;"><img class="" src="img/ring.svg"></div>
     </div>
 </div>
 <div ng-hide="slideInfo.page.size==0||slideInfo.page.index==0">
