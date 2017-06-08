@@ -1,4 +1,4 @@
-authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", function ($scope, $http, $cookies, $timeout, $interval, $location) {
+authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", "$state", function ($scope, $http, $cookies, $timeout, $interval, $location, $state) {
     console.info("[load] indexController @" + Date.now());
 
     var socket = $scope.socket;
@@ -29,6 +29,11 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
                 try {
                     chrome.runtime.sendMessage($scope.extension.id.chrome, {session: $scope.session}, function (msg) {
                     });
+                    if ($state.params.sessionOnly) {
+                        $timeout(function () {
+                            window.close();
+                        }, 100);
+                    }
                 } catch (ignoerd) {
                 }
             });
