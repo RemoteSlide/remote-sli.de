@@ -94,10 +94,15 @@
         </div>
 
         <div id="swipe-controls" ng-show="settings.navigationType=='swipe'">
-            <img class="img-responsive" src="" data-ng-src="{{ slideInfo.screenshot }}" ng-show="slideInfo.screenshot">
             <div>
-                Swipe or tap to navigate
+                <div style="position:relative;width: 100%;padding: 0px;" ng-show="slideInfo.screenshot">
+                    <img class="img-responsive" src="" data-ng-src="{{ slideInfo.screenshot }}">
+                    <div ng-show="slideInfo.waitingForScreenshot" style="background-color: gray; opacity:0.7;color: #fff;position: absolute;bottom: 0;left: 0;top:0;width: 100%;"><img class="centered" src="img/ring.svg"></div>
+                </div>
             </div>
+            <!--<div>-->
+            <!--Swipe or tap to navigate-->
+            <!--</div>-->
         </div>
 
         <div id="laser-controls" ng-show="settings.navigationType=='laser'">

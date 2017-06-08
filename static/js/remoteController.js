@@ -143,10 +143,14 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             index: 0,
             size: 0
         },
-        screenshot:""
+        screenshot:"",
+        waitingForScreenshot:true
     };
     socket.on("slideInfo", function (data) {
         $timeout(function () {
+            if($scope.slideInfo.page.index!=data.data.info.page.index){
+                $scope.slideInfo.waitingForScreenshot=true;
+            }
             $scope.slideInfo.page = data.data.info.page;
         })
         console.log($scope.slideInfo)
@@ -156,6 +160,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
         console.log("SCREENSHOT")
         console.log(data)
         $scope.slideInfo.screenshot=data.data.image;
+        $scope.slideInfo.waitingForScreenshot=false;
     })
 
     socket.on("err", function (data) {
