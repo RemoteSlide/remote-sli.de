@@ -127,7 +127,7 @@
 </div>
 <div ng-hide="slideInfo.page.size==0||slideInfo.page.index==0">
     <div class="progress" style="bottom: 2px; position: absolute; width: 100%;">
-        <div class="progress-bar" role="progressbar" aria-valuenow="{{ slideInfo.page.index }}" aria-valuemin="0" aria-valuemax="{{ slideInfo.page.size }}" ng-style="{'width':(slideInfo.page.index/slideInfo.page.size)*100+'%'}">
+        <div class="progress-bar" role="progressbar" aria-valuenow="{{ slideInfo.page.index }}" aria-valuemin="0" aria-valuemax="{{ slideInfo.page.size }}" ng-class="{'progress-bar-success':slideInfo.page.index==slideInfo.page.size}" ng-style="{'width':(slideInfo.page.index/slideInfo.page.size)*100+'%'}">
             <span>{{ slideInfo.page.index }}/{{ slideInfo.page.size }}</span>
         </div>
     </div>
