@@ -104,7 +104,7 @@
             }
         </style>
     </head>
-    <body ng-cloak>
+    <body ng-cloak id="body">
         <div>
             <div>
                 <div ng-click="showConnectionInfo()" style="position: absolute; right: 4px; top: 4px; cursor:pointer;" id="statusIcons" ng-attr-title="{{ 'Host: ' + (session.info.host ? 'connected':'not connected') + ', ' + (session.info.remotes.length || 0) + ' remotes connected' }}">

@@ -61,7 +61,7 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             console.log(target.id)
             if ($scope.settings.navigationType != 'swipe' && $scope.settings.navigationType != 'laser')
                 return;
-            if (target.id != 'outer-html-wrapper' && target.id != 'swipe-controls' && target.id != 'preview-screenshot')// ignore taps on any other controls
+            if (target.id != 'outer-html-wrapper' && target.id != "body" && target.id != 'swipe-controls' && target.id != 'preview-screenshot')// ignore taps on any other controls
                 return;
             if ($("#settingsModal").hasClass('in')) {// settings modal is open
                 return;
