@@ -8,7 +8,7 @@ window.mobilecheck = function () {
 
 var authApp = angular.module("slideApp", ["ui.router", "ngCookies"]);
 
-authApp.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
+authApp.config(["$stateProvider", "$urlRouteProvider", "$locationProvider", "$httpProvider", function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
 
     // $routeProvider
     //     .when("/", {
@@ -43,7 +43,7 @@ authApp.config(function ($stateProvider, $urlRouterProvider, $locationProvider, 
 
     // Required for session cookies to be sent in $http
     $httpProvider.defaults.withCredentials = true;
-});
+}]);
 
 
 ////// Utils
