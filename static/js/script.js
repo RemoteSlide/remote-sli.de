@@ -8,7 +8,7 @@ window.mobilecheck = function () {
 
 var slideApp = angular.module("slideApp", ["ui.router", "ngCookies"]);
 
-slideApp.config(["$stateProvider", "$urlRouteProvider", "$locationProvider", "$httpProvider", function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
+slideApp.config(["$stateProvider", "$urlRouterProvider", "$locationProvider", "$httpProvider", function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
 
     // $routeProvider
     //     .when("/", {
