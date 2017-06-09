@@ -1,4 +1,4 @@
-authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", "$state", function ($scope, $http, $cookies, $timeout, $interval, $location, $state) {
+slideApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", "$state", function ($scope, $http, $cookies, $timeout, $interval, $location, $state) {
     console.info("[load] indexController @" + Date.now());
 
     var socket = $scope.socket;

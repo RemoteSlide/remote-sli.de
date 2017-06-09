@@ -6,9 +6,9 @@ window.mobilecheck = function () {
     return check;
 };
 
-var authApp = angular.module("slideApp", ["ui.router", "ngCookies"]);
+var slideApp = angular.module("slideApp", ["ui.router", "ngCookies"]);
 
-authApp.config(["$stateProvider", "$urlRouteProvider", "$locationProvider", "$httpProvider", function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
+slideApp.config(["$stateProvider", "$urlRouteProvider", "$locationProvider", "$httpProvider", function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
 
     // $routeProvider
     //     .when("/", {

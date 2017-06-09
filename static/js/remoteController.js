@@ -1,4 +1,4 @@
-authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", "$stateParams", "$window", function ($scope, $http, $cookies, $timeout, $interval, $location, $stateParams, $window) {
+slideApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", "$stateParams", "$window", function ($scope, $http, $cookies, $timeout, $interval, $location, $stateParams, $window) {
     console.info("[load] remoteController @" + Date.now());
 
     var socket = $scope.socket;
