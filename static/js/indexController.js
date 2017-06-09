@@ -4,6 +4,16 @@ authApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout"
     var socket = $scope.socket;
     console.info($scope.socket)
 
+    console.log($state.params)
+    if ($state.params.connectionInfo) {
+        $("#connectionInfoModal").modal("show");
+    }
+    if ($state.params.scanCode) {
+        $timeout(function () {
+            $scope.qrCodeScan.start();
+        }, 100);
+    }
+
     socket.on("init", function (data) {
         console.log("init: " + JSON.stringify(data));
         if (data.state == "start") {

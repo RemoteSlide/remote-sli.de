@@ -40,6 +40,10 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             console.log(direction);
             console.log(distance);
 
+            if ($("#settingsModal").hasClass('in')) {// settings modal is open
+                return;
+            }
+
             if (direction == "right")
                 $scope.sendControl(37);//left
             if (direction == "down")
@@ -57,8 +61,11 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             console.log(target.id)
             if ($scope.settings.navigationType != 'swipe' && $scope.settings.navigationType != 'laser')
                 return;
-            if (target.id != 'outer-html-wrapper' && target.id != 'swipe-controls')// ignore taps on any other controls
+            if (target.id != 'outer-html-wrapper' && target.id != 'swipe-controls' && target.id != 'preview-screenshot')// ignore taps on any other controls
                 return;
+            if ($("#settingsModal").hasClass('in')) {// settings modal is open
+                return;
+            }
             $scope.sendControl(32);//space
         }
     });
@@ -143,24 +150,24 @@ authApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout
             index: 0,
             size: 0
         },
-        screenshot:"",
-        waitingForScreenshot:true
+        screenshot: "",
+        waitingForScreenshot: true
     };
     socket.on("slideInfo", function (data) {
         $timeout(function () {
-            if($scope.slideInfo.page.index!=data.data.info.page.index){
-                $scope.slideInfo.waitingForScreenshot=true;
+            if ($scope.slideInfo.page.index != data.data.info.page.index) {
+                $scope.slideInfo.waitingForScreenshot = true;
             }
             $scope.slideInfo.page = data.data.info.page;
         })
         console.log($scope.slideInfo)
         console.log($scope.slideInfo.page.index + "/" + $scope.slideInfo.page.size);
     })
-    socket.on("screenshot",function(data) {
+    socket.on("screenshot", function (data) {
         console.log("SCREENSHOT")
         console.log(data)
-        $scope.slideInfo.screenshot=data.data.image;
-        $scope.slideInfo.waitingForScreenshot=false;
+        $scope.slideInfo.screenshot = data.data.image;
+        $scope.slideInfo.waitingForScreenshot = false;
     })
 
     socket.on("err", function (data) {

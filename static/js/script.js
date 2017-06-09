@@ -22,7 +22,7 @@ authApp.config(function ($stateProvider, $urlRouterProvider, $locationProvider, 
 
     $stateProvider
         .state("index", {
-            url: "/?sessionOnly",
+            url: "/?sessionOnly&connectionInfo&scanCode",
             templateUrl: "/pages/index.html",
             controller: "indexController"
         })
