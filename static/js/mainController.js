@@ -55,10 +55,10 @@ slideApp.controller("slideController", ["$scope", "$cookies", "$location", "$htt
             if (callback) callback();
             if ($scope.settings.saveCallback)$scope.settings.saveCallback($scope.settings);
 
-            _gaq.push(["_trackEvent", "settings", $scope.settings.navigationType, "navigationType"]);
-            _gaq.push(["_trackEvent", "settings", $scope.settings.vibration, "vibration"]);
-            _gaq.push(["_trackEvent", "settings", $scope.settings.laserTool, "laserTool"]);
-            _gaq.push(["_trackEvent", "settings", $scope.settings.laserStyle.color, "laserStyle.color"]);
+            _gaq.push(["_setCustomVar", 1, "settings.navigationType", $scope.settings.navigationType]);
+            _gaq.push(["_setCustomVar", 1, "settings.vibration", $scope.settings.vibration]);
+            _gaq.push(["_setCustomVar", 1, "settings.laserTool", $scope.settings.laserTool]);
+            _gaq.push(["_setCustomVar", 1, "settings.laserStyle.color", $scope.settings.laserStyle.color]);
         },
         saveCallback: undefined
     };
