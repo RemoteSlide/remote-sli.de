@@ -15,6 +15,7 @@ var port = 3011;
 
 require('console-stamp')(console, 'HH:MM:ss.l');
 
+console.log("Minifying scripts...");
 compressor.minify({
     compressor: "gcc",
     input: "static/js/*.js",
