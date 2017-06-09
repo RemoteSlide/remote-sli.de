@@ -10,17 +10,10 @@ var repeat = require("repeat");
 var cookieParser = require("cookie-parser");
 var Cookies = require("cookies");
 var storage = require("node-persist");
-var compressor = require("node-minify");
 var port = 3011;
 
 require('console-stamp')(console, 'HH:MM:ss.l');
 
-console.log("Minifying scripts...");
-compressor.minify({
-    compressor: "gcc",
-    input: "static/js/*.js",
-    output: "static/js/main-script.js"
-})
 
 /*
 
