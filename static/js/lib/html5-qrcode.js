@@ -34,7 +34,7 @@
                             qrcodeError(e, localMediaStream);
                         }
 
-                        $.data(currentElem[0], "timeout", setTimeout(scan, 500));
+                        $.data(currentElem[0], "timeout", setTimeout(scan, 250));
 
                     } else {
                         $.data(currentElem[0], "timeout", setTimeout(scan, 500));
@@ -50,7 +50,7 @@
                     $.data(currentElem[0], "stream", stream);
 
                     video.play();
-                    $.data(currentElem[0], "timeout", setTimeout(scan, 1000));
+                    $.data(currentElem[0], "timeout", setTimeout(scan, 500));
                 };
 
                 // Call the getUserMedia method with our callback functions
