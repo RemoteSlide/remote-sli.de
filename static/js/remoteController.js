@@ -26,8 +26,23 @@ slideApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeou
             $timeout(function () {
                 $scope.overlayMessage.message = '';
             });
+        },
+        remote: {
+            show: function (msg) {
+                socket.emit("_forward", {event: "overlayMessage", action: "show", msg: msg});
+            },
+            hide: function () {
+                socket.emit("_forward", {event: "overlayMessage", action: "hide"});
+            }
         }
     };
+    socket.on("overlayMessage", function (msg) {
+        if (msg.action == "show") {
+            $scope.overlayMessage.show(msg.msg)
+        } else if (msg.action == "hide") {
+            $scope.overlayMessage.hide();
+        }
+    });
 
     // (mobile)
     $(document).swipe({
