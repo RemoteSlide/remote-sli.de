@@ -102,6 +102,24 @@
                 margin: 0 auto;
                 padding: 5px;
             }
+
+            /* https://stackoverflow.com/questions/22424877/how-can-i-fade-in-and-out-the-visibility-of-a-div-using-ng-show-with-angularjs-1 */
+            .ng-fade.ng-hide {
+                opacity: 0;
+            }
+
+            .ng-fade.ng-hide-remove,
+            .ng-fade.ng-hide-add {
+                display: block !important; /* or inline-block, as appropriate */
+            }
+
+            .ng-fade.ng-hide-remove {
+                transition: all linear 400ms;
+            }
+
+            .ng-fade.ng-hide-add {
+                transition: all linear 400ms;
+            }
         </style>
     </head>
     <body ng-cloak id="body">
@@ -197,6 +215,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.3/angular-ui-router.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular-cookies.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular-animate.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.18/jquery.touchSwipe.min.js"></script>
         <script async src="/js/lib/jsqrcode-combined.min.js"></script>
