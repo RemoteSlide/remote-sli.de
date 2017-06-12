@@ -68,6 +68,11 @@ slideApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout
             console.log(data.info)
             if (data.clientType == 'remote') {
                 $scope.statusIcon.showMessage("check", "lime", false, "Remote connected", 2500);
+
+                /// Tutorial
+                if ($scope.tutorialMode) {
+                    $scope.infoModal.show("Well done!", "/pages/instructions/tutorial/after-scan.html");
+                }
             } else if (data.clientType == 'host') {
                 $scope.statusIcon.showMessage("check", "lime", false, "Host connected", 2500);
             }
@@ -155,10 +160,14 @@ slideApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout
     }
 
     // First time visit message
-    var lastVisitCookie = $cookies.get("rs-last-visit");
-    if (!lastVisitCookie && $scope.isDesktop()) {
-        $scope.infoModal.show("Welcome!", "/pages/instructions/welcome.html");
-        $cookies.put("rs-last-visit", Date.now(), {
+    var lastVisitCookie = $cookies.get("rs-last-visit-index");
+    if (!lastVisitCookie) {
+        if ($scope.isDesktop()) {
+            $scope.infoModal.show("Welcome!", "/pages/instructions/welcome.html");
+        }
+        $scope.tutorialMode = true;
+        console.log("[Tutorial] active")
+        $cookies.put("rs-last-visit-index", Date.now(), {
             expires: new Date(Date.now() + 2.628e+9)
         })
     }
@@ -183,4 +192,5 @@ slideApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout
             }
         }, 200)
     });
-}]);
+}
+]);

@@ -5,6 +5,15 @@ slideApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeou
         $scope.infoModal.show("Mobile Page", "/pages/instructions/warnings/mobile.html");
     }
 
+    var lastVisitCookie = $cookies.get("rs-last-visit-remote");
+    if (!lastVisitCookie) {
+        $scope.tutorialMode = true;
+        console.log("[Tutorial] active")
+        $cookies.put("rs-last-visit-remote", Date.now(), {
+            expires: new Date(Date.now() + 2.628e+9)
+        })
+    }
+
     var socket = $scope.socket;
     $scope.session.session = $stateParams.session;
     $scope.settings.saveCallback = function (settings) {

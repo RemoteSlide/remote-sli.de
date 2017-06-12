@@ -3,6 +3,8 @@ slideApp.controller("slideController", ["$scope", "$cookies", "$location", "$htt
 
     window.__$scope = $scope;
 
+    $scope.tutorialMode = false;
+
     $scope.session = {
         session: "",
         qr: "",
