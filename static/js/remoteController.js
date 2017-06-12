@@ -1,6 +1,10 @@
 slideApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeout", "$interval", "$location", "$stateParams", "$window", function ($scope, $http, $cookies, $timeout, $interval, $location, $stateParams, $window) {
     console.info("[load] remoteController @" + Date.now());
 
+    if(!window.mobilecheck()) {
+        $scope.infoModal.show("Mobile Page", "/pages/instructions/warnings/mobile.html");
+    }
+
     var socket = $scope.socket;
     $scope.session.session = $stateParams.session;
     $scope.settings.saveCallback = function (settings) {
