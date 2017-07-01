@@ -10,6 +10,9 @@ var repeat = require("repeat");
 var cookieParser = require("cookie-parser");
 var Cookies = require("cookies");
 var storage = require("node-persist");
+var fs = require('fs')
+var morgan = require('morgan')
+var path = require('path')
 var port = 3011;
 
 require('console-stamp')(console, 'HH:MM:ss.l');
@@ -89,6 +92,11 @@ app.use(function (req, res, next) {
 });
 app.use(express.static("static"));
 app.use(cookieParser());
+
+// create a write stream (in append mode)
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'})
+// setup the logger
+app.use(morgan('combined', {stream: accessLogStream}))
 
 app.get("/api/session", function (req, res) {// Continue or create session
     var cookies = new Cookies(req, res);
