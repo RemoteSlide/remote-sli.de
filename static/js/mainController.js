@@ -55,7 +55,7 @@ slideApp.controller("slideController", ["$scope", "$cookies", "$location", "$htt
             localStorage.setItem("rs-settings", JSON.stringify($scope.settings));
             console.info("[Settings] Saved!")
             if (callback) callback();
-            if ($scope.settings.saveCallback)$scope.settings.saveCallback($scope.settings);
+            if ($scope.settings.saveCallback) $scope.settings.saveCallback($scope.settings);
 
             _gaq.push(["_setCustomVar", 1, "settings.navigationType", $scope.settings.navigationType]);
             _gaq.push(["_setCustomVar", 1, "settings.vibration", $scope.settings.vibration]);
@@ -87,7 +87,8 @@ slideApp.controller("slideController", ["$scope", "$cookies", "$location", "$htt
     // Non-settings stuff
     $scope.extension = {
         id: {
-            chrome: "enmfbjneielhjagdgebkmcdhgbbionek"
+            // chrome: "enmfbjneielhjagdgebkmcdhgbbionek"
+            chrome: "ojmlekgoiolmbfddhkdbnlpndbcipfkp"
         },
         installed: false
     };
