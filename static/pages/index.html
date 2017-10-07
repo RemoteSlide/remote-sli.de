@@ -13,12 +13,12 @@
             <a href="https://remote-sli.de/{{ session.session }}" target="_blank"><span class="text-muted" style="font-size:16px;">remote-sli.de/<strong><samp>{{ session.session }}</samp></strong>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
         </div>
     </div>
-    <div ng-hide="extension.installed">
+    <div ng-hide="extension.installed" id="downloadLinks">
         <hr/>
         <div>
             <!-- TODO: open a modal with installation instructions -->
             <!--<a href="https://chrome.google.com/webstore/detail/remoteslide/ojmlekgoiolmbfddhkdbnlpndbcipfkp" target="_blank" download="RemoteSlide.zip" ng-click="infoModal.show('Download Extension','/pages/instructions/extension.html')">Download Chrome Extension</a>-->
-            <a href="https://chrome.google.com/webstore/detail/remoteslide/ojmlekgoiolmbfddhkdbnlpndbcipfkp" target="_blank">
+            <a href="https://chrome.google.com/webstore/detail/remoteslide/ojmlekgoiolmbfddhkdbnlpndbcipfkp" target="_blank" id="inlineInstallLink">
                 <img src="/img/ChromeWebStore_Badge_v2_206x58.png">
             </a>
         </div>
@@ -59,3 +59,15 @@
         </div>
     </div>
 </div>
+
+<script>
+   $(document).ready(function () {
+       $("#inlineInstallLink").on("click",function (e) {
+           e.preventDefault();
+
+           chrome.webstore.install("https://chrome.google.com/webstore/detail/ojmlekgoiolmbfddhkdbnlpndbcipfkp",function () {
+               $("#downloadLinks").hide();
+           });
+       })
+   })
+</script>
