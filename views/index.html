@@ -183,7 +183,8 @@
                                         <span ng-style="session.info.observer && {color:'lime'} || {color:'red'}" style="padding:5px;"><i class='fa fa-circle fa-2x' aria-hidden='true' style='vertical-align: middle'></i></span>&nbsp;<strong>Observer</strong> {{ session.type=='observer' ? " (that's you!)":"" }}
                                     </div>
                                     <div>
-                                        <span ng-style="session.info.host && {color:'lime'} || {color:'red'}" style="padding:5px;"><i class='fa fa-circle fa-2x' aria-hidden='true' style='vertical-align: middle'></i></span>&nbsp;<strong>Host</strong> {{ session.type=='host' ? " (that's you!)":"" }} <span class="text-muted">{{ session.info.host.injector ? "("+session.info.host.injector+")":"" }}</span>
+                                        <span ng-style="session.info.host && {color:'lime'} || {color:'red'}" style="padding:5px;"><i class='fa fa-circle fa-2x' aria-hidden='true' style='vertical-align: middle'></i></span>&nbsp;<strong>Host</strong> {{ session.type=='host' ? " (that's you!)":"" }} <span
+                                            class="text-muted">{{ session.info.host.injector ? "("+session.info.host.injector+")":"" }}</span>
                                     </div>
                                 </div>
                             </div>
