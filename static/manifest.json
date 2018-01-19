@@ -1,0 +1,22 @@
+{
+  "name": "Remote Slide",
+  "short_name":"RemoteSlide",
+  "description":"Remotely control slides and presentations from your smartphone.",
+  "icons": [
+    {
+      "src": "/img/logo-128.png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "/img/logo-256.png",
+      "sizes": "256x256"
+    },
+    {
+      "src": "/img/logo-512.png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/?utm_source=homescreen",
+  "display": "standalone",
+  "orientation": "portrait"
+}
