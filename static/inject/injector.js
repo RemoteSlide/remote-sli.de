@@ -9,9 +9,21 @@
         });
     };
     $.getScript("https://cdn.rawgit.com/meetselva/attrchange/master/js/attrchange.js");
-    if (typeof io === "undefined" || typeof io.Socket === "undefined") {
+    if (typeof window.io === "undefined" || typeof window.io.Socket === "undefined") {
         console.info("[RS] Loading socket.io");
-        $.getScript("https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js", inject);
+
+        // store current io variable
+        const currentIo = window.io;
+        $.getScript("https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js", function () {
+            // move remoteslide io to its own variable
+            window.remoteslideio = window.io;
+            if (typeof currentIo !== "undefined") {
+                // restore old one
+                window.io = currentIo;
+            }
+
+            inject();
+        });
     } else {
         console.info("[RS] socket.io already loaded");
         inject();
