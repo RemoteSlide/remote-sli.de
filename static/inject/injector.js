@@ -21,6 +21,9 @@
                 // restore old one
                 window.io = currentIo;
             }
+            if (typeof window.remoteslideio === "undefined") {
+                console.warn("[RS] Failed to load socket.io");
+            }
 
             inject();
         });
