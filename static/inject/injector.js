@@ -9,7 +9,7 @@
         });
     };
     $.getScript("https://cdn.rawgit.com/meetselva/attrchange/master/js/attrchange.js");
-    if (typeof io === "undefined") {
+    if (typeof io === "undefined" || typeof io.Socket === "undefined") {
         console.info("[RS] Loading socket.io");
         $.getScript("https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js", inject);
     } else {
