@@ -18,7 +18,7 @@ slideApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeou
     $scope.session.session = $stateParams.session;
     $scope.settings.saveCallback = function (settings) {
         // Synchronize settings
-        socket.emit("_forward", {event: "settings", settings: settings});
+        socket.emit("settings", {settings: settings});
     };
 
     $scope.sendControl = function (keyCode, keys) {
@@ -42,10 +42,10 @@ slideApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeou
         },
         remote: {
             show: function (msg) {
-                socket.emit("_forward", {event: "overlayMessage", action: "show", msg: msg});
+                socket.emit("overlayMessage", {action: "show", msg: msg});
             },
             hide: function () {
-                socket.emit("_forward", {event: "overlayMessage", action: "hide"});
+                socket.emit("overlayMessage", {action: "hide"});
             }
         }
     };
@@ -102,12 +102,7 @@ slideApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeou
     // Init
     socket.on("init", function (data) {
         console.log("init: " + JSON.stringify(data));
-        if (data.state == "start") {
-            console.info("Initializing Session #" + $scope.session.session)
-            $timeout(function () {
-                socket.emit("init", {iAm: "remote", session: $scope.session.session});
-            }, 500);
-        } else if (data.state == "success") {
+        if (data.state == "success") {
             console.info("Session initialized.")
             $timeout(function () {
                 $scope.session.initialized = true;
@@ -121,7 +116,7 @@ slideApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeou
                 }
 
                 // Synchronize settings
-                socket.emit("_forward", {event: "settings", settings: $scope.settings});
+                socket.emit("settings", {settings: $scope.settings});
             });
         } else if (data.state == "not_found") {
             console.warn("Session not found");
@@ -137,6 +132,10 @@ slideApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeou
         console.warn("DISCONNECT")
         $scope.statusIcon.showMessage("times", "red", [100, 30, 100], "Lost connection", 2000);
     })
+    socket.on("rejected", function (data) {
+        // "Session not found" is already handled by the init event
+        console.warn("Connection rejected: " + data.code + " " + data.reason);
+    })
     socket.on("info", function (data) {
         console.log(data);
         if (data.type == 'client_connected') {
@@ -148,7 +147,7 @@ slideApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeou
                 $scope.overlayMessage.hide();
 
                 // Synchronize settings
-                socket.emit("_forward", {event: "settings", settings: $scope.settings});
+                socket.emit("settings", {settings: $scope.settings});
             }
         }
         if (data.type == 'client_disconnected') {
@@ -302,7 +301,7 @@ slideApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeou
                 }, 500);
             },
             showOrHidePosition: function (action, which) {
-                socket.emit("_forward", {event: "calibrationDot", action: action, which: which});
+                socket.emit("calibrationDot", {action: action, which: which});
             }
         },
         getVector: function () {
@@ -359,7 +358,7 @@ slideApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeou
                 return;
             }
             console.log(JSON.stringify($scope.deviceOrientation.getVector()))
-            socket.emit("_forward", {event: "deviceOrientation", v: $scope.deviceOrientation.getVector()})
+            socket.emit("deviceOrientation", {v: $scope.deviceOrientation.getVector()})
         }
     };
     window.laserPointer = $scope.deviceOrientation;
@@ -431,4 +430,7 @@ slideApp.controller("remoteController", ["$scope", "$http", "$cookies", "$timeou
     $("#settingsModal").on("hidden.bs.modal", function () {
         $scope.settings.save();
     });
+
+    console.info("Joining Session #" + $scope.session.session + " as remote");
+    socket.connect({session: $scope.session.session, role: "remote"});
 }]);

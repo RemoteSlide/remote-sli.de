@@ -1,0 +1,40 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "remote-sli-de",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+  // Everything under static/ (including the RemoteSlide-Controller submodule at
+  // static/inject/controller) is uploaded as static assets. The Worker runs
+  // first for every request so it can handle CORS, the www -> apex redirect,
+  // /api/* and /ws/*, and then falls through to the assets binding. Unknown
+  // paths get index.html so the AngularJS router can take over.
+  "assets": {
+    "directory": "./static",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": true
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "SESSIONS",
+        "class_name": "SessionRoom"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["SessionRoom"]
+    }
+  ],
+  "vars": {
+    // Hostnames that should redirect to the canonical origin.
+    "REDIRECT_HOSTS": "www.remote-sli.de",
+    "CANONICAL_ORIGIN": "https://remote-sli.de"
+  }
+}

@@ -17,10 +17,12 @@ slideApp.controller("slideController", ["$scope", "$cookies", "$location", "$htt
             remotes: 0
         }
     };
-    $scope.socket = io()
+    // The connection is opened by the index (observer) and remote controllers
+    // once they know which session to join.
+    $scope.socket = new RemoteSlideSocket(window.location.origin);
 
     $scope.getFromServer = function (what) {
-        $scope.socket.emit("_get", {what: what})
+        $scope.socket.emit("get", {what: what})
     };
 
     //TODO: disable some (most) settings for the host
@@ -57,10 +59,12 @@ slideApp.controller("slideController", ["$scope", "$cookies", "$location", "$htt
             if (callback) callback();
             if ($scope.settings.saveCallback) $scope.settings.saveCallback($scope.settings);
 
-            _gaq.push(["_setCustomVar", 1, "settings.navigationType", $scope.settings.navigationType]);
-            _gaq.push(["_setCustomVar", 1, "settings.vibration", $scope.settings.vibration]);
-            _gaq.push(["_setCustomVar", 1, "settings.laserTool", $scope.settings.laserTool]);
-            _gaq.push(["_setCustomVar", 1, "settings.laserStyle.color", $scope.settings.laserStyle.color]);
+            if (window._gaq) {
+                _gaq.push(["_setCustomVar", 1, "settings.navigationType", $scope.settings.navigationType]);
+                _gaq.push(["_setCustomVar", 1, "settings.vibration", $scope.settings.vibration]);
+                _gaq.push(["_setCustomVar", 1, "settings.laserTool", $scope.settings.laserTool]);
+                _gaq.push(["_setCustomVar", 1, "settings.laserStyle.color", $scope.settings.laserStyle.color]);
+            }
         },
         saveCallback: undefined
     };
@@ -164,15 +168,10 @@ slideApp.controller("slideController", ["$scope", "$cookies", "$location", "$htt
         }
     }
 
-    //// Latency
-    var startTime;
-    setInterval(function () {
-        startTime = Date.now();
-        $scope.socket.emit('latency', {t: startTime, l: $scope.session.latency});
-    }, 2000);
-    $scope.socket.on('latency', function () {
+    //// Latency (the socket sends its own heartbeats and reports the round trip)
+    $scope.socket.on('latency', function (data) {
         $timeout(function () {
-            $scope.session.latency = Date.now() - startTime;
+            $scope.session.latency = data.latency;
         });
     });
 }]);
