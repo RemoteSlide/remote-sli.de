@@ -1,13 +1,10 @@
 {
-  "extends": [
-    "config:base"
-  ],
-  "maven": {
-    "enabled": true
-  },
-  "ignoreUnstable": false,
-  "hostRules": [{
-    "hostType": "maven",
-    "endpoint": "https://repo.inventivetalent.org/content/groups/public/"
-  }]
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["wrangler", "@cloudflare/vitest-pool-workers", "miniflare"],
+      "groupName": "cloudflare tooling"
+    }
+  ]
 }

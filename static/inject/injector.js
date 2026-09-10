@@ -1,34 +1,33 @@
+/*
+ * Bookmarklet loader. bookmark.js drops this script into the presentation
+ * page (after making sure jQuery is around); it then pulls in the page
+ * controller from the RemoteSlide-Controller submodule served under
+ * /inject/controller/. The extension has its own copy of these files and
+ * injects them directly.
+ */
 (function () {
-    var inject = function () {
-        console.info("[RS] Injecting controller...");
-        $("body").append("<div id='remoteSlideOverlayHtmlContainer'></div>");
-        $("#remoteSlideOverlayHtmlContainer").load("https://remote-sli.de/inject/controller/overlay.html");
+    var base = "https://remote-sli.de";
 
-        $.getScript("https://remote-sli.de/inject/controller/pageController.js", function () {
+    // Loaded in order: attrchange (slide index tracking), the socket client,
+    // then the controller that uses both.
+    var scripts = [
+        base + "/inject/lib/attrchange.js",
+        base + "/inject/controller/rs-socket.js",
+        base + "/inject/controller/pageController.js"
+    ];
+
+    function loadNext() {
+        var src = scripts.shift();
+        if (!src) {
             console.info("[RS] Injection complete.");
+            return;
+        }
+        $.getScript(src).done(loadNext).fail(function (jqxhr, settings, error) {
+            console.error("[RS] Failed to load " + src, error);
         });
-    };
-    $.getScript("https://cdn.rawgit.com/meetselva/attrchange/master/js/attrchange.js");
-    if (typeof window.io === "undefined" || typeof window.io.Socket === "undefined") {
-        console.info("[RS] Loading socket.io");
-
-        // store current io variable
-        const currentIo = window.io;
-        $.getScript("https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js", function () {
-            // move remoteslide io to its own variable
-            window.remoteslideio = window.io;
-            if (typeof currentIo !== "undefined") {
-                // restore old one
-                window.io = currentIo;
-            }
-            if (typeof window.remoteslideio === "undefined") {
-                console.warn("[RS] Failed to load socket.io");
-            }
-
-            inject();
-        });
-    } else {
-        console.info("[RS] socket.io already loaded");
-        inject();
     }
+
+    console.info("[RS] Injecting controller...");
+    $("body").append("<div id='remoteSlideOverlayHtmlContainer'></div>");
+    $("#remoteSlideOverlayHtmlContainer").load(base + "/inject/controller/overlay.html", loadNext);
 })();

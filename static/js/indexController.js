@@ -16,16 +16,7 @@ slideApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout
 
     socket.on("init", function (data) {
         console.log("init: " + JSON.stringify(data));
-        if (data.state == "start") {
-            waitForCondition(function () {
-                return $scope.session.session.length > 0;
-            }, function () {
-                console.info("Initializing Session #" + $scope.session.session)
-                $timeout(function () {
-                    socket.emit("init", {iAm: "observer", session: $scope.session.session});
-                }, 500);
-            })
-        } else if (data.state == "success") {
+        if (data.state == "success") {
             console.info("Session initialized.")
             $timeout(function () {
                 $scope.session.initialized = true;
@@ -60,6 +51,12 @@ slideApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout
     socket.on("disconnect", function (data) {
         console.warn("DISCONNECT")
         $scope.statusIcon.showMessage("times", "red", [100, 30, 100], "Lost connection", 2000);
+    })
+    socket.on("rejected", function (data) {
+        console.warn("Connection rejected: " + data.code + " " + data.reason);
+        if (data.code == 4001) {// this session was opened in another tab
+            $scope.statusIcon.showMessage("exclamation", "orange", false, "Session opened in another tab", 20000);
+        }
     })
     socket.on("info", function (data) {
         console.log(data);
@@ -98,6 +95,8 @@ slideApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout
     $http.get("/api/session").then(function (data) {
         data = data.data;
         $.extend($scope.session, data);
+        console.info("Joining Session #" + $scope.session.session + " as observer");
+        socket.connect({session: $scope.session.session, role: "observer"});
         $http.get("/inject/bookmark.js").then(function (data) {
             data = data.data;
             console.log(data)

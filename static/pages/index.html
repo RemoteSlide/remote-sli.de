@@ -63,15 +63,3 @@
         </div>
     </div>
 </div>
-
-<script>
-   $(document).ready(function () {
-       $("#inlineInstallLink").on("click",function (e) {
-           e.preventDefault();
-
-           chrome.webstore.install("https://chrome.google.com/webstore/detail/ojmlekgoiolmbfddhkdbnlpndbcipfkp",function () {
-               $("#downloadLinks").hide();
-           });
-       })
-   })
-</script>
