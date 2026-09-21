@@ -1,0 +1,75 @@
+/* Shared layout for the static legal pages (imprint, privacy, terms). */
+body {
+    padding: 24px 16px 48px;
+}
+
+.legal {
+    max-width: 760px;
+    margin: 0 auto;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.legal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.legal-header .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #222;
+}
+
+.legal-header .brand:hover,
+.legal-header .brand:focus {
+    text-decoration: none;
+}
+
+.legal h1 {
+    margin-top: 0;
+}
+
+.legal h2 {
+    font-size: 22px;
+    margin-top: 32px;
+}
+
+.legal h3 {
+    font-size: 17px;
+    margin-top: 20px;
+}
+
+.legal-updated {
+    color: #777;
+}
+
+.legal-lede {
+    font-size: 17px;
+}
+
+.legal address {
+    margin-bottom: 16px;
+}
+
+.legal-footer {
+    max-width: 760px;
+    margin: 40px auto 0;
+    padding-top: 16px;
+    border-top: 1px solid #ddd;
+    color: #777;
+}
+
+.legal-footer a {
+    margin-right: 12px;
+}
+
+.legal-footer a[aria-current="page"] {
+    color: #333;
+    font-weight: bold;
+}

@@ -16,7 +16,7 @@ javascript:if (!remote_slide) {
             console.info("[RS] Loading JQuery...");
             var sc = document.createElement('SCRIPT');
             sc.type = 'text/javascript';
-            sc.src = "https://code.jquery.com/jquery-3.7.1.min.js";
+            sc.src = "https://remote-sli.de/vendor/jquery/jquery-3.7.1.min.js";
             sc.onload = inject;
             document.getElementsByTagName('head')[0].appendChild(sc);
         } else {

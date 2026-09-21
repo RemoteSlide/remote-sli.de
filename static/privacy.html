@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="What remote-sli.de and the Remote Slide service process, why, and for how long.">
+    <title>Privacy policy · Remote Slide</title>
+    <link rel="canonical" href="https://remote-sli.de/privacy">
+    <link rel="shortcut icon" type="image/png" href="/favicon.png">
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/legal.css" rel="stylesheet">
+</head>
+<body>
+<header class="legal legal-header">
+    <a class="brand" href="/"><img src="/img/logo-32.png" alt="" width="32" height="32">Remote Slide</a>
+    <a href="/">Back to remote-sli.de</a>
+</header>
+
+<main class="legal">
+    <h1>Privacy policy</h1>
+    <p class="legal-updated">Information under Art. 13 GDPR · Last updated 21 September 2026</p>
+
+    <p class="legal-lede">Remote Slide has no accounts and no analytics. Sessions are identified by a random code, and everything sent through a session is forwarded live and discarded. The server does not keep a copy of it. Sessions are deleted an hour after the last activity.</p>
+
+    <h2>Who is responsible</h2>
+    <p>Haylee Schäfer, Wiesenstraße 7, 78112 St. Georgen, Germany · <a href="mailto:mail@inventivetalent.org">mail@inventivetalent.org</a>. Full details are in the <a href="/imprint">imprint</a>.</p>
+
+    <h2>Hosting</h2>
+    <p>remote-sli.de runs on Cloudflare Workers and is delivered through Cloudflare's network (Cloudflare, Inc., 101 Townsend St., San Francisco, CA 94107, USA). Serving a page requires processing connection data: your IP address, the time of the request, the page requested, the referring page, and your browser's user agent. Cloudflare processes this data to deliver the site and to protect it from attacks, and may keep it briefly in security logs.</p>
+    <p>The service also keeps request logs through Cloudflare's Workers Logs. They record requests to the site and the service, including the metadata listed above, and the session code when a session is created or expires. They are used to investigate errors and misuse, and are deleted automatically after 7 days at the latest.</p>
+    <p>The legal basis is Art. 6 (1) (f) GDPR: the legitimate interest in providing a working and reasonably secure website. Cloudflare acts as a processor under Art. 28 GDPR.</p>
+
+    <h2>How a session works</h2>
+    <p>When you open remote-sli.de, the server creates a session with a random 10-character code and shows it as a QR code. Your phone (the “remote”) and your presentation (the “host”) join the same session. Each of them keeps a WebSocket connection to the server, which forwards messages between them.</p>
+
+    <h3>What passes through a session</h3>
+    <ul>
+        <li><strong>Control input</strong> from the remote: key presses such as “next slide”, status messages shown on the presentation, and, if you use the laser pointer, the orientation of your phone.</li>
+        <li><strong>Slide information</strong> from the presentation: which presentation service was detected, the current slide number, and the number of slides.</li>
+        <li><strong>Slide previews</strong>, if you use the Chrome extension: a screenshot of the browser tab showing your presentation, so the remote can display the current slide. Whatever is visible in that tab is included in the screenshot.</li>
+        <li><strong>Remote settings</strong>: the display name you choose (optional), the laser pointer's colour, size, shape, and calibration, the navigation type, and whether vibration is on. They are sent to the other participants of the session, and the display name is shown to them.</li>
+    </ul>
+    <p>These messages are forwarded to the other participants of the session as they arrive. They are not written to storage, not logged, and not used for any other purpose. Remote settings are kept in memory while that remote is connected.</p>
+
+    <h3>Session metadata</h3>
+    <p>For each session, the server stores the session code, when it was created, when it was last active, and a counter used to number the connected devices. For each connection, it holds the role (host, remote, or observer), the connection time, and how the presentation was connected (bookmarklet or extension).</p>
+    <p>Sessions run as Cloudflare Durable Objects. A Durable Object is usually placed in a Cloudflare data center close to the first person who opened the session, which may be outside the EU.</p>
+
+    <h3>Legal basis</h3>
+    <p>Relaying messages within the sessions you open is necessary to provide the service you request (Art. 6 (1) (b) GDPR).</p>
+
+    <h2>Cookies and local storage</h2>
+    <p>The site uses the following cookies and browser storage. None of them are used for tracking or advertising.</p>
+    <ul>
+        <li><code>rs-session-id</code> (cookie, 1 hour): lets the page showing the QR code continue its session when you reload it.</li>
+        <li><code>rs-last-visit-index</code> and <code>rs-last-visit-remote</code> (cookies, about 30 days): remember that you have seen the introduction, so it is not shown again.</li>
+        <li><code>cookieconsent_status</code> (cookie, 1 year): remembers that you dismissed the cookie notice.</li>
+        <li><code>rs-settings</code> (local storage, until you clear it): your remote settings, such as navigation type, vibration, laser pointer style, and display name. When your phone joins a session as a remote, these settings are sent to it as described above.</li>
+    </ul>
+    <p>These are strictly necessary to provide the features you use (§ 25 (2) no. 2 TDDDG). The legal basis for the related processing is Art. 6 (1) (f) GDPR.</p>
+
+    <h2>Camera and motion sensors</h2>
+    <p>If you scan the QR code with the built-in scanner, the site asks for access to your camera. The camera image is processed only in your browser to read the QR code and is never uploaded. If you use the laser pointer, the site reads your phone's orientation sensors and sends only the resulting pointer position to your session.</p>
+
+    <h2>Scripts, stylesheets, and fonts</h2>
+    <p>All scripts, stylesheets, and fonts that remote-sli.de uses are served from remote-sli.de itself. Opening the site sends no requests to content delivery networks or other third parties.</p>
+
+    <h2>Instruction videos</h2>
+    <p>The installation instructions for the bookmarklet and the Chrome extension include videos from YouTube, a service of Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland. They are embedded in YouTube's privacy-enhanced mode (<code>youtube-nocookie.com</code>) and are loaded only when you open those instructions. Your browser then connects to Google's servers, and Google receives your IP address, the page you came from, and your browser's user agent. See <a href="https://policies.google.com/privacy">Google's privacy policy</a>.</p>
+    <p>The legal basis is Art. 6 (1) (f) GDPR: the legitimate interest in explaining how to set up Remote Slide.</p>
+
+    <h2>The bookmarklet and the Chrome extension</h2>
+    <p>To control a presentation, Remote Slide runs a small script on the presentation page. With the bookmarklet, that script is loaded from remote-sli.de, together with jQuery if the page does not already include it. Bookmarklets saved before 21 September 2026 load jQuery from <code>code.jquery.com</code>, the jQuery CDN of the OpenJS Foundation, which then receives your IP address and the address of the presentation page. The Chrome extension carries its own copy of the script.</p>
+    <p>The script connects to your session and sends the data described under “What passes through a session”. It does not read or send the page's content, other than the slide number and, with the extension, the preview screenshot.</p>
+
+    <h2>How long data is kept</h2>
+    <ul>
+        <li><strong>Messages within a session:</strong> not stored. They are forwarded and discarded.</li>
+        <li><strong>Session metadata:</strong> deleted one hour after the last activity in the session.</li>
+        <li><strong>Connection data:</strong> in memory while the device is connected.</li>
+        <li><strong>Request logs:</strong> 7 days at the latest, then deleted.</li>
+        <li><strong>Emails you send:</strong> as long as needed to answer them.</li>
+    </ul>
+
+    <h2>Transfers outside the EU</h2>
+    <p>Cloudflare and Google are US companies and may process data outside the EU. Both are certified under the EU–US Data Privacy Framework and also rely on the European Commission's Standard Contractual Clauses, which are the basis for these transfers under Art. 44 ff. GDPR.</p>
+
+    <h2>Emails</h2>
+    <p>If you write to the address on this site, your address and message are used to answer you (Art. 6 (1) (b) or (f) GDPR) and are not shared with anyone else.</p>
+
+    <h2>Other services</h2>
+    <p>The source code is hosted on GitHub, and the extension is distributed through the Chrome Web Store. Links on this site lead to those and other services, such as the presentation demo on slides.com. Those services have their own privacy policies.</p>
+
+    <h2>Your rights</h2>
+    <p>You have the right to access (Art. 15), rectification (Art. 16), erasure (Art. 17), restriction of processing (Art. 18), and data portability (Art. 20), and <strong>the right to object at any time to processing based on legitimate interests (Art. 21)</strong>. To exercise them, write to <a href="mailto:mail@inventivetalent.org">mail@inventivetalent.org</a>.</p>
+    <p>Remote Slide does not link its data to names or accounts. To find records that concern you, it usually needs the session code or the IP address and the approximate time. Without them, it may not be able to identify your data (Art. 11 GDPR).</p>
+    <p>You can also complain to a supervisory authority. The authority responsible for Remote Slide is the <a href="https://www.baden-wuerttemberg.datenschutz.de/">State Commissioner for Data Protection and Freedom of Information Baden-Württemberg</a>.</p>
+
+    <h2>No automated decisions</h2>
+    <p>Remote Slide does not use your data for profiling, advertising, or automated decision-making under Art. 22 GDPR, and does not sell it.</p>
+
+    <h2>Changes</h2>
+    <p>This policy will be updated when Remote Slide's handling of data changes. The date at the top shows the current version.</p>
+</main>
+
+<footer class="legal-footer">
+    <a href="/">Remote Slide</a>
+    <a href="/imprint">Imprint</a>
+    <a href="/privacy" aria-current="page">Privacy</a>
+    <a href="/terms">Terms</a>
+</footer>
+</body>
+</html>
