@@ -62,18 +62,15 @@
     <h2>Camera and motion sensors</h2>
     <p>If you scan the QR code with the built-in scanner, the site asks for access to your camera. The camera image is processed only in your browser to read the QR code and is never uploaded. If you use the laser pointer, the site reads your phone's orientation sensors and sends only the resulting pointer position to your session.</p>
 
-    <h2>Libraries from third-party servers</h2>
-    <p>The main page loads scripts and stylesheets (jQuery, AngularJS, Bootstrap, Font Awesome, and others) from these content delivery networks:</p>
-    <ul>
-        <li><code>cdnjs.cloudflare.com</code>, operated by Cloudflare, Inc.;</li>
-        <li><code>ajax.googleapis.com</code>, operated by Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland;</li>
-        <li><code>code.jquery.com</code>, the jQuery CDN of the OpenJS Foundation;</li>
-        <li><code>maxcdn.bootstrapcdn.com</code>, the Bootstrap CDN.</li>
-    </ul>
-    <p>When your browser loads these files, the operators receive your IP address, the time of the request, the referring page, and your browser's user agent. The legal basis is Art. 6 (1) (f) GDPR: the legitimate interest in delivering the site quickly and reliably. The legal pages you are reading load nothing from third parties.</p>
+    <h2>Scripts, stylesheets, and fonts</h2>
+    <p>All scripts, stylesheets, and fonts that remote-sli.de uses are served from remote-sli.de itself. Opening the site sends no requests to content delivery networks or other third parties.</p>
+
+    <h2>Instruction videos</h2>
+    <p>The installation instructions for the bookmarklet and the Chrome extension include videos from YouTube, a service of Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Ireland. They are embedded in YouTube's privacy-enhanced mode (<code>youtube-nocookie.com</code>) and are loaded only when you open those instructions. Your browser then connects to Google's servers, and Google receives your IP address, the page you came from, and your browser's user agent. See <a href="https://policies.google.com/privacy">Google's privacy policy</a>.</p>
+    <p>The legal basis is Art. 6 (1) (f) GDPR: the legitimate interest in explaining how to set up Remote Slide.</p>
 
     <h2>The bookmarklet and the Chrome extension</h2>
-    <p>To control a presentation, Remote Slide runs a small script on the presentation page. With the bookmarklet, that script is loaded from remote-sli.de, together with jQuery from <code>code.jquery.com</code> if the page does not already include it. The Chrome extension carries its own copy of the script.</p>
+    <p>To control a presentation, Remote Slide runs a small script on the presentation page. With the bookmarklet, that script is loaded from remote-sli.de, together with jQuery if the page does not already include it. Bookmarklets saved before 21 September 2026 load jQuery from <code>code.jquery.com</code>, the jQuery CDN of the OpenJS Foundation, which then receives your IP address and the address of the presentation page. The Chrome extension carries its own copy of the script.</p>
     <p>The script connects to your session and sends the data described under “What passes through a session”. It does not read or send the page's content, other than the slide number and, with the extension, the preview screenshot.</p>
 
     <h2>How long data is kept</h2>
