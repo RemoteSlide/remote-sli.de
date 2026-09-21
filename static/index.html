@@ -68,7 +68,10 @@
                             "background": "#14a7d0"
                         }
                     },
-                    "position": "bottom-right"
+                    "position": "bottom-right",
+                    "content": {
+                        "href": "/privacy"
+                    }
                 })
             });
         </script>
@@ -151,6 +154,10 @@
                 <a href="https://donation.inventivetalent.org/paypal/?item=RemoteSlide" target="_blank" title="Donate via PayPal"><i class="fa fa-paypal" aria-hidden="true" style="padding-right: 4px;"></i></a>
 
                 <a href="/about" title="About">About</a>
+                <span class="text-muted">|</span>
+                <a href="/imprint" target="_self">Imprint</a>
+                <a href="/privacy" target="_self">Privacy</a>
+                <a href="/terms" target="_self">Terms</a>
                 <span class="text-muted">|</span>
                 <span ng-style="session.latency > 200 && {'color':'red'}" class="text-muted">{{ session.latency }}ms</span>
             </div>
