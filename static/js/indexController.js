@@ -26,17 +26,18 @@ slideApp.controller("indexController", ["$scope", "$http", "$cookies", "$timeout
                 console.log(data.info)
                 $scope.statusIcon.showMessage("check", "lime", [200], "Connected", 2000);
 
-                // Notify extension
-                try {
-                    chrome.runtime.sendMessage($scope.extension.id.chrome, {session: $scope.session}, function (msg) {
-                    });
+                // Notify extension. If it opened this tab just to get a session, close
+                // the tab once the extension has it - or after a second at the latest,
+                // as extension versions up to 1.2.0 never answer this message.
+                var closeSessionOnlyTab = function () {
                     if ($state.params.sessionOnly) {
                         $timeout(function () {
                             window.close();
                         }, 100);
                     }
-                } catch (ignoerd) {
-                }
+                };
+                $scope.extension.send({session: $scope.session}, closeSessionOnlyTab);
+                $timeout(closeSessionOnlyTab, 900);
             });
         } else if (data.state == "not_found") {// This should be impossible here, since the observer generates the new session ID
             console.warn("Session not found");

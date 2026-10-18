@@ -94,17 +94,41 @@ slideApp.controller("slideController", ["$scope", "$cookies", "$location", "$htt
             // chrome: "enmfbjneielhjagdgebkmcdhgbbionek"
             chrome: "ojmlekgoiolmbfddhkdbnlpndbcipfkp"
         },
-        installed: false
-    };
-    try {
-        chrome.runtime.sendMessage($scope.extension.id.chrome, {ping: "hello"}, function (msg) {
-            console.log(msg)
-            if (msg && msg.pong && msg.pong == 'hello') {
-                $scope.extension.installed = true;
+        installed: false,
+        // Chrome exposes chrome.runtime to this site once the extension is
+        // installed (externally_connectable). Firefox doesn't let pages message an
+        // extension at all, so there the extension's siteBridge.js content script
+        // relays what is posted to this window, and posts the answer back.
+        send: function (message, callback) {
+            if (window.chrome && chrome.runtime && chrome.runtime.sendMessage) {
+                try {
+                    chrome.runtime.sendMessage($scope.extension.id.chrome, message, function (response) {
+                        void chrome.runtime.lastError;
+                        if (callback) callback(response);
+                    });
+                } catch (ignored) {
+                }
+                return;
             }
-        });
-    } catch (ignoerd) {
-    }
+            var id = ++extensionBridge.lastId;
+            if (callback) extensionBridge.callbacks[id] = callback;
+            window.postMessage({channel: "remoteslide", direction: "to-extension", id: id, message: message}, window.location.origin);
+        }
+    };
+    var extensionBridge = {lastId: 0, callbacks: {}};
+    window.addEventListener("message", function (event) {
+        var data = event.data;
+        if (event.source !== window || !data || data.channel !== "remoteslide" || data.direction !== "to-page") return;
+        var callback = extensionBridge.callbacks[data.id];
+        delete extensionBridge.callbacks[data.id];
+        if (callback) callback(data.response);
+    });
+    $scope.extension.send({ping: "hello"}, function (msg) {
+        console.log(msg)
+        if (msg && msg.pong && msg.pong == 'hello') {
+            $scope.extension.installed = true;
+        }
+    });
 
     $scope.isMobile = function () {
         return window.mobilecheck();

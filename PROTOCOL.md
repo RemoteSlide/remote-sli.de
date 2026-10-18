@@ -27,7 +27,8 @@ GET /ws/<session>?as=<role>[&injector=<name>]   (WebSocket upgrade)
 A session has at most one host and one observer; a newer connection replaces
 the older one, which is closed with code `4001`. Any number of remotes can
 join. `injector` is free text describing how the host got injected
-(`bookmark`, `extension_chrome`) and is shown in the connection info.
+(`bookmark`, `extension_chrome`, `extension_firefox`) and is shown in the
+connection info.
 
 The first frame the server sends is always `init`:
 
