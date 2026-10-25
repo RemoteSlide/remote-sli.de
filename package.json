@@ -23,7 +23,7 @@
     "@cloudflare/vitest-pool-workers": "^0.22.0",
     "@types/qrcode": "^1.5.5",
     "typescript": "^5.9.0",
-    "vitest": "^4.1.0",
+    "vitest": "^4.1.12",
     "wrangler": "^4.0.0"
   }
 }
